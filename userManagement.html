@@ -5,21 +5,25 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="style.css">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="http://redrockcodecamp.org/educationMaterials/frameworks/js/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://redrockcodecamp.org/educationMaterials/frameworks/fonts/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <script src="userManagement.js"></script>
+    <script type="module">
+      import { App } from './app.js';
+      var thisApp = new App();
+      thisApp.load();
+    
+    </script>
   </head>
   <body>
-      
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
     <header class="border-bottom">
         <h1 class="text-primary text-center mt-2 mb-2">NortonQuiz User Management</h1>
+        <div id="messageBox" class="m-auto text-center"></div>
     </header>
-
+    
     <main>
         <div class="row container-fluid mt-3 ml-auto mr-auto">
             <div class="col-5">
@@ -99,11 +103,10 @@
                       </tr>
                   </table>
 
-                  <div class="row ml-2 container-fluid">
+                  <div class="row ml-2">
                     <div class="col-4"><button id="btnNewUser" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> New User</button></div>
-                    <div class="col-2"></div>
-                    <div class="col-3"><button id="btnSaveUser" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
-                    <div class="col-3"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fa fa-minus" aria-hidden="true"></i> Cancel</button></div>
+                    <div class="col-4 pr-1"><button id="btnSaveUser" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
+                    <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fa fa-minus" aria-hidden="true"></i> Cancel</button></div>
                   </div>
                 </form>
             </div>
