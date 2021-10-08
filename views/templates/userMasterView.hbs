@@ -1,0 +1,26 @@
+
+                <h2 class="text-primary text-center">All Users</h2>
+
+                <table id="userMasterTable" class="table-hover container-fluid">
+                  <thead>
+                    <tr class="border-bottom">
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th width="10%"></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each users}}
+                    <tr>
+                      <td>{{id}}</td>
+                      <td>{{name}}</td>
+                      <td>{{email}}</td>
+                      <td>{{iconize gender}}</td>
+                      <td class="delete"><i class="fa fa-trash" aria-hidden="true"></i></td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>

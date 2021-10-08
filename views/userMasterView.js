@@ -4,81 +4,52 @@ class UserMasterView {
 
     constructor(controller) {
         this.controller = controller;
-        this.initializeView();
-    }
+        this.loadHandlebars(() => {
 
-    initializeView () {
-        this.populateUserList();
-    }
-    
-    // VIEW
-    populateUserList() {
-        
-        let userMasterTable = document.querySelector("#userMasterTable tbody");
-        let rows = userMasterTable.querySelectorAll("tr");
-        rows.forEach(row => { row.remove(); })
-    
-        let allUsers = this.controller.getAllUsers();
-
-        Object.keys(allUsers).forEach(key => {
-            
-            let currentUser = this.controller.getUser(key);
-
-            let userRow = document.createElement('tr');
-            
-            let idElement = document.createElement('td');
-            idElement.id = "listId";
-            idElement.innerHTML = key;
-            userRow.appendChild(idElement);
-    
-            let nameElement = document.createElement('td');
-            nameElement.id = "listName";
-            nameElement.innerHTML = currentUser.name;
-            userRow.appendChild(nameElement);
-    
-            let emailElement = document.createElement('td');
-            emailElement.id = "listEmail";
-            emailElement.innerHTML = currentUser.email;
-            userRow.appendChild(emailElement);
-    
-            let genderElement = document.createElement('td');
-            genderElement.id = "listGender";
-            let genderSymbol = '<i class="fa fa-question" aria-hidden="true"></i>'
-            switch (currentUser.gender) {
-                case 'm':
-                    genderSymbol = '<i class="fa fa-male" aria-hidden="true"></i>'
-                    break;
-    
-                case 'f':
-                    genderSymbol = '<i class="fa fa-female" aria-hidden="true"></i>'
-                    break; 
-            }
-            genderElement.innerHTML = genderSymbol;
-            userRow.appendChild(genderElement);
-    
-            let deleteElement = document.createElement('td');
-            deleteElement.id = "delete";
-            deleteElement.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
-    
-            deleteElement.addEventListener('click', (e) => {
-                e.stopPropagation;            
-                if (confirm('Are you sure you want to delete ' + currentUser.name + '?')) {
-                    this.controller.delete(key); 
-                }
-    
-            });
-            userRow.appendChild(deleteElement);
-    
-            userRow.addEventListener('click', e => {
-                this.controller.edit(key);
-            });
-    
-            userMasterTable.appendChild(userRow);
+            this.allUsers = this.controller.getAllUsers();
+            this.context = { 'users': this.allUsers }; 
+            document.getElementById('userMasterPlaceholder').innerHTML = this.template(this.context);
+            this.addListeners();
         });
         
     }
-    
 
+    async loadHandlebars(callback) {
+        let hbs = await fetch("views/templates/userMasterView.hbs");
+        let text = await hbs.text();
+        this.template = Handlebars.compile(text);
+        callback();
+    }
+    
+    // VIEW
+    addListeners() {
+        
+        let userMasterTable = document.querySelector("#userMasterTable tbody");
+        let rows = userMasterTable.querySelectorAll("tr");
+        
+        rows.forEach(row => { 
+            let currentId = row.firstElementChild.innerHTML;
+            row.addEventListener('click', () => {
+                this.controller.edit(currentId);
+            });
+
+            row.children[4].addEventListener('click', (e) => {
+                e.stopPropagation;
+                let currentId = e.currentTarget.parentNode.children[0].innerHTML;            
+                let currentName = e.currentTarget.parentNode.children[1].innerHTML;            
+                if (confirm('Are you sure you want to delete ' + currentName + '?')) {
+                    this.controller.delete(currentId); 
+                }
+                e.stopPropagation();
+            });
+        });
+    }
+
+    refresh () {
+        this.allUsers = this.controller.getAllUsers();
+        document.getElementById('userMasterPlaceholder').innerHTML = this.template(this.context);
+        this.addListeners();
+    }
 }
 
 export { UserMasterView }

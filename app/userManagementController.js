@@ -22,7 +22,7 @@ class UserManagementController {
     }
 
     load() {
-        this.viewMaster.populateUserList();
+        this.viewMaster.refresh();
     }
 
     getUser(id) {
@@ -45,7 +45,7 @@ class UserManagementController {
             this.db.update(user);
         } else {
             this.db.add(user);
-            this.viewMaster.populateUserList();
+            this.load();
             this.viewDetails.resetUserDetails();
             this.viewDetails.hideUserDetails();
     
@@ -62,7 +62,9 @@ class UserManagementController {
 
     delete(id) {
         this.db.remove(id);
-        this.viewMaster.populateUserList();
+        this.load();
+        this.viewDetails.resetUserDetails();
+        this.viewDetails.hideUserDetails();
     }
 
     // CONTROL

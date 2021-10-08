@@ -2,10 +2,18 @@ class MessagesView {
 
     constructor(controller) {
         this.controller = controller;
+        this.loadHandlebars();
+    }
+
+    async loadHandlebars() {
+        let hbs = await fetch("views/templates/messagesView.hbs");
+        let text = await hbs.text();
+        this.template = Handlebars.compile(text);
     }
 
     showMessage(message) {
-        document.getElementById('messageBox').innerHTML = message;
+        this.context = { 'message': message }; 
+        document.getElementById('messagesPlaceholder').innerHTML = this.template(this.context);
     }
 
 }

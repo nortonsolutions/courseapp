@@ -1,0 +1,83 @@
+
+                <h2 class="text-primary text-center">User Details</h2>
+
+                <form id="userDetailForm">
+                  
+                  <table id="userDetailTable" class="table-hover container-fluid d-none">
+ 
+                      <tr>
+                          <td width="30%"></td>
+                          <td>
+                            <input type="hidden" name="id" id="id" value="{{id}}">
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Name</td>
+                          <td>
+                            <input type="text" name="name" id="name" value="{{name}}" class="form-control" required>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Email</td>
+                          <td>
+                              <input type="email" name="email" id="email" value="{{email}}" class="form-control" required>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Gender</td>
+                          <td>
+                              <input type="radio" id="male" name="gender" class="mt-2" {{maleCheck gender}}>
+                              <label for="male"><i class="fa fa-male" aria-hidden="true"></i> Male</label>
+                              <input type="radio" id="female" name="gender" {{femaleCheck gender}}>
+                              <label for="female"><i class="fa fa-female" aria-hidden="true"></i> Female</label>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Age</td>
+                          <td>
+                              <input type="number" name="age" id="age" class="form-control" value="{{age}}" required>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Role</td>
+                          <td>
+                            <div class="form-group m-auto">
+                              <select class="form-control" name="role" id="role">
+                                <option {{roleCompare role 'Student'}}>Student</option>
+                                <option {{roleCompare role 'Tutor'}}>Tutor</option>
+                                <option {{roleCompare role 'Administrator'}}>Administrator</option>
+                              </select>
+                            </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Verified</td>
+                          <td>
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="verified" id="verified" {{verifiedHelper verified}}>
+                                Has been verified
+                              </label>
+                            </div>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Created</td>
+                          <td>
+                            <span id="dateCreated" name="dateCreated">{{dateCreated}}</span>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Updated</td>
+                          <td>
+                            <span id="dateUpdated" name="dateCreated" >{{dateUpdated}}</span>
+                          </td>
+                      </tr>
+                  </table>
+
+                  <div class="row">
+                    <div class="col-4"><button id="btnNewUser" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> New</button></div>
+                    <div class="col-4 pr-1"><button id="btnSaveUser" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
+                    <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fa fa-cancel" aria-hidden="true"></i> Cancel</button></div>
+                  </div>
+                </form>

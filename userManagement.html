@@ -9,6 +9,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="http://redrockcodecamp.org/educationMaterials/frameworks/js/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://redrockcodecamp.org/educationMaterials/frameworks/fonts/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <script src="http://redrockcodecamp.org/educationMaterials/frameworks/js/handlebars/4.0.12/handlebars.min.js"></script>
+    <script src="./app/handlebarHelpers.js"></script>
 
     <script type="module">
       import { App } from './app.js';
@@ -17,118 +20,21 @@
     
     </script>
   </head>
-  <body>
+  <body style="min-width: 800px">
 
     <header class="border-bottom">
         <h1 class="text-primary text-center mt-2 mb-2">NortonQuiz User Management</h1>
-        <div id="messageBox" class="m-auto text-center"></div>
+        <!-- Placeholder for messages -->
+        <div id="messagesPlaceholder"></div>
     </header>
     
     <main>
         <div class="row container-fluid mt-3 ml-auto mr-auto">
-            <div class="col-5">
-                <h2 class="text-primary text-center">User Details</h2>
-
-                <form id="userDetailForm">
-                  
-                  <table id="userDetailTable" class="table-hover container-fluid d-none">
- 
-                      <tr>
-                          <td width="30%"></td>
-                          <td>
-                            <input type="hidden" name="id" id="id">
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Name</td>
-                          <td>
-                            <input type="text" name="name" id="name" class="form-control">
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Email</td>
-                          <td>
-                              <input type="email" name="email" id="email" class="form-control">
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Gender</td>
-                          <td>
-                              <input type="radio" id="male" name="gender" class="mt-2">
-                              <label for="male"><i class="fa fa-male" aria-hidden="true"></i> Male</label>
-                              <input type="radio" id="female" name="gender" >
-                              <label for="female"><i class="fa fa-female" aria-hidden="true"></i> Female</label>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Age</td>
-                          <td>
-                              <input type="number" name="age" id="age" class="form-control">
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Role</td>
-                          <td>
-                            <div class="form-group m-auto">
-                              <select class="form-control" name="role" id="role">
-                                <option>Student</option>
-                                <option>Tutor</option>
-                                <option>Administrator</option>
-                              </select>
-                            </div>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Verified</td>
-                          <td>
-                            <div class="form-check">
-                              <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" name="verified" id="verified" value="checkedValue">
-                                Has been verified
-                              </label>
-                            </div>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Created Date</td>
-                          <td>
-                            <span id="dateCreated"></span>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Updated Date</td>
-                          <td>
-                            <span id="dateUpdated"></span>
-                          </td>
-                      </tr>
-                  </table>
-
-                  <div class="row ml-2">
-                    <div class="col-4"><button id="btnNewUser" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> New User</button></div>
-                    <div class="col-4 pr-1"><button id="btnSaveUser" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
-                    <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fa fa-minus" aria-hidden="true"></i> Cancel</button></div>
-                  </div>
-                </form>
-            </div>
-            <div class="col-7">
-                <h2 class="text-primary text-center">All Users</h2>
-
-                <table id="userMasterTable" class="table-hover container-fluid">
-                  <thead>
-                    <tr class="border-bottom">
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th width="10%"></th>
-                      <th></th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-      
-              </div>
+          <!-- Placeholder for userDetails -->
+          <div id="userDetailsPlaceholder" class="col-5"></div>
+          <!-- Placeholder for userMaster -->
+          <div id="userMasterPlaceholder" class="col-7"></div>
+            
         </div>
 
     </main>

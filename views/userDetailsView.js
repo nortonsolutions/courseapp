@@ -4,79 +4,36 @@ class UserDetailsView {
 
     constructor(controller) {
         this.controller = controller;
-        this.initializeView();
+        this.loadHandlebars(() => {
+            this.resetUserDetails();
+        });
+        
     }
 
-    initializeView () {
-
-        document.getElementById("btnNewUser").addEventListener('click', e => {
-            this.controller.new();
-        });
-    
-        document.getElementById("btnCancel").addEventListener('click', e => {
-            this.controller.cancel();
-        });
-    
-        document.getElementById("userDetailForm").addEventListener('submit', e => {
-            
-            e.preventDefault();
-            let id = document.getElementById('id').value
-            let newDate = new Date().toISOString();
-    
-            let userDetails = {
-                name: e.target[1].value,
-                email: e.target[2].value,
-                gender: e.target[3].checked ? 'm' : e.target[4].checked ? 'f' : '',
-                age: e.target[5].value,
-                role: e.target[6].value,
-                verified: e.target[7].checked,
-                dateCreated: this.controller.checkCreationDate(id),
-                dateUpdated: newDate
-            }
-    
-            if (e.target[1].value.length == 0) {
-                throw new Error('The name is empty!');
-            } else {
-                this.controller.save({id: id, ...userDetails});
-                document.getElementById("dateUpdated").innerHTML = newDate;
-            }
-        });
+    async loadHandlebars(callback) {
+        let hbs = await fetch("views/templates/userDetailsView.hbs");
+        let text = await hbs.text();
+        this.template = Handlebars.compile(text);
+        callback();
     }
+
     
     // VIEW
     resetUserDetails() {
-    
-        document.getElementById("userDetailForm").reset();
-        document.getElementById('dateCreated').innerHTML = null;
-        document.getElementById('dateUpdated').innerHTML = null;
-        document.querySelector("#id").value = this.controller.getNextUserId();
+
+        this.context = { id: this.controller.getNextUserId() }; 
+        document.getElementById('userDetailsPlaceholder').innerHTML = this.template(this.context);
+        this.addListeners();
     }
     
 
     // VIEW
     showUser(id) {
         
-        let currentUser = this.controller.getUser(id);
-        
-        if (currentUser) {
-            this.showUserDetails();
-    
-            document.getElementById('id').value = id;
-            document.getElementById('name').value = currentUser.name;
-            document.getElementById('email').value = currentUser.email;
-            if (currentUser.gender == 'm') {
-                document.getElementById('male').checked = true;
-            } else if (currentUser.gender == 'f') {
-                document.getElementById('female').checked = true;
-            }
-            document.getElementById('age').value = currentUser.age;
-            document.getElementById('role').value = currentUser.role;
-            document.getElementById('verified').checked = currentUser.role;
-            
-            document.getElementById('dateCreated').innerHTML = currentUser.dateCreated;
-            document.getElementById('dateUpdated').innerHTML = currentUser.dateUpdated;
-        
-        }
+        this.context = this.controller.getUser(id);
+        document.getElementById('userDetailsPlaceholder').innerHTML = this.template(this.context);
+        this.showUserDetails();
+        this.addListeners();
     
     }
     
@@ -98,6 +55,43 @@ class UserDetailsView {
         document.getElementById("btnSaveUser").classList.add("d-none");
         document.getElementById("btnCancel").classList.add("d-none");
     
+    }
+
+    addListeners() {
+        document.getElementById("btnNewUser").addEventListener('click', e => {
+            this.controller.new();
+        });
+    
+        document.getElementById("btnCancel").addEventListener('click', e => {
+            this.controller.cancel();
+        });
+    
+        document.getElementById("userDetailForm").addEventListener('submit', e => {
+            
+            e.preventDefault();
+            
+            let newDate = new Date().toISOString();
+    
+            let formElements = document.getElementById("userDetailForm").elements;
+            let id = formElements["id"].value;
+            
+            let userDetails = {
+                id: id,
+                name: formElements["name"].value,
+                email: formElements["email"].value,
+                gender: formElements["male"].checked ? 'm' : formElements["female"].checked ? 'f' : '',
+                age: formElements["age"].value,
+                role: formElements["role"].value,
+                verified: formElements["verified"].checked,
+                dateCreated: this.controller.checkCreationDate(id),
+                dateUpdated: newDate
+            }
+
+            this.controller.save(userDetails);
+            document.getElementById("dateUpdated").innerHTML = newDate;
+            
+        });
+
     }
 
 }
