@@ -1,13 +1,21 @@
+import { UserManagementModel } from '../models/userManagementModel.js'
+import { UserManagementView } from '../views/userManagementView.js'
 import { UserMasterView } from '../views/userMasterView.js'
 import { UserDetailsView } from '../views/userDetailsView.js'
-import { UserManagementModel } from './userManagementModel.js'
+import { UserDisplayView } from '../views/userDisplayView.js'
 
 class UserManagementController {
 
-    constructor() {
-        this.db = new UserManagementModel()
-        this.viewMaster = new UserMasterView(this);
-        this.viewDetails = new UserDetailsView(this);
+    constructor(eventDepot) {
+        
+        this.eventDepot = eventDepot;
+        this.db = new UserManagementModel();
+        
+        this.load = this.load.bind(this);
+
+        this.view = new UserManagementView();
+        this.viewDetails = new UserDetailsView(this, eventDepot);
+        this.viewMaster = new UserMasterView(this, eventDepot);
     }
 
     // CONTROL
@@ -21,8 +29,21 @@ class UserManagementController {
         return this.db.includes(id);
     }
 
-    load() {
-        this.viewMaster.refresh();
+    load(request) {
+        this.view.load(request, () => {
+            this.viewDetails.load(request);
+            this.viewMaster.load(request);
+            document.title = "nortonQuiz Manager"; 
+        });
+    }
+
+    loadDisplay(request) {
+        
+        let userId = request.parameters[0].split("=")[1];
+        let userObject = this.getUser(userId);
+        this.viewDisplay = new UserDisplayView(this.eventDepot, () => {
+            this.viewDisplay.load(userObject);
+        });
     }
 
     getUser(id) {

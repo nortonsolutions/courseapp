@@ -2,6 +2,7 @@
 
 let sampleDB = {
     0: {
+        id: 0,
         name: "Dave Norton",
         email: "norton@whatever.com",
         gender: "m",
@@ -12,6 +13,7 @@ let sampleDB = {
         dateUpdated: ""
     },
     1: {
+        id: 1,
         name: "Joe Smith",
         email: "joe@whatever.com",
         gender: "m",

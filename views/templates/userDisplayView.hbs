@@ -1,26 +1,25 @@
-
-                <h2 class="text-primary text-center">User Details</h2>
+<h2 class="text-primary text-center">User Overview</h2>
 
                 <form id="userDetailForm">
                   
-                  <table id="userDetailTable" class="table-hover container-fluid d-none">
+                  <table id="userDetailTable" class="table-hover m-auto">
  
                       <tr>
                           <td width="30%"></td>
                           <td>
-                            <input type="hidden" name="id" id="id" value="{{id}}">
+                            <span name="id" id="id">{{id}}</span>
                           </td>
                       </tr>
                       <tr>
                           <td>Name</td>
                           <td>
-                            <input type="text" name="name" id="name" value="{{name}}" class="form-control" required>
+                            <span name="name" id="name">{{name}}</span>
                           </td>
                       </tr>
                       <tr>
                           <td>Email</td>
                           <td>
-                              <input type="email" name="email" id="email" value="{{email}}" class="form-control" required>
+                              <span name="email" id="email">{{email}}</span>
                           </td>
                       </tr>
                       <tr>
@@ -35,19 +34,13 @@
                       <tr>
                           <td>Age</td>
                           <td>
-                              <input type="number" name="age" id="age" class="form-control" value="{{age}}" required>
+                              <span name="age" id="age">{{age}}</span>
                           </td>
                       </tr>
                       <tr>
                           <td>Role</td>
                           <td>
-                            <div class="form-group m-auto">
-                              <select class="form-control" name="role" id="role">
-                                <option {{roleCompare role 'Student'}}>Student</option>
-                                <option {{roleCompare role 'Tutor'}}>Tutor</option>
-                                <option {{roleCompare role 'Administrator'}}>Administrator</option>
-                              </select>
-                            </div>
+                              <span name="role" id="role">{{role}}</span>
                           </td>
                       </tr>
                       <tr>
@@ -55,7 +48,7 @@
                           <td>
                             <div class="form-check">
                               <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" name="verified" id="verified" {{verifiedHelper verified}}>
+                                <input type="checkbox" name="verified" id="verified" {{verifiedHelper verified}}>
                                 Has been verified
                               </label>
                             </div>
@@ -74,16 +67,18 @@
                           </td>
                       </tr>
                       <tr>
-                        <td colspan="2">
-                            <a data-route-link href="/user.html?user={{id}}">View public profile</a>
+                        <td colspan="2" class="text-center">
+                          <a data-route-link href="/userManagement.html">User Management</a>
                         </td>
-
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="text-center">
+                          <a data-route-link href="/userManagement.html?id={{id}}">Edit {{name}}</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" class="text-center">
+                          <a data-route-link href="/main.html">Back to home</a>
+                        </td>
                       </tr>
                   </table>
-
-                  <div class="row">
-                    <div class="col-4"><button id="btnNewUser" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> New</button></div>
-                    <div class="col-4 pr-1"><button id="btnSaveUser" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
-                    <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fa fa-cancel" aria-hidden="true"></i> Cancel</button></div>
-                  </div>
-                </form>

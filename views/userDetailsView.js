@@ -2,19 +2,30 @@
 
 class UserDetailsView {
 
-    constructor(controller) {
+    constructor(controller, eventDepot) {
         this.controller = controller;
-        this.loadHandlebars(() => {
-            this.resetUserDetails();
-        });
+        this.eventDepot = eventDepot;
         
+        this.loadHandlebars();
+    }
+
+    load(request) {
+
+        if (request && request.parameters[0].length > 1) {
+            let userId = request.parameters[0].split("=")[1];
+            this.showUser(userId);
+        } else {
+            this.resetUserDetails();
+        }
+
+
     }
 
     async loadHandlebars(callback) {
         let hbs = await fetch("views/templates/userDetailsView.hbs");
         let text = await hbs.text();
         this.template = Handlebars.compile(text);
-        callback();
+        if (callback) callback();
     }
 
     
@@ -31,10 +42,12 @@ class UserDetailsView {
     showUser(id) {
         
         this.context = this.controller.getUser(id);
-        document.getElementById('userDetailsPlaceholder').innerHTML = this.template(this.context);
+        this.location = document.getElementById('userDetailsPlaceholder');
+        this.location.innerHTML = this.template(this.context);
         this.showUserDetails();
+        this.eventDepot.fire("renderComplete", this.location);
         this.addListeners();
-    
+        document.getElementById("name").focus();
     }
     
     // VIEW
@@ -60,6 +73,7 @@ class UserDetailsView {
     addListeners() {
         document.getElementById("btnNewUser").addEventListener('click', e => {
             this.controller.new();
+            document.getElementById("name").focus();
         });
     
         document.getElementById("btnCancel").addEventListener('click', e => {
@@ -75,6 +89,11 @@ class UserDetailsView {
             let formElements = document.getElementById("userDetailForm").elements;
             let id = formElements["id"].value;
             
+            // test Error throw
+            if (formElements["name"].value == "Blah") {
+                throw new Error("Illegal name!");
+            }
+
             let userDetails = {
                 id: id,
                 name: formElements["name"].value,
