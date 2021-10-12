@@ -1,8 +1,9 @@
 class WelcomeView {
 
-    constructor(eventDepot) {
+    constructor(eventDepot, router, callback) {
         this.eventDepot = eventDepot;
-        this.loadHandlebars();
+        this.router = router;
+        this.loadHandlebars(() => { callback (); });
     }
 
     load() {
@@ -14,10 +15,14 @@ class WelcomeView {
 
     }
 
-    async loadHandlebars() {
+    async loadHandlebars(callback) {
         let hbs = await fetch("views/templates/welcomeView.hbs");
         this.text = await hbs.text();
-        this.eventDepot.fire("welcomeReady");
+        callback();
+    }
+
+    routeInitialRequest() {
+        this.router.navigateTo(window.location.pathname, window.location.search, false);
     }
 
 }

@@ -4,10 +4,10 @@
                     aria-expanded="false" aria-label="Toggle navigation"></button>
                 <div class="collapse navbar-collapse" id="collapsibleNavId">
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" data-route-link href="/main.html">Home <span class="sr-only">(current)</span></a>
+                        <li class="nav-item {{mainActive}}">
+                            <a class="nav-link " data-route-link href="/main.html">Home <span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {{userManagementActive}}">
                             <a class="nav-link" data-route-link href="/userManagement.html">Users</a>
                         </li>
                         <li class="nav-item dropdown">
@@ -24,8 +24,3 @@
                     </form>
                 </div>
             </nav>
-
-
-            <div id="messageBox" class="m-auto text-center">{{message}}</div>
-
-            

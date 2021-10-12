@@ -3,13 +3,22 @@ import { UserManagementController } from './userManagementController.js'
 
 class MainController {
 
-    constructor(eventDepot) { 
+    constructor(eventDepot, router) { 
 
         this.eventDepot = eventDepot;
-        this.userManagementController = new UserManagementController(this.eventDepot);
-        this.welcomeController = new WelcomeController(this.eventDepot);
+        this.router = router;
 
+        this.userManagementController = new UserManagementController(this.eventDepot, () => {
+            this.welcomeController = new WelcomeController(this.eventDepot, this.router, () => {
+                this.loadInitialRequest();
+            });
+        });
+        
     } 
+
+    loadInitialRequest() {
+        this.welcomeController.routeInitialRequest();
+    }
 
     load(subController, request) {
         switch (subController) {

@@ -36,19 +36,12 @@ class UserMasterView {
         
         rows.forEach(row => { 
             let currentId = row.firstElementChild.innerHTML;
-            row.addEventListener('click', () => {
-                this.controller.edit(currentId);
-            });
-
-            // DISPLAY USER
-            row.children[4].addEventListener('click', (e) => {
-                let currentId = e.currentTarget.parentNode.children[0].innerHTML;            
-                this.controller.loadDisplay({ parameters: ["id=" + currentId]}); 
-                e.stopPropagation();
-            });
+            // row.addEventListener('click', () => {
+            //     this.controller.edit(currentId);
+            // });
 
             // EDIT USER
-            row.children[5].addEventListener('click', (e) => {
+            row.children[6].addEventListener('click', (e) => {
 
                 let currentId = e.currentTarget.parentNode.children[0].innerHTML;            
                 let currentName = e.currentTarget.parentNode.children[1].innerHTML;            

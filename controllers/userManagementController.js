@@ -6,7 +6,7 @@ import { UserDisplayView } from '../views/userDisplayView.js'
 
 class UserManagementController {
 
-    constructor(eventDepot) {
+    constructor(eventDepot, callback) {
         
         this.eventDepot = eventDepot;
         this.db = new UserManagementModel();
@@ -16,6 +16,7 @@ class UserManagementController {
         this.view = new UserManagementView();
         this.viewDetails = new UserDetailsView(this, eventDepot);
         this.viewMaster = new UserMasterView(this, eventDepot);
+        callback();
     }
 
     // CONTROL

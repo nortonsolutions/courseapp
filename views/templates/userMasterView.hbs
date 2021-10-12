@@ -10,6 +10,7 @@
                       <th width="10%"></th>
                       <th></th>
                       <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -19,7 +20,8 @@
                       <td>{{name}}</td>
                       <td>{{email}}</td>
                       <td>{{iconize gender}}</td>
-                      <td class="edit"><i class="fa fa-eye" aria-hidden="true"></i></td>
+                      <td class="edit"><a data-route-link href="/userManagement.html?id={{id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                      <td class="view"><a data-route-link href="/user.html?user={{id}}"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                       <td class="delete"><i class="fa fa-trash" aria-hidden="true"></i></td>
                     </tr>
                     {{/each}}

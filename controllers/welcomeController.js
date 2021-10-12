@@ -2,17 +2,19 @@ import { WelcomeView } from '../views/welcomeView.js'
 
 class WelcomeController {
 
-    constructor(eventDepot) {
+    constructor(eventDepot, router, callback) {
         this.eventDepot = eventDepot; 
-
+        this.router = router;
         this.load = this.load.bind(this);
-        this.eventDepot.addListener("welcomeReady", this.load)
-
-        this.view = new WelcomeView(this.eventDepot);
+        this.view = new WelcomeView(this.eventDepot, this.router, () => { callback() });
     } 
 
     load() {
         this.view.load();
+    }
+
+    routeInitialRequest() {
+        this.view.routeInitialRequest();
     }
 
 }
