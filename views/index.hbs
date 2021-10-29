@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>nortonQuiz Login/Registration</title>
+
+    {{> headerStuff jQuery=true fontAwesome=false bootStrap=true }}
+
+</head>
+<body>
+
+    <div class="outerContainer">
+
+        <h2>{{ welcomeMessage }}</h2>
+
+        {{#if showLogin}}
+        <hr>
+        <h2>Login: </h2>
+        <form action="/login" method="post">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" value="Register">Submit</button>
+            </div>
+        </form>
+        {{^}}
+        {{/if}}
+
+        {{#if showRegistration}}
+        <hr>
+        <h2>New User Registration:</h2>
+        <form action="/register" method="post">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password">
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" value="Register">Submit</button>
+            </div>
+        </form>
+        {{^}}
+        {{/if}}
+    </div>
+
+</body>
+</html>

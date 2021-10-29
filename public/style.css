@@ -1,0 +1,11 @@
+label {
+    color: blue;
+}
+
+form label {
+    width: 100px;
+}
+
+.outerContainer {
+    margin: 40px;
+}
