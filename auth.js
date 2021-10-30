@@ -2,54 +2,32 @@
 const LocalStrategy = require('passport-local');
 const bcrypt        = require('bcrypt');
 const passport      = require('passport');
-const mongoose      = require('mongoose');
 
-module.exports = function (app) {
+module.exports = function (app, UserModel) {
 
-  const userSchema = mongoose.Schema({
+  passport.serializeUser((user, done) => {
+    done(null, user._id);
+  });
+  
+  passport.deserializeUser((id, done) => {
+      UserModel.findOne({_id: id}, (err, doc) => {
+        done(null, doc);
+      });
+  });
 
-    username: { type: String, required: true },
-    password: { type: String, required: true },
-    roles: [String]
-
-  })
-
-  const UserModel = mongoose.model('User', userSchema);
-
-  const CONNECTION_STRING = process.env.DB;
-  mongoose.connect(CONNECTION_STRING, { useMongoClient: true })
-    .then(
-      
-      () => {
-        passport.serializeUser((user, done) => {
-          done(null, user._id);
-        });
+  passport.use(new LocalStrategy(
+    function(username, password, done) {
+      UserModel.findOne({ username: username }, function (err, user) {
+        console.log('User '+ username +' attempted to log in.');
+        if (err) { return done(err, false); }
+        if (!user) { return done(null, false); }
         
-        passport.deserializeUser((id, done) => {
-            UserModel.findOne({_id: id}, (err, doc) => {
-              done(null, doc);
-            });
+        bcrypt.compare(password, user.password).then(success => {
+          if (!success) {
+            return (null, false);
+          } else return done(null, user);
         });
-      
-        passport.use(new LocalStrategy(
-          function(username, password, done) {
-            UserModel.findOne({ username: username }, function (err, user) {
-              console.log('User '+ username +' attempted to log in.');
-              if (err) { return done(err); }
-              if (!user) { return done(null, false); }
-              
-              bcrypt.compare(password, user.password).then(success => {
-                if (!success) {
-                  return (null, false);
-                } else return done(null, user);
-              });
-            });
-          }
-        ));
-      },
-
-      (err) => {
-          console.log('Database error: ' + err.message);
+      });
     }
-  )
+  ));
 }

@@ -2,7 +2,7 @@ label {
     color: blue;
 }
 
-form label {
+form label, form button {
     width: 100px;
 }
 

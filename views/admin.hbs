@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>nortonQuiz Admin Interface</title>
+
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true }}
+
+</head>
+<body>
+
+    <div class="outerContainer">
+
+        {{> navbar }}
+
+        {{#if standard}}
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-3">Main Admin Interface</h1>
+
+                    <div class="row">
+                        <div class="col-3">
+                        <form id="newQuiz" method="post" action="/quiz">
+                            <div class="form-group">
+                                <label for="quizName">Add a quiz:</label>
+                                <input type="text"
+                                    class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="">
+                                <small id="helpId" class="form-text text-muted">Enter Quiz Name</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            
+                        </form>
+                    </div>
+                    <div class="col-3">
+                        <form id='selectQuiz' action="/quiz" method="post">
+                            
+                            <div class="form-group">
+                                <label for="sel1">Select a Quiz:</label>
+                                <select class="form-control" id="sel1">
+                                {{#each quizzes}}
+                                    <option>{{quizName}}</option>
+                                {{/each}}
+                                </select>
+                                <small id="helpId2" class="form-text text-muted">Select a Quiz</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+        {{^}}
+
+        
+        {{/if}}
+
+    </div>
+
+</body>
+</html>

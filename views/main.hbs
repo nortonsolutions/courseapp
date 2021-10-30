@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>nortonQuiz Main Interface</title>
+
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true }}
+
+</head>
+<body>
+
+    <div class="outerContainer">
+
+        {{> navbar mainActive='active' }}
+
+        {{#if showWelcome}}
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-3">Welcome to QuizApp</h1>
+                    <p class="lead">Hello {{ username }}!  Select a Quiz from the Quiz tab</p>
+                    <hr class="my-2">
+                    <p>Copyright <i class="fas fa-copyright"></i> Norton 2021</p>
+                    <p class="lead">
+                        <a class="btn btn-primary btn-lg" href="/quiz" role="button">Take a quiz</a>
+                    </p>
+                </div>
+            </div>
+        {{^}}
+        {{/if}}
+
+    </div>
+
+</body>
+</html>

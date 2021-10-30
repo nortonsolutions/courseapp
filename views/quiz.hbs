@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>nortonQuiz Quiz Interface</title>
+
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true }}
+
+</head>
+<body>
+
+    <div class="outerContainer">
+
+        {{> navbar quizActive='active' }}
+
+        {{#if noQuiz}}
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-3">Main Quiz Interface</h1>
+                    
+                    <div class="col-3">
+
+                        <form id='selectQuiz' action="/quiz" method="post">
+                            
+                            <div class="form-group">
+                            <label for="sel1">Select a Quiz:</label>
+                            <select class="form-control" id="sel1">
+                            {{#each quizzes}}
+                                <option>{{quizName}}</option>
+                            {{/each}}
+                            </select>
+                            </div>
+                        
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        {{^}}
+
+
+        {{/if}}
+
+    </div>
+
+</body>
+</html>
