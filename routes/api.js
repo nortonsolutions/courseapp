@@ -32,7 +32,6 @@ module.exports = function (app, db) {
     })
   };
 
-
   app.route('/')
     .get((req,res) => {
       
@@ -97,52 +96,99 @@ module.exports = function (app, db) {
     .get(ensureAuthenticated, (req,res) => {
       res.render(process.cwd() + '/views/main.hbs', {
         showWelcome: true,
-        username: req.user.username
+        username: req.user.username,
+        admin: req.user.roles.includes('admin')
       });
     })
 
   app.route('/quiz')
     .get(ensureAuthenticated, (req,res) => {
 
-      let defaultOptions = {
+      let options = {
           noQuiz: true,
-          quizzes: []
+          quizzes: [],
+          admin: req.user.roles.includes('admin')
       }
-      res.render(process.cwd() + '/views/quiz.hbs', defaultOptions);
+
+      // Grab list of quizzes:
+      db.models.Quiz.find({}, 'name', (err,doc) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          options.quizzes = doc;
+          res.render(process.cwd() + '/views/quiz.hbs', options);
+        }
+      })
+    })
+
+
+
+  app.route('/admin')
+    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+      let options = {
+        admin: req.user.roles.includes('admin'),
+        feedback: req.query.feedback? req.query.feedback : ''
+      };
+      
+      // Grab list of quizzes:
+      db.models.Quiz.find({}, 'name', (err,doc) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          options.quizzes = doc
+          res.render(process.cwd() + '/views/admin.hbs', options);
+        }
+      })
     })
 
     .post(ensureAuthenticated, ensureAdmin, (req,res) => {
       
       let quizName = req.body.quizName;
-      
-      db.models.Quiz.create({ name: quizName }, (err,doc) => {
+      db.models.Quiz.create({ name: quizName }, (err, doc) => {
         if (err) {
           res.json({error: err.message});
-        } else res.json(doc);
+        } else {
+          res.json(doc);
+        }
       });
-
+    })
+    
+  app.route('/quizAdmin/:quizId')
+    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+      let quizId = req.params.quizId;
+      let options = {
+        admin: req.user.roles.includes('admin'),
+      };
+      
+      // Quiz details
+      db.models.Quiz.findOne({_id: quizId}, 'name', (err,quiz) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          options.quiz = quiz
+          res.render(process.cwd() + '/views/quizAdmin.hbs', options);
+        }
+      })
     })
 
-  app.route('/admin')
-    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
-      let options = {};
-      if (req.query.adminMode) {
-        switch (req.query.adminMode) {
-          case "standard":
-            options.standard = true;
-            break;
-        }
-      } else {
-        options.standard = true;
-      } 
+    .post(ensureAuthenticated, ensureAdmin, (req,res) => {
       
-      res.render(process.cwd() + '/views/admin.hbs', options);
     })
 
   app.route('/profile')
     .get(ensureAuthenticated, (req,res) => {
       res.render(process.cwd() + '/views/profile.hbs', {
       });
+    })
+
+  app.route('/api/quizzes')
+    // Provide a list of quizzes
+    .get((req,res) => {
+      db.models.Quiz.find({}, 'name', (err,doc) => {
+        if (err) {
+          res.json({error: err.message});
+        } else res.json(doc);
+      })
     })
 
 };

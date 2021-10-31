@@ -12,65 +12,73 @@
 
         {{> navbar }}
 
-        {{#if standard}}
-            <div class="jumbotron jumbotron-fluid">
-                <div id="adminInterface" class="container">
-                    <h1 class="display-3">Main Admin Interface</h1>
+        <div class="jumbotron jumbotron-fluid">
+            <div id="adminInterface" class="container">
+                <h1 class="display-3">Main Admin Interface</h1>
 
-                    <div class="row">
-                        <div class="col-3">
-                        <form id="newQuiz" method="post" action="/quiz">
+                <div class="row">
+                    <div class="col-3">
+                    <form id="newQuiz" method="post" action="/quiz">
+                        <div class="form-group">
+                            <label for="quizName">Add a quiz:</label>
+                            <input type="text"
+                                class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="">
+                            <small id="helpId" class="form-text text-muted">Enter Quiz Name</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        
+                    </form>
+                    </div>
+                    <div class="col-3">
+                        <form id='selectQuiz' action="/quiz" method="get">
+                            
                             <div class="form-group">
-                                <label for="quizName">Add a quiz:</label>
-                                <input type="text"
-                                    class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="">
-                                <small id="helpId" class="form-text text-muted">Enter Quiz Name</small>
+                                <label for="sel1">Select a Quiz:</label>
+                                <select class="form-control" id="sel1">
+                                {{#each quizzes}}
+                                    <option value="{{_id}}">{{name}}</option>
+                                {{/each}}
+                                </select>
+                                <small id="helpId2" class="form-text text-muted">Select a Quiz</small>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
-                            
                         </form>
-                        </div>
-                        <div class="col-3">
-                            <form id='selectQuiz' action="/quiz" method="get">
-                                
-                                <div class="form-group">
-                                    <label for="sel1">Select a Quiz:</label>
-                                    <select class="form-control" id="sel1">
-                                    {{#each quizzes}}
-                                        <option>{{quizName}}</option>
-                                    {{/each}}
-                                    </select>
-                                    <small id="helpId2" class="form-text text-muted">Select a Quiz</small>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <span class="text-primary" id="feedback"></span>
-
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-12">
+                        <span class="text-primary" id="feedback">{{feedback}}</span>
+                   </div>
+                </div>
             </div>
-        {{^}}
-
-        
-        {{/if}}
+        </div>
 
     </div>
 
     <script>
     
         document.getElementById('newQuiz').addEventListener('submit', (e) => {
-            let url = "/quiz";
+            let url = "/admin";
             let data = { quizName: e.target.elements.quizName.value }
-            handleFetch(url,data, (response) => {
-                document.getElementById('feedback').innerHTML = response;
+            handlePost(url, data, (response) => {
+                if (/error/.test(response)) {
+                    document.getElementById('feedback').innerHTML = response;
+                } else {
+                    window.location.href = '/admin?feedback=Success';
+                }
             });
 
             e.preventDefault();
         })
-    
+
+        document.getElementById('selectQuiz').addEventListener('submit', (e) => {
+            let quizId = e.target.elements.sel1.value;
+            let url = "/quizAdmin/" + quizId;
+            window.location.href = url;
+            e.preventDefault();
+        })
+
+
     </script>
 
 </body>

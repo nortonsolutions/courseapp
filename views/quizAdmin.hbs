@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>nortonQuiz Admin Interface</title>
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true }}
+
+</head>
+<body>
+
+    <div class="outerContainer">
+
+        {{> navbar }}
+
+        <div class="jumbotron jumbotron-fluid">
+            <div id="adminInterface" class="container">
+                <h2 class="display-3">{{quiz.name}}</h2>
+                <div class="row">
+                    <div class="col-6">
+                        <form class="d-none" id="questionDetail" method="post" action="/quizAdmin/{{quiz._id}}">
+                            <div class="form-group">
+                              <label for="question">Question:</label>
+                              <textarea class="form-control" name="question" id="question" rows="3"></textarea>
+                              <label for="question">Choices:</label>
+                              <table class="table">
+                                  <tbody>
+                                      <tr>
+                                          <td scope="row" width="10%">
+                                              <div class="form-check">
+                                                <div class="form-group">
+                                                <label for=""></label>
+                                                <select multiple class="form-control" name="" id="">
+                                                    <option></option>
+                                                    <option></option>
+                                                    <option></option>
+                                                </select>
+                                                </div>
+                                              </div>
+                                          </td>
+                                          <td></td>
+                                      </tr>
+                                      <tr>
+                                          <td scope="row"></td>
+                                          <td></td>
+                                      </tr>
+                                      <tr>
+                                          <td scope="row"></td>
+                                          <td></td>
+                                      </tr>
+                                      <tr>
+                                          <td scope="row"></td>
+                                          <td></td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                            </div>
+
+                        </form>
+                        <div class="row">
+                            <div class="col-4"><button id="btnNewQuestion" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> New</button></div>
+                            <div class="col-4 pr-1"><button id="btnSaveQuestion" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
+                            <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fas fa-eject    "></i>  Cancel</button></div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <table class="table table-striped table-inverse table-responsive">
+                            <thead class="thead-inverse">Questions
+                                <tr>
+                                    <th>Question</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each quiz.questions}}
+                                    <tr>
+                                        <td scope="row">{{question}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <span class="text-primary" id="feedback">{{feedback}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        showQuestionForm = () => {
+            document.getElementById('questionDetail').classList.remove('d-none');
+            document.getElementById('btnSaveQuestion').classList.remove('d-none');
+            document.getElementById('btnCancel').classList.remove('d-none');
+        }
+        
+        hideQuestionForm = () => {
+            document.getElementById('questionDetail').classList.add('d-none');
+            document.getElementById('btnSaveQuestion').classList.add('d-none');
+            document.getElementById('btnCancel').classList.add('d-none');
+        }
+
+        document.getElementById('btnNewQuestion').addEventListener('click', () => {
+            showQuestionForm();
+        })
+
+        document.getElementById('btnCancel').addEventListener('click', () => {
+            hideQuestionForm();
+        })
+    
+    </script>
+
+</body>
+</html>

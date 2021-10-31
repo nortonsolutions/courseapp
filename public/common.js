@@ -1,4 +1,4 @@
-fetchOptions = (data) => {
+postOptions = (data) => {
     return {
         method: 'POST',
         body: JSON.stringify(data),
@@ -6,8 +6,8 @@ fetchOptions = (data) => {
     }
 }
 
-handleFetch = (url, data, callback) => {
-    fetch(url, fetchOptions(data))
+handlePost = (url, data, callback) => {
+    fetch(url, postOptions(data))
     .then(response => response.json())
     .catch(error => {
         callback(JSON.stringify(error.message));
