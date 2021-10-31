@@ -1,3 +1,9 @@
+/**
+ * Database strategy - Norton 2021
+ * Based on Mongoose.
+ */
+
+
 module.exports = function (mongoose, callback) {
 
     const CONNECTION_STRING = process.env.DB;

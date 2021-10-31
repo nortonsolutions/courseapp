@@ -1,3 +1,8 @@
+/**
+ * Authentication strategy - Norton 2021
+ * Based on passport, passport-local, bcrypt;
+ * Assumes Mongoose-style UserModel.
+ */
 
 const LocalStrategy = require('passport-local');
 const bcrypt        = require('bcrypt');
