@@ -111,6 +111,18 @@ module.exports = function (app, db) {
       res.render(process.cwd() + '/views/quiz.hbs', defaultOptions);
     })
 
+    .post(ensureAuthenticated, ensureAdmin, (req,res) => {
+      
+      let quizName = req.body.quizName;
+      
+      db.models.Quiz.create({ name: quizName }, (err,doc) => {
+        if (err) {
+          res.json({error: err.message});
+        } else res.json(doc);
+      });
+
+    })
+
   app.route('/admin')
     .get(ensureAuthenticated, ensureAdmin, (req,res) => {
       let options = {};
