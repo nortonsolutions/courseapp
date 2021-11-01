@@ -1,5 +1,5 @@
 /*
-* Norton 2021
+* Norton 2021 - QuizApp
 *
 */
 
@@ -32,7 +32,9 @@ module.exports = function (app, db) {
     })
   };
 
+
   app.route('/')
+    // Get and render the index view
     .get((req,res) => {
       
       
@@ -47,10 +49,14 @@ module.exports = function (app, db) {
       res.render(process.cwd() + '/views/index.hbs', options);
     })
 
+
   app.route('/login')
+    // Login
     .post(passport.authenticate('local', { successRedirect: '/main', failureRedirect: '/?failedLogin=true' }))
 
+
   app.route('/register')
+    // Register a new user
     .post(
       (req, res, next) => {
         db.models.User.findOne({ username: req.body.username }, function(
@@ -84,15 +90,17 @@ module.exports = function (app, db) {
     );
 
   app.route('/logout')
+    // Logout
     .get((req,res) => {
-
       alertText = "";
       if (req.user) console.log("Logging out: " + req.user.username);
       req.logout();
       res.redirect('/');
     });
 
+
   app.route('/main')
+    // Get and render the main view:
     .get(ensureAuthenticated, (req,res) => {
       res.render(process.cwd() + '/views/main.hbs', {
         showWelcome: true,
@@ -101,8 +109,11 @@ module.exports = function (app, db) {
       });
     })
 
+
   app.route('/quiz')
-    .get(ensureAuthenticated, (req,res) => {
+
+  // Get and render the whole quiz view:
+  .get(ensureAuthenticated, (req,res) => {
 
       let options = {
           noQuiz: true,
@@ -110,7 +121,6 @@ module.exports = function (app, db) {
           admin: req.user.roles.includes('admin')
       }
 
-      // Grab list of quizzes:
       db.models.Quiz.find({}, 'name', (err,doc) => {
         if (err) {
           res.json({error: err.message});
@@ -124,6 +134,8 @@ module.exports = function (app, db) {
 
 
   app.route('/admin')
+
+    // Get the full admin view
     .get(ensureAuthenticated, ensureAdmin, (req,res) => {
       let options = {
         admin: req.user.roles.includes('admin'),
@@ -141,6 +153,7 @@ module.exports = function (app, db) {
       })
     })
 
+    // Post a new quiz  
     .post(ensureAuthenticated, ensureAdmin, (req,res) => {
       
       let quizName = req.body.quizName;
@@ -152,16 +165,48 @@ module.exports = function (app, db) {
         }
       });
     })
-    
-  app.route('/quizAdmin/:quizId')
-    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
-      let quizId = req.params.quizId;
+
+    // Grab list of quizzes for selectQuiz partial
+    app.route('/admin/quizzes')
+    .get(ensureAuthenticated, (req,res) => {
       let options = {
         admin: req.user.roles.includes('admin'),
       };
       
-      // Quiz details
-      db.models.Quiz.findOne({_id: quizId}, 'name', (err,quiz) => {
+      db.models.Quiz.find({}, 'name', (err,doc) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          options.quizzes = doc
+          res.render(process.cwd() + '/views/partials/selectQuiz.hbs', options);
+        }
+      })
+    })
+
+  app.route('/quizAdmin/:quizId')
+
+    // Get entire quizAdmin view for a quiz
+    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+      let quizId = req.params.quizId;
+
+
+      let newQuestion = {
+        type: 'multi',
+        question: '',
+        choices: [
+            { text: '', correct: false},
+            { text: '', correct: false},
+            { text: '', correct: false},
+            { text: '', correct: false}
+        ]
+      }
+
+      let options = {
+        admin: req.user.roles.includes('admin'),
+        currentQuestion: newQuestion
+      };
+
+      db.models.Quiz.findOne({_id: quizId}, 'name questions', (err,quiz) => {
         if (err) {
           res.json({error: err.message});
         } else {
@@ -171,24 +216,46 @@ module.exports = function (app, db) {
       })
     })
 
+    // Post new question for the quiz
     .post(ensureAuthenticated, ensureAdmin, (req,res) => {
-      
+      let quizId = req.params.quizId;
+      let newQuestion = req.body.newQuestion;
+      db.models.Quiz.findOne({_id: quizId}, (err,doc) => {
+        doc.questions = [...doc.questions, newQuestion];
+        doc.save((err,doc) => {
+          if (err) {
+            res.json({error: err.message});
+          } else {
+            res.json(doc);
+          }
+        })
+      })
     })
 
+  app.route('/quizAdmin/:quizId/questions')
+    
+    // Grab list of questions for questionList partial
+    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+      let quizId = req.params.quizId;
+      let options = {};
+
+      db.models.Quiz.findOne({_id: quizId}, 'name questions', (err,quiz) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          options.quiz = quiz
+          res.render(process.cwd() + '/views/partials/questionList.hbs', options);
+        }
+      })
+    })
+
+
   app.route('/profile')
+    // Get and render the whole profile view  
     .get(ensureAuthenticated, (req,res) => {
       res.render(process.cwd() + '/views/profile.hbs', {
       });
     })
 
-  app.route('/api/quizzes')
-    // Provide a list of quizzes
-    .get((req,res) => {
-      db.models.Quiz.find({}, 'name', (err,doc) => {
-        if (err) {
-          res.json({error: err.message});
-        } else res.json(doc);
-      })
-    })
 
 };

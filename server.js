@@ -36,6 +36,12 @@ database(mongoose, (db) => {
   
   app.use(cors({origin: '*'})); //For FCC testing purposes only
   
+  hbs.registerHelper("booleanCheckboxHelper", function(boolean) {
+    let str = "";
+    if (boolean) str = "checked";
+    return new hbs.SafeString(str);
+  });
+
   app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials'
   }));

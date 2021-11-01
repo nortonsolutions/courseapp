@@ -9,3 +9,7 @@ form label, form button {
 .outerContainer {
     margin: 40px;
 }
+
+.checkboxContainer {
+    padding: 5px 0px 5px 20px !important;
+}

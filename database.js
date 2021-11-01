@@ -12,7 +12,7 @@ module.exports = function (mongoose, callback) {
       type: { type: String, required: true, default: 'multi' },
       question: { type: String, required: true },
       choices: [{
-        text: { type: String, required: true },
+        text: String,
         correct: Boolean
       }]
     })

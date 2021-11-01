@@ -1,0 +1,18 @@
+                        <form class="d-none" id="questionDetail" method="post" action="/quizAdmin/{{quiz._id}}">
+                            <div class="form-group">
+                              <label for="question">Question:</label>
+                              <textarea class="form-control" name="question" id="question" rows="2" placeholder="Enter question..."></textarea>
+                              <label for="question">Choices:</label>
+                                {{#each currentQuestion.choices}}
+                                <div class="row">
+                                    <div class="col-1 checkboxContainer" >
+                                        <input type="checkbox" {{{booleanCheckboxHelper currentQuestion.correct}}}>
+                                    </div>
+                                    <div class="col-11">
+                                        <input type="text" class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">
+                                    </div>
+                                </div>
+                                {{/each}}
+                            </div>
+
+                        </form>

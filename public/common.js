@@ -16,3 +16,20 @@ handlePost = (url, data, callback) => {
         callback(JSON.stringify(response));
     })
 }
+
+getOptions = () => {
+    return {
+        method: 'GET',
+    }
+}
+
+handleGet = (url, callback) => {
+    fetch(url, getOptions())
+    .then(response => response.text())
+    .catch(error => {
+        callback(error.message);
+    })
+    .then(response => { 
+        callback(response);
+    })
+}
