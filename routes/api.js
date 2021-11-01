@@ -9,6 +9,18 @@ var expect            = require('chai').expect;
 var bcrypt            = require('bcrypt');
 var passport          = require('passport');
 
+const blankQuestion = {
+  _id: 0,
+  type: 'multi',
+  question: '',
+  choices: [
+      { text: '', correct: false},
+      { text: '', correct: false},
+      { text: '', correct: false},
+      { text: '', correct: false}
+  ]
+}
+
 module.exports = function (app, db) {
 
   var alertText = "";
@@ -189,21 +201,9 @@ module.exports = function (app, db) {
     .get(ensureAuthenticated, ensureAdmin, (req,res) => {
       let quizId = req.params.quizId;
 
-
-      let newQuestion = {
-        type: 'multi',
-        question: '',
-        choices: [
-            { text: '', correct: false},
-            { text: '', correct: false},
-            { text: '', correct: false},
-            { text: '', correct: false}
-        ]
-      }
-
       let options = {
         admin: req.user.roles.includes('admin'),
-        currentQuestion: newQuestion
+        currentQuestion: blankQuestion
       };
 
       db.models.Quiz.findOne({_id: quizId}, 'name questions', (err,quiz) => {
@@ -216,12 +216,28 @@ module.exports = function (app, db) {
       })
     })
 
-    // Post new question for the quiz
+    // Post question for the quiz
     .post(ensureAuthenticated, ensureAdmin, (req,res) => {
       let quizId = req.params.quizId;
-      let newQuestion = req.body.newQuestion;
+      let question = req.body.question;
       db.models.Quiz.findOne({_id: quizId}, (err,doc) => {
-        doc.questions = [...doc.questions, newQuestion];
+        
+        if (question._id == 0) {
+          // add new question
+          doc.questions = [...doc.questions, { 
+            question: question.question, 
+            choices: question.choices,
+            type: question.type
+          }];
+
+        } else {
+          // update existing question
+          var subDoc = doc.questions.id(question._id);
+          subDoc.question = question.question;
+          subDoc.choices = question.choices;
+          subDoc.type = question.type;
+        }
+        
         doc.save((err,doc) => {
           if (err) {
             res.json({error: err.message});
@@ -249,6 +265,28 @@ module.exports = function (app, db) {
       })
     })
 
+  app.route('/quizAdmin/:quizId/:questionId')
+
+    // Grab question details for questionDetail partial
+    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+      let questionId = req.params.questionId;
+      let quizId = req.params.quizId;
+      let options = {}
+
+      if (questionId == 0) {
+        options.currentQuestion = blankQuestion;
+        res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
+      } else {
+        db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+          if (err) {
+            res.json({error: err.message});
+          } else {
+            options.currentQuestion = quiz.questions.find(el => el._id == questionId);
+            res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
+          }
+        })
+      }
+    })
 
   app.route('/profile')
     // Get and render the whole profile view  
@@ -256,6 +294,5 @@ module.exports = function (app, db) {
       res.render(process.cwd() + '/views/profile.hbs', {
       });
     })
-
 
 };

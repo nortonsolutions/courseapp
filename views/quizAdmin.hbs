@@ -15,16 +15,19 @@
         <div class="jumbotron jumbotron-fluid">
             <div id="adminInterface" class="container">
                 <div id='quizId' class='d-none'>{{quiz._id}}</div>
-                <h2 class="display-3">{{quiz.name}}</h2>
+                <div class="row">
+                    <div class="col-9"><h2 class="display-3">{{quiz.name}}</h2></div>
+                    <div class="col-3 mt-5"><button id="deleteQuiz" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete Quiz</button></div>
+                </div>
                 <div class="row">
                     <div class="col-6">
-                        <div id="questionDetailContainer">
+                        <form class="d-none" id="questionDetail" method="post" action="/quizAdmin/{{quiz._id}}">
                             {{> questionDetail }}
-                        </div>
+                        </form>
                         <div class="row">
-                            <div class="col-4"><button id="btnNewQuestion" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> New</button></div>
-                            <div class="col-4 pr-1"><button id="btnSaveQuestion" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
-                            <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fas fa-eject    "></i>  Cancel</button></div>
+                            <div class="col-4"><button id="btnNewQuestion" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
+                            <div class="col-4 pr-1"><button id="btnSaveQuestion" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i></button></div>
+                            <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fas fa-backspace    "></i></button></div>
                         </div>
                     </div>
                     <div class="col-6">
@@ -45,59 +48,7 @@
 
     </div>
 
-    <script>
-
-        showQuestionForm = () => {
-            document.getElementById('questionDetail').classList.remove('d-none');
-            document.getElementById('btnSaveQuestion').classList.remove('d-none');
-            document.getElementById('btnCancel').classList.remove('d-none');
-        }
-        
-        hideQuestionForm = () => {
-            document.getElementById('questionDetail').classList.add('d-none');
-            document.getElementById('btnSaveQuestion').classList.add('d-none');
-            document.getElementById('btnCancel').classList.add('d-none');
-        }
-
-        document.getElementById('btnNewQuestion').addEventListener('click', () => {
-            showQuestionForm();
-        })
-
-        document.getElementById('btnCancel').addEventListener('click', () => {
-            hideQuestionForm();
-        })
-
-        document.getElementById('btnSaveQuestion').addEventListener('click', (e) => {
-            
-            let formElements = document.getElementById('questionDetail').elements;
-            // console.log(formElements);
-
-            let newQuestion = {
-                type: 'multi',
-                question: formElements[0].value,
-                choices: [
-                    { text: formElements[2].value, correct: formElements[1].checked},
-                    { text: formElements[4].value, correct: formElements[3].checked},
-                    { text: formElements[6].value, correct: formElements[5].checked},
-                    { text: formElements[8].value, correct: formElements[7].checked}
-                ]
-            }
-
-            let quizId = document.getElementById('quizId').innerText;
-            handlePost('/quizAdmin/' + quizId, {newQuestion}, (response) => {
-                if (/error/.test(response)) {
-                    document.getElementById('feedback').innerHTML = response;
-                } else {
-                    document.getElementById('feedback').innerHTML = "Successfully added new question.";
-                    document.getElementById('questionDetail').reset();
-                    handleGet('/quizAdmin/' + quizId + '/questions', (response) => {
-                        document.getElementById('questionListContainer').innerHTML = response;
-                    })
-                }
-            });
-        });
-
-    </script>
+    <script src="/viewScripts/quizAdminScripts.js"></script>
 
 </body>
 </html>
