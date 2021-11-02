@@ -57,8 +57,14 @@ database(mongoose, (db) => {
     return new hbs.SafeString(str);
   });
 
-  hbs.registerHelper("imageLocationHelper", function(string) {
-    return string.length>0
+  hbs.registerHelper("plusOne", function(value) {
+    return value+1;
+  });
+
+  hbs.registerHelper("limitLength", function(string) {
+    if (string.length > 24) {
+      return (string.substring(0,24) + '...');
+    } else return string;
   });
 
   app.engine('hbs', hbs.express4({

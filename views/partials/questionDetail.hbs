@@ -14,8 +14,16 @@
                                 {{/each}}
                                 <input class="d-none" type="text" name="questionId" id="questionId" value="{{currentQuestion._id}}">
                                 {{#if currentQuestion.imageLocation}}
-                                  <img width="200px" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image">        
-                                {{/if}}  
-                                <input type="file" name="file" id="file">
+                                  <div class="col-12">
+                                    <div class="row"><label style="width: 100%" for="currentImage">Current image:</label></div>
+                                    <div class="row"><img id="currentImage" width="200px" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"></div>
+                                  </div>
+                                {{/if}}
+                                {{!-- <input type="file" name="file" id="file" accept=".jpg, .jpeg, .png"> --}}
                                 
+                                <div class="form-group">
+                                  <label style="width: 100%" for="file">Upload new image:</label>
+                                  <input type="file" class="form-control-file" name="file" id="file" placeholder="Upload image" aria-describedby="fileHelpId" accept=".jpg, .jpeg, .png">
+                                </div>
+
                             </div>

@@ -306,6 +306,30 @@ module.exports = function (app, db, upload) {
       }
     })
 
+    // Remove the question
+    .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+      let questionId = req.params.questionId;
+      let quizId = req.params.quizId;
+      let options = {}
+
+        db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+          if (err) {
+            res.json({error: err.message});
+          } else {
+
+            var index = quiz.questions.findIndex((el) => { return el._id == questionId})
+            quiz.questions.splice(index, 1);
+            quiz.save(err => {
+              if (err) {
+                res.json({error: err.message});
+              } else {
+                res.json({response: 'Successfully removed question.'});
+              }
+            })
+          }
+        })
+    })
+
   app.route('/profile')
     // Get and render the whole profile view  
     .get(ensureAuthenticated, (req,res) => {

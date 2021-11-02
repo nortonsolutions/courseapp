@@ -12,7 +12,7 @@
 
         {{> navbar }}
 
-        <div class="jumbotron jumbotron-fluid">
+        <div class="jumbotron jumbotron-fluid limit-mt">
             <div id="adminInterface" class="container">
                 <div id='quizId' class='d-none'>{{quiz._id}}</div>
                 <div class="row">
@@ -25,9 +25,9 @@
                             {{> questionDetail }}
                         </form>
                         <div class="row">
-                            <div class="col-4"><button id="btnNewQuestion" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i></button></div>
-                            <div class="col-4 pr-1"><button id="btnSaveQuestion" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i></button></div>
-                            <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fas fa-backspace    "></i></button></div>
+                            <div class="col-4"><button id="btnNewQuestion" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></div>
+                            <div class="col-4 pr-1"><button id="btnSaveQuestion" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
+                            <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fas fa-backspace"></i> Cancel</button></div>
                         </div>
                     </div>
                     <div class="col-6">

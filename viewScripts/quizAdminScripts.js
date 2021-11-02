@@ -4,7 +4,7 @@
         
         applyQuestionListHandlers = () => {
 
-            let questions = document.querySelectorAll('#questionList li');
+            let questions = document.querySelectorAll('#questionList .question');
             Array.from(questions).forEach(question => {
                 question.addEventListener('click', (e) => {
                     currentQuestionId = e.target.id;
@@ -12,6 +12,29 @@
                         showQuestionForm();
                         document.getElementById('questionDetail').innerHTML = response;
                     })
+                })
+            })
+
+            let deleteQuestions = document.querySelectorAll('#questionList .deleteQuestion');
+            Array.from(deleteQuestions).forEach(deleteQuestion => {
+                deleteQuestion.addEventListener('click', (e) => {
+                    if (confirm('Are you sure you want to delete this question?')) {
+
+                        questionIdToDelete = e.target.parentNode.querySelector('div:nth-child(2)').id;
+                        handleDelete('/quizAdmin/' + currentQuizId + '/' + questionIdToDelete, (response) => {
+                            rerenderQuestionList();
+                            document.getElementById('feedback').innerHTML = response;
+
+                            if (currentQuestionId == questionIdToDelete) {
+                                currentQuestionId = 0;
+                                document.getElementById('questionDetail').reset();
+                                rerenderQuestionDetail(() => {
+                                    hideQuestionForm();
+                                });
+                            }
+                        })
+                    }
+                    e.stopPropagation();
                 })
             })
         }
@@ -29,8 +52,11 @@
         }
 
         document.getElementById('btnNewQuestion').addEventListener('click', () => {
-            document.getElementById('feedback').innerHTML = 'Enter question details.';
-            showQuestionForm();
+            currentQuestionId = 0;
+            rerenderQuestionDetail(() => {
+                document.getElementById('feedback').innerHTML = 'Enter question details.';
+                showQuestionForm();
+            });
         })
 
         document.getElementById('btnCancel').addEventListener('click', () => {
@@ -45,7 +71,6 @@
         document.getElementById('btnSaveQuestion').addEventListener('click', (e) => {
             
             let formElements = document.getElementById('questionDetail').elements;
-            // console.log(formElements);
 
             let questionJson = {
                 question: formElements[0].value,
@@ -58,20 +83,6 @@
                 _id: formElements[9].value,
                 type: 'multi'
             }
-
-            // handlePost('/quizAdmin/' + currentQuizId, {question}, (response) => {
-            //     if (/error/.test(response)) {
-            //         document.getElementById('feedback').innerHTML = response;
-            //     } else {
-            //         currentQuestionId = 0;
-            //         document.getElementById('feedback').innerHTML = "Successfully updated question.";
-            //         document.getElementById('questionDetail').reset();
-            //         rerenderQuestionList();
-            //         rerenderQuestionDetail(() => {
-            //             hideQuestionForm();
-            //         });
-            //     }
-            // });
 
             var formData = new FormData(document.getElementById('questionDetail'));
             formData.append('questionJson', JSON.stringify(questionJson));

@@ -1,5 +1,6 @@
 label {
     color: blue;
+    margin: 8px 0px 0px !important;
 }
 
 form label, form button {
@@ -12,4 +13,21 @@ form label, form button {
 
 .checkboxContainer {
     padding: 5px 0px 5px 20px !important;
+}
+
+.limit-mt {
+    padding-top: 10px !important;
+}
+
+#questionList .question:hover, input[type="checkbox"], .deleteQuestion {
+    cursor: pointer;
+}
+
+.deleteQuestion {
+    margin: 0px 0px 2px !important;
+
+}
+
+i, path, svg {
+    pointer-events: none !important;
 }

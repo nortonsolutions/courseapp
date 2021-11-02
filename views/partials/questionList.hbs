@@ -1,6 +1,11 @@
                         <label>Questions:</label>
-                        <ol id="questionList">
+                        <div class="col" id="questionList">
                             {{#each quiz.questions}}
-                            <li class="question" id={{_id}}>{{question}}</li>
+                            <div class="row">
+                                <div class="col-1">{{{plusOne @index}}}</div>
+                                <div class="col-8 question" id={{_id}}>{{{limitLength question}}}</div>
+                                <div class="col-2 deleteQuestion text-danger text-center"><span class="fas fa-minus-circle"></span></div>
+
+                            </div>
                             {{/each}}
-                        </ol>
+                        </div>
