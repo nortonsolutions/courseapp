@@ -47,7 +47,7 @@
             let formElements = document.getElementById('questionDetail').elements;
             // console.log(formElements);
 
-            let question = {
+            let questionJson = {
                 question: formElements[0].value,
                 choices: [
                     { text: formElements[2].value, correct: formElements[1].checked},
@@ -59,7 +59,24 @@
                 type: 'multi'
             }
 
-            handlePost('/quizAdmin/' + currentQuizId, {question}, (response) => {
+            // handlePost('/quizAdmin/' + currentQuizId, {question}, (response) => {
+            //     if (/error/.test(response)) {
+            //         document.getElementById('feedback').innerHTML = response;
+            //     } else {
+            //         currentQuestionId = 0;
+            //         document.getElementById('feedback').innerHTML = "Successfully updated question.";
+            //         document.getElementById('questionDetail').reset();
+            //         rerenderQuestionList();
+            //         rerenderQuestionDetail(() => {
+            //             hideQuestionForm();
+            //         });
+            //     }
+            // });
+
+            var formData = new FormData(document.getElementById('questionDetail'));
+            formData.append('questionJson', JSON.stringify(questionJson));
+
+            handleFormPost('/quizAdmin/' + currentQuizId, formData, (response) => {
                 if (/error/.test(response)) {
                     document.getElementById('feedback').innerHTML = response;
                 } else {
@@ -68,14 +85,19 @@
                     document.getElementById('questionDetail').reset();
                     rerenderQuestionList();
                     rerenderQuestionDetail(() => {
-                        hideQuestionForm()
+                        hideQuestionForm();
                     });
                 }
-            });
+            })
         });
 
-        document.getElementById('deleteQuiz').addEventListener(e => {
+        document.getElementById('deleteQuiz').addEventListener('click', (e) => {
             
+            if (confirm('Are you sure you want to delete this quiz?')) {
+                handleDelete('/quizAdmin/' + currentQuizId, (response) => {
+                    window.location.href = encodeURI('/admin?feedback=' + JSON.parse(response).response);
+                })
+            }
         })
 
         rerenderQuestionList = (callback) => {

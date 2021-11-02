@@ -8,6 +8,8 @@ var express     = require('express');
 var session     = require('express-session');
 var bodyParser  = require('body-parser');
 var cors        = require('cors');
+var fs          = require('fs');
+var multer      = require('multer');
 
 var auth              = require('./auth.js');
 var apiRoutes         = require('./routes/api.js');
@@ -16,6 +18,18 @@ var passport          = require('passport');
 var hbs               = require('express-hbs');
 
 const mongoose          = require('mongoose');
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
+// require and use "multer"...
+var upload = multer({ storage: storage });
 
 
 // For unit and functional testing with Chai later:
@@ -43,6 +57,10 @@ database(mongoose, (db) => {
     return new hbs.SafeString(str);
   });
 
+  hbs.registerHelper("imageLocationHelper", function(string) {
+    return string.length>0
+  });
+
   app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials'
   }));
@@ -67,7 +85,7 @@ database(mongoose, (db) => {
   
   auth(app, db.models.User);
   
-  apiRoutes(app, db);
+  apiRoutes(app, db, upload);
 
   //404 Not Found Middleware
   app.use(function(req, res, next) {

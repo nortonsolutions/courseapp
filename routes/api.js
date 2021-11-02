@@ -18,10 +18,11 @@ const blankQuestion = {
       { text: '', correct: false},
       { text: '', correct: false},
       { text: '', correct: false}
-  ]
+  ],
+  imageLocation: ''
 }
 
-module.exports = function (app, db) {
+module.exports = function (app, db, upload) {
 
   var alertText = "";
 
@@ -60,7 +61,6 @@ module.exports = function (app, db) {
 
       res.render(process.cwd() + '/views/index.hbs', options);
     })
-
 
   app.route('/login')
     // Login
@@ -178,8 +178,8 @@ module.exports = function (app, db) {
       });
     })
 
-    // Grab list of quizzes for selectQuiz partial
-    app.route('/admin/quizzes')
+  // Grab list of quizzes for selectQuiz partial
+  app.route('/admin/quizzes')
     .get(ensureAuthenticated, (req,res) => {
       let options = {
         admin: req.user.roles.includes('admin'),
@@ -217,36 +217,54 @@ module.exports = function (app, db) {
     })
 
     // Post question for the quiz
-    .post(ensureAuthenticated, ensureAdmin, (req,res) => {
-      let quizId = req.params.quizId;
-      let question = req.body.question;
-      db.models.Quiz.findOne({_id: quizId}, (err,doc) => {
-        
-        if (question._id == 0) {
-          // add new question
-          doc.questions = [...doc.questions, { 
-            question: question.question, 
-            choices: question.choices,
-            type: question.type
-          }];
+    .post(
+      ensureAuthenticated, 
+      ensureAdmin, 
+      upload.single('file'), // req.file
+      (req,res) => {
+        let quizId = req.params.quizId;
+        let question = JSON.parse(req.body.questionJson);
+        db.models.Quiz.findOne({_id: quizId}, (err,doc) => {
+          
+          if (question._id == 0) {
+            // add new question
+            doc.questions = [...doc.questions, { 
+              question: question.question, 
+              choices: question.choices,
+              type: question.type,
+              imageLocation: req.file? req.file.originalname: ''
+            }];
 
-        } else {
-          // update existing question
-          var subDoc = doc.questions.id(question._id);
-          subDoc.question = question.question;
-          subDoc.choices = question.choices;
-          subDoc.type = question.type;
-        }
-        
-        doc.save((err,doc) => {
-          if (err) {
-            res.json({error: err.message});
           } else {
-            res.json(doc);
+            // update existing question
+            var subDoc = doc.questions.id(question._id);
+            subDoc.question = question.question;
+            subDoc.choices = question.choices;
+            subDoc.type = question.type;
+            subDoc.imageLocation = req.file? req.file.originalname: ''
           }
+          
+          doc.save((err,doc) => {
+            if (err) {
+              res.json({error: err.message});
+            } else {
+              res.json(doc);
+            }
+          })
         })
       })
-    })
+
+    .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+      let quizId = req.params.quizId;
+      db.models.Quiz.remove({_id: quizId}, (err) => {
+        if (err) {
+          res.json({response: err.message});
+        } else {
+          res.json({response: 'Successfully removed quiz.'});
+        }
+      });
+      
+    })  
 
   app.route('/quizAdmin/:quizId/questions')
     

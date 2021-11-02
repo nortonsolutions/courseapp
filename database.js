@@ -14,7 +14,8 @@ module.exports = function (mongoose, callback) {
       choices: [{
         text: String,
         correct: Boolean
-      }]
+      }],
+      imageLocation: String
     })
 
 
