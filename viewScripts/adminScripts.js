@@ -17,7 +17,7 @@ document.getElementById('newQuiz').addEventListener('submit', (e) => {
 })
 
 document.getElementById('selectQuiz').addEventListener('submit', (e) => {
-    let quizId = e.target.elements.sel1.value;
+    let quizId = e.target.elements.quizName.value;
     let url = "/quizAdmin/" + quizId;
     window.location.href = url;
     e.preventDefault();

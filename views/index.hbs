@@ -11,47 +11,75 @@
 
     <div class="outerContainer">
 
-        <h2>{{ welcomeMessage }}</h2>
+        <h2>{{ welcomeMessage }}<img width="100px" src="/public/favicon.ico" alt="QuizApp"></h2>
 
         {{#if showLogin}}
         <hr>
-        <h2>Login: </h2>
-        <form action="/login" method="post">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username">
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password">
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary" value="Register">Submit</button>
-                <span id="alertText" class="text-primary pl-3">{{ alertText }}</span>
-            </div>
-        </form>
-        {{^}}
+        <div id="loginForm">
+            <h4>Login: </h4>
+            <form action="/login" method="post">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username">
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" value="Register">Submit</button>
+                    <span id="alertText" class="text-primary pl-3">{{ alertText }}</span>
+                </div>
+            </form>
+            <div id="newUser"><small>New User?</small></div>
+        </div>
+
+
+        {{else}}
+            <span>Logins are disabled temporarily.</span>
         {{/if}}
 
-        {{#if showRegistration}}
-        <hr>
-        <h2>New User Registration:</h2>
-        <form action="/register" method="post">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username">
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password">
-            </div>
-            <div>
-                <button type="submit" class="btn btn-primary" value="Register">Submit</button>
-            </div>
-        </form>
-        {{^}}
-        {{/if}}
+        <div id="newUserRegistrationForm" class="d-none">
+            <h4>New User Registration:</h4>
+            <form action="/register" method="post">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username">
+                </div>
+                <div>
+                    <label for="firstname">First name:</label>
+                    <input type="text" id="firstname" name="firstname">
+                </div>
+                <div>
+                    <label for="surname">Last name:</label>
+                    <input type="text" id="surname" name="surname">
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" id="password">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" value="Register">Submit</button>
+                </div>
+            <div id="login"><small>Back</small></div>                
+            </form>
+
+        </div>
+
     </div>
+
+    <script>
+        document.getElementById('newUser').addEventListener('click', (e) => {
+            document.getElementById('loginForm').classList.add('d-none');
+            document.getElementById('newUserRegistrationForm').classList.remove('d-none');
+        })
+
+        document.getElementById('login').addEventListener('click', (e) => {
+            document.getElementById('loginForm').classList.remove('d-none');
+            document.getElementById('newUserRegistrationForm').classList.add('d-none');
+        })
+
+    </script>
 
 </body>
 </html>

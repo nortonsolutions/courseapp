@@ -13,35 +13,24 @@
 
         {{> navbar quizActive='active' }}
 
-        {{#if noQuiz}}
-            <div class="jumbotron jumbotron-fluid">
+        <main id="quizMain">
+            <div class="limit-mt jumbotron jumbotron-fluid">
                 <div class="container">
-                    <h1 class="display-3">Main Quiz Interface</h1>
+                    <h1 class="display-4">Main Quiz Interface</h1>
                     
                     <div class="col-3">
-
-                        <form id='selectQuiz' action="/quiz" method="post">
-                            
-                            <div class="form-group">
-                            <label for="sel1">Select a Quiz:</label>
-                            <select class="form-control" id="sel1">
-                            {{#each quizzes}}
-                                <option value="{{id}}">{{name}}</option>
-                            {{/each}}
-                            </select>
-                            </div>
-                        
-                        </form>
-
+                        <form id='selectQuiz' action="/quiz" method="get">
+                            {{> selectQuiz }}                            
+                       </form>
                     </div>
+
                 </div>
             </div>
-        {{^}}
-
-
-        {{/if}}
+        </main>
 
     </div>
+
+    <script src="/viewScripts/quizScripts.js"></script>
 
 </body>
 </html>

@@ -53,7 +53,7 @@ module.exports = function (app, db, upload) {
       
       let options = {
         welcomeMessage: "Welcome to QuizApp!",
-        showRegistration: true,
+        showRegistration: false,
         showLogin: true
       }
 
@@ -82,7 +82,12 @@ module.exports = function (app, db, upload) {
           } else {
             bcrypt.hash(req.body.password, 12).then(hash => {
               db.models.User.create(
-                { username: req.body.username, password: hash },
+                { 
+                  username: req.body.username, 
+                  password: hash,
+                  surname: req.body.surname,
+                  firstname: req.body.firstname
+                },
                 (err, doc) => {
                   if (err) {
                     res.redirect("/");
@@ -116,7 +121,7 @@ module.exports = function (app, db, upload) {
     .get(ensureAuthenticated, (req,res) => {
       res.render(process.cwd() + '/views/main.hbs', {
         showWelcome: true,
-        username: req.user.username,
+        user: req.user,
         admin: req.user.roles.includes('admin')
       });
     })
@@ -128,8 +133,7 @@ module.exports = function (app, db, upload) {
   .get(ensureAuthenticated, (req,res) => {
 
       let options = {
-          noQuiz: true,
-          quizzes: [],
+          currentQuiz: '',
           admin: req.user.roles.includes('admin')
       }
 
@@ -143,6 +147,28 @@ module.exports = function (app, db, upload) {
       })
     })
 
+  app.route('/quiz/:quizId/:index')
+
+  // Get and render the quiz question:
+  .get(ensureAuthenticated, (req,res) => {
+
+      let quizId = req.params.quizId;
+      let options = {
+          currentQuizId: req.params.quizId,
+          currentQuestionNumber: Number(req.params.index) + 1,
+          admin: req.user.roles.includes('admin')
+      }
+
+      db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          options.quizName = quiz.name;
+          options.currentQuestion = quiz.questions[req.params.index];
+          res.render(process.cwd() + '/views/partials/quizActive.hbs', options);
+        }
+      })
+    })
 
 
   app.route('/admin')

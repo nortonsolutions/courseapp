@@ -19,7 +19,11 @@ form label, form button {
     padding-top: 10px !important;
 }
 
-#questionList .question:hover, input[type="checkbox"], .deleteQuestion {
+#questionList .question:hover, 
+input[type="checkbox"], 
+.deleteQuestion, 
+#newUser, 
+#login {
     cursor: pointer;
 }
 

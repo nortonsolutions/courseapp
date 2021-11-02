@@ -21,7 +21,8 @@ module.exports = function (mongoose, callback) {
 
     const quizSchema = mongoose.Schema({
       name: { type: String, required: true, unique: true },
-      questions: {type: [quizQuestionSchema], default: []}
+      questions: {type: [quizQuestionSchema], default: []},
+      decription: String
     })
 
     const QuizModel = mongoose.model('Quiz', quizSchema);
@@ -37,12 +38,14 @@ module.exports = function (mongoose, callback) {
       quizName: { type: String, required: true },
       questions: [userQuizQuestionSchema]
     })
-    
+
     const userSchema = mongoose.Schema({
       username: { type: String, required: true },
       password: { type: String, required: true },
       roles: {type: [String], default: ['student']},
-      quizzes: {type: [userQuizSchema], default: []}
+      quizzes: {type: [userQuizSchema], default: []},
+      firstname: String,
+      surname: String
     })
     
     const UserModel = mongoose.model('User', userSchema);
