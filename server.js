@@ -13,6 +13,7 @@ var multer      = require('multer');
 
 var auth              = require('./auth.js');
 var apiRoutes         = require('./routes/api.js');
+var hbsHelpers        = require('./public/handlebarsHelpers.js')
 var helmet            = require('helmet');
 var passport          = require('passport');
 var hbs               = require('express-hbs');
@@ -51,21 +52,7 @@ database(mongoose, (db) => {
   
   app.use(cors({origin: '*'})); //For FCC testing purposes only
   
-  hbs.registerHelper("booleanCheckboxHelper", function(boolean) {
-    let str = "";
-    if (boolean) str = "checked";
-    return new hbs.SafeString(str);
-  });
-
-  hbs.registerHelper("plusOne", function(value) {
-    return value+1;
-  });
-
-  hbs.registerHelper("limitLength", function(string) {
-    if (string.length > 24) {
-      return (string.substring(0,24) + '...');
-    } else return string;
-  });
+  hbsHelpers(hbs);
 
   app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials'

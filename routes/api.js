@@ -22,9 +22,13 @@ const blankQuestion = {
   imageLocation: ''
 }
 
+
 module.exports = function (app, db, upload) {
 
   var alertText = "";
+
+  // Allow test reviews?
+  var allowTestReviews = true;
 
   // ensureAuthenticated
   const ensureAuthenticated = (req,res,next) => {
@@ -129,12 +133,13 @@ module.exports = function (app, db, upload) {
 
   app.route('/quiz')
 
-  // Get and render the whole quiz view:
-  .get(ensureAuthenticated, (req,res) => {
+    // Get and render the whole quiz view:
+    .get(ensureAuthenticated, (req,res) => {
 
       let options = {
           currentQuiz: '',
-          admin: req.user.roles.includes('admin')
+          admin: req.user.roles.includes('admin'),
+          allowTestReviews: allowTestReviews
       }
 
       db.models.Quiz.find({}, 'name', (err,doc) => {
@@ -149,14 +154,15 @@ module.exports = function (app, db, upload) {
 
   app.route('/quiz/:quizId/:index')
 
-  // Get and render the quiz question:
-  .get(ensureAuthenticated, (req,res) => {
+    // Get and render the quiz question:
+    .get(ensureAuthenticated, (req,res) => {
 
       let quizId = req.params.quizId;
       let options = {
           currentQuizId: req.params.quizId,
           currentQuestionNumber: Number(req.params.index) + 1,
-          admin: req.user.roles.includes('admin')
+          admin: req.user.roles.includes('admin'),
+          showAnswers: req.query.showAnswers == "true"
       }
 
       db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
@@ -164,12 +170,72 @@ module.exports = function (app, db, upload) {
           res.json({error: err.message});
         } else {
           options.quizName = quiz.name;
+          options.totalQuestions = quiz.questions.length;
           options.currentQuestion = quiz.questions[req.params.index];
           res.render(process.cwd() + '/views/partials/quizActive.hbs', options);
         }
       })
     })
 
+
+  
+  app.route('/quiz/grade/:quizId')
+    .post(ensureAuthenticated, (req,res) => {
+  
+      let quizId = req.params.quizId;
+      let userAnswers = req.body.userAnswers;
+  
+      db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+
+          db.models.User.findOne({_id: req.user._id}, (err,user) => {
+            if (err) {
+              res.json({error: err.message});
+            } else {
+              
+              var totalQuestions = quiz.questions.length;
+              var totalMissed = 0;
+
+              userAnswers.forEach(userAnswer => {
+                
+                let correctAnswer = true;
+
+                // Is the answer correct?  Compare against the quizId/questionId
+                var question = quiz.questions.id(userAnswer.questionId);
+                var wrong = question.choices.reduce((total, current, index) => {
+                  return total + (current.correct != userAnswer.answer[index]);
+                }, 0)
+        
+                // Update the userAnswer
+                if (wrong > 0) {
+                  correctAnswer = false;
+                  totalMissed++;
+                }
+                userAnswer.correct = correctAnswer;
+
+              })
+              let score = (totalQuestions - totalMissed) / totalQuestions;
+
+              user.quizzes = [...user.quizzes, {
+                quizId: quizId,
+                answers: userAnswers,
+                score: score
+              }];
+
+              user.save((err,doc) => {
+                if (err) {
+                  res.json({feedback: err.message});
+                } else {
+                  res.json({feedback: "You scored " + score*100 + "%"});
+                }
+              })
+            }
+          })
+        }
+      });
+    });
 
   app.route('/admin')
 
@@ -208,7 +274,7 @@ module.exports = function (app, db, upload) {
   app.route('/admin/quizzes')
     .get(ensureAuthenticated, (req,res) => {
       let options = {
-        admin: req.user.roles.includes('admin'),
+        admin: req.user.roles.includes('admin')
       };
       
       db.models.Quiz.find({}, 'name', (err,doc) => {

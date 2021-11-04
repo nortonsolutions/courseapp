@@ -1,33 +1,54 @@
-    <div class="limit-mt jumbotron jumbotron-fluid">
-        <div class="container">
+
             <h1 class="display-4">{{quizName}}</h1>
 
+            <div class="form-group row">
 
-                <div class="form-group row">
+                <div class="col-7">
+                    <label style="width: 100%" for="question">Question #{{currentQuestionNumber}}:</label>
+                    <textarea class="form-control" disabled name="question" id="question" rows="4" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
+                    <label for="question">Select your answer(s):</label>
+                    {{#each currentQuestion.choices}}
+                    <div class="row">
+                        {{#if ../showAnswers}}
+                            <div class="col-1">
+                                <label class="customCheckboxContainer">
+                                <input disabled id="answer{{@index}}" name="answer{{@index}}" type="checkbox" {{{booleanCheckboxHelper correct}}}>
+                                <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        {{else}}
+                            <div class="col-1"></div>
+                        {{/if}}
 
-                    <div class="col-7">
-                        <label style="width: 100%" for="question">Question #{{currentQuestionNumber}}:</label>
-                        <textarea class="form-control" name="question" id="question" rows="4" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
-                        <label for="question">Select your answer(s):</label>
-                        {{#each currentQuestion.choices}}
-                        <div class="row">
-                            <div class="col-1 checkboxContainer" >
-                                <input name="checkbox{{@index}}" type="checkbox">
-                            </div>
-                            <div class="col-11">
-                                <input name="text{{@index}}" type="text" class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">
-                            </div>
+                        <div class="col-1 checkboxContainer" >
+                            <input id="checkbox{{@index}}" name="checkbox{{@index}}" type="checkbox" {{{unless ../showAnswers}}}>
                         </div>
-                        {{/each}}
+                        <div class="col-10">
+                            <input name="text{{@index}}" type="text" disabled class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">
+                        </div>
 
                     </div>
-                    {{#if currentQuestion.imageLocation}}
-                    <div class="col-5">
-                        <div class="mt-3"><img id="currentImage" width="100%" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"></div>
+                    {{/each}}
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-3">
+                            <button id="previousQuestion" class="btn {{{hideButton 'previous' currentQuestionNumber totalQuestions}}}">Back <span class="badge badge-primary"><i class="fas fa-minus"></i></span></button>
+                        </div>
+                        <div class="col-3">
+                            <button id="nextQuestion" class="btn {{{hideButton 'next' currentQuestionNumber totalQuestions}}}">Next <span class="badge badge-primary"><i class="fas fa-plus"></i></span></button>
+                        </div>
+                        <div class="col-3">
+                            <button id="finishQuiz" class="btn {{{hideButton 'done' currentQuestionNumber totalQuestions}}}">Done! <span class="badge badge-primary"><i class="fas fa-check"></i></span></button>
+                        </div>
                     </div>
+                </div>
+                <div class="col-5">
+                    {{#if currentQuestion.imageLocation}}
+                        <div class="mt-3"><img id="currentImage" width="100%" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"></div>
                     {{/if}}
+
+
                     <input class="d-none" type="text" name="questionId" id="questionId" value="{{currentQuestion._id}}">
                 </div>
-
-        </div>
-    </div>
+            </div>

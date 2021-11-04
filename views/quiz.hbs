@@ -10,24 +10,35 @@
 <body>
 
     <div class="outerContainer">
-
         {{> navbar quizActive='active' }}
 
-        <main id="quizMain">
-            <div class="limit-mt jumbotron jumbotron-fluid">
-                <div class="container">
-                    <h1 class="display-4">Main Quiz Interface</h1>
-                    
-                    <div class="col-3">
-                        <form id='selectQuiz' action="/quiz" method="get">
-                            {{> selectQuiz }}                            
-                       </form>
+        <div class="limit-mt jumbotron jumbotron-fluid">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-12">
+                        <span class="text-primary" id="feedback">{{feedback}} </span>
+                        <span class="text-primary d-none" id="reviewQuiz">{{#if allowTestReviews}}Click here to review!{{/if}}</span>
                     </div>
-
                 </div>
-            </div>
-        </main>
 
+                {{!-- This will be replaced by quizActive when quiz loads --}}
+                <main id="quizMain">
+                    <div class="limit-mt jumbotron jumbotron-fluid">
+                        <div class="container">
+                            <h1 class="display-4">Main Quiz Interface</h1>
+                            
+                            <div class="col-3">
+                                <form id='selectQuiz' action="/quiz" method="get">
+                                    {{> selectQuiz }}                            
+                            </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
     </div>
 
     <script src="/viewScripts/quizScripts.js"></script>

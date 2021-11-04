@@ -27,16 +27,16 @@ module.exports = function (mongoose, callback) {
 
     const QuizModel = mongoose.model('Quiz', quizSchema);
 
-    // TODO: ASSUMING MULTIPLE CHOICE WITH ONE CORRECT ANSWER FOR NOW
     const userQuizQuestionSchema = mongoose.Schema({
-      quizQuestionId: { type: String, required: true },
-      myAnswer: String,
+      questionId: { type: String, required: true },
+      answer: [Boolean],
       correct: Boolean
     })
 
     const userQuizSchema = mongoose.Schema({
-      quizName: { type: String, required: true },
-      questions: [userQuizQuestionSchema]
+      quizId: { type: String, required: true },
+      answers: [userQuizQuestionSchema],
+      score: Number
     })
 
     const userSchema = mongoose.Schema({
