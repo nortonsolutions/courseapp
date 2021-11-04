@@ -110,6 +110,40 @@ module.exports = function (app, db, upload) {
       }
     );
 
+  app.route('/updateAccount')
+    .post(ensureAuthenticated,(req,res) => {
+      db.models.User.findOne({_id : req.user._id}, (err,user) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+
+          if (req.body.password != req.body.confirm) {
+            res.json({error: "Password and Confirm values must match."});
+          } else {
+
+            user.username = req.body.username;
+            user.firstname = req.body.firstname;
+            user.surname = req.body.surname;
+
+            if (req.body.password) {
+              bcrypt.hash(req.body.password, 12).then(hash => {
+                user.password = hash;
+                user.save((err,user) => {
+                  if (err) res.json({error: err.message});
+                  res.json({Success: "User successfully updated."})
+                })
+              });
+            } else {
+              user.save((err,user) => {
+                if (err) res.json({error: err.message});
+                res.json({Success: "User successfully updated."})
+              })
+            }
+          }
+        }
+      })
+    })
+
   app.route('/logout')
     // Logout
     .get((req,res) => {
@@ -221,7 +255,9 @@ module.exports = function (app, db, upload) {
               user.quizzes = [...user.quizzes, {
                 quizId: quizId,
                 answers: userAnswers,
-                score: score
+                score: score*100,
+                date: new Date(),
+                quizName: quiz.name
               }];
 
               user.save((err,doc) => {
@@ -425,8 +461,11 @@ module.exports = function (app, db, upload) {
   app.route('/profile')
     // Get and render the whole profile view  
     .get(ensureAuthenticated, (req,res) => {
-      res.render(process.cwd() + '/views/profile.hbs', {
-      });
+
+      let context = req.user;
+
+      // Get the quiz name and add to the context
+      res.render(process.cwd() + '/views/profile.hbs', context);
     })
 
 };

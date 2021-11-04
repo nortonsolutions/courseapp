@@ -35,7 +35,9 @@ module.exports = function (mongoose, callback) {
 
     const userQuizSchema = mongoose.Schema({
       quizId: { type: String, required: true },
+      quizName: { type: String, required: true },
       answers: [userQuizQuestionSchema],
+      date: Date,
       score: Number
     })
 

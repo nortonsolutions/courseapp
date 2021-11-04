@@ -37,4 +37,8 @@ module.exports = function(hbs) {
         if (boolean) str = "disabled";
         return new hbs.SafeString(str);
     });
+
+    hbs.registerHelper("shortDate", function(date) {
+        return date.toLocaleDateString();
+    });
 }

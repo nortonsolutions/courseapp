@@ -1,6 +1,6 @@
 label {
     color: blue;
-    margin: 8px 0px 0px !important;
+    /* margin: 8px 0px 0px !important; */
 }
 
 form label, form button {

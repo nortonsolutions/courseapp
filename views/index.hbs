@@ -27,7 +27,7 @@
                     <input type="password" name="password" id="password">
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-primary" value="Register">Submit</button>
+                    <button type="submit" class="btn btn-primary my-2" value="Register">Submit</button>
                     <span id="alertText" class="text-primary pl-3">{{ alertText }}</span>
                 </div>
             </form>
@@ -44,22 +44,22 @@
             <form action="/register" method="post">
                 <div>
                     <label for="username">Username:</label>
-                    <input type="text" id="username" name="username">
+                    <input type="text" id="username" name="username" required>
                 </div>
                 <div>
                     <label for="firstname">First name:</label>
-                    <input type="text" id="firstname" name="firstname">
+                    <input type="text" id="firstname" name="firstname" required>
                 </div>
                 <div>
                     <label for="surname">Last name:</label>
-                    <input type="text" id="surname" name="surname">
+                    <input type="text" id="surname" name="surname" required>
                 </div>
                 <div>
                     <label for="password">Password:</label>
-                    <input type="password" name="password" id="password">
+                    <input type="password" name="password" id="password" required>
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-primary" value="Register">Submit</button>
+                    <button type="submit" class="btn btn-primary my-2" value="Register">Submit</button>
                 </div>
             <div id="login"><small>Back</small></div>                
             </form>
