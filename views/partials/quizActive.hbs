@@ -9,19 +9,21 @@
                     <label for="question">Select your answer(s):</label>
                     {{#each currentQuestion.choices}}
                     <div class="row">
-                        {{#if ../showAnswers}}
+                        {{#if ../reviewMode}}
+                            {{#if ../showAnswers}}
                             <div class="col-1">
                                 <label class="customCheckboxContainer">
                                 <input disabled id="answer{{@index}}" name="answer{{@index}}" type="checkbox" {{{booleanCheckboxHelper correct}}}>
                                 <span class="checkmark"></span>
                                 </label>
                             </div>
+                            {{/if}}
                         {{else}}
                             <div class="col-1"></div>
                         {{/if}}
 
                         <div class="col-1 checkboxContainer" >
-                            <input id="checkbox{{@index}}" name="checkbox{{@index}}" type="checkbox" {{{disabledIf ../showAnswers}}}>
+                            <input id="checkbox{{@index}}" name="checkbox{{@index}}" type="checkbox" {{{disabledIf ../reviewMode}}}>
                         </div>
                         <div class="col-10">
                             <input name="text{{@index}}" type="text" disabled class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">
@@ -38,7 +40,7 @@
                         <div class="col-3">
                             <button id="nextQuestion" class="btn {{{hideButton 'next' currentQuestionNumber totalQuestions}}}">Next <span class="badge badge-primary"><i class="fas fa-plus"></i></span></button>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 {{{hideIf reviewMode}}}">
                             <button id="finishQuiz" class="btn {{{hideButton 'done' currentQuestionNumber totalQuestions}}}">Done! <span class="badge badge-primary"><i class="fas fa-check"></i></span></button>
                         </div>
                     </div>
@@ -52,3 +54,4 @@
                     <input class="d-none" type="text" name="questionId" id="questionId" value="{{currentQuestion._id}}">
                 </div>
             </div>
+

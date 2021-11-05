@@ -1,38 +1,12 @@
-
-var quizId = '';
 var questionId = '';
 var currentQuestionIndex = 0;
-var userAnswers = [];
-var reviewMode = false;
+var quizId = localStorage.getItem("quizId")? localStorage.getItem("quizId") : '';
+var userAnswers = localStorage.getItem("userAnswers")? JSON.parse(localStorage.getItem("userAnswers")) : []
+let reviewMode = false;
 
-document.getElementById('selectQuiz').addEventListener('submit', (e) => {
+getCurrentQuestion = (reviewMode) => {
     
-    reviewMode = false;
-    quizId = e.target.elements.quizName.value;
-    if (confirm("Are you ready to start the quiz?")) {
-        getCurrentQuestion();
-    }
-    e.preventDefault();
-
-})
-
-document.getElementById('reviewQuiz').addEventListener('click', (e) => {
-    reviewMode = true;
-    document.getElementById('quizMain').classList.remove('d-none');
-    document.getElementById('reviewQuiz').classList.add('d-none');
-    currentQuestionIndex = 0;
-    getCurrentQuestion();
-    e.preventDefault();
-})
-
-getCurrentQuestion = () => {
-    
-    let reviewQuery = '';
-
-    if (reviewMode) {
-        reviewQuery = '?showAnswers=true';
-    }
-
+    let reviewQuery = reviewMode? '?mode=review' : ''
     handleGet('/quiz/' + quizId + '/' + currentQuestionIndex + reviewQuery, (response) => {
         document.getElementById('quizMain').innerHTML = response;
         questionId = document.getElementById('questionId').value;
@@ -68,7 +42,6 @@ hideInterface = () => {
 submitQuiz = () => {
     handlePost('/quiz/grade/' + quizId, {userAnswers: userAnswers}, (response) => {
         document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
-        document.getElementById('reviewQuiz').classList.remove('d-none');
         hideInterface();
     })
 }
@@ -77,17 +50,34 @@ addQuizActiveButtonListeners = () => {
     document.getElementById('previousQuestion').addEventListener('click', (e) => {
         saveCurrentAnswer();
         currentQuestionIndex--;
-        getCurrentQuestion();
+        getCurrentQuestion(reviewMode);
     })
 
     document.getElementById('nextQuestion').addEventListener('click', (e) => {
         saveCurrentAnswer();
         currentQuestionIndex++;
-        getCurrentQuestion();
+        getCurrentQuestion(reviewMode);
     })
 
     document.getElementById('finishQuiz').addEventListener('click', (e) => {
         saveCurrentAnswer();
         submitQuiz();
     })
+}
+
+if (document.getElementById('selectQuiz')) {
+    document.getElementById('selectQuiz').addEventListener('submit', (e) => {
+    
+        localStorage.removeItem('userAnswers');
+        userAnswers = [];
+        quizId = e.target.elements.quizName.value;
+        if (confirm("Are you ready to start the quiz?")) {
+            getCurrentQuestion(reviewMode);
+        }
+        e.preventDefault();
+    
+    })
+} else {
+    reviewMode = true;
+    getCurrentQuestion(reviewMode);
 }

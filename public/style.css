@@ -34,7 +34,7 @@ input[type="checkbox"],
 
 }
 
-i, path, svg {
+i, path, svg, .noclick {
     pointer-events: none !important;
 }
 
@@ -108,3 +108,13 @@ textarea:disabled, input:disabled {
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
   }
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 720px !important;
+  }
+}
+
+body {
+  min-width: 800px;
+}

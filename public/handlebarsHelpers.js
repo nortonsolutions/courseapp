@@ -38,6 +38,12 @@ module.exports = function(hbs) {
         return new hbs.SafeString(str);
     });
 
+    hbs.registerHelper("hideIf", function(boolean) {
+        let str = '';
+        if (boolean) str = "d-none";
+        return new hbs.SafeString(str);
+    });
+
     hbs.registerHelper("shortDate", function(date) {
         return date.toLocaleDateString();
     });

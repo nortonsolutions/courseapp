@@ -25,10 +25,9 @@ const blankQuestion = {
 
 module.exports = function (app, db, upload) {
 
-  var alertText = "";
-
-  // Allow test reviews?
-  var allowTestReviews = true;
+  // Allow test reviews and show answers?
+  var allowTestReviews = process.env.ALLOW_TEST_REVIEWS == 'true';
+  var showAnswers = process.env.SHOW_ANSWERS_ON_REVIEWS == 'true';;
 
   // ensureAuthenticated
   const ensureAuthenticated = (req,res,next) => {
@@ -147,7 +146,6 @@ module.exports = function (app, db, upload) {
   app.route('/logout')
     // Logout
     .get((req,res) => {
-      alertText = "";
       if (req.user) console.log("Logging out: " + req.user.username);
       req.logout();
       res.redirect('/');
@@ -171,44 +169,62 @@ module.exports = function (app, db, upload) {
     .get(ensureAuthenticated, (req,res) => {
 
       let options = {
-          admin: req.user.roles.includes('admin'),
-          allowTestReviews: allowTestReviews,
-          standardMode: true
+        admin: req.user.roles.includes('admin'),
+        showAnswers: showAnswers
       }
 
-      db.models.Quiz.find({}, 'name', (err,doc) => {
-        if (err) {
-          res.json({error: err.message});
-        } else {
-          options.quizzes = doc;
-          res.render(process.cwd() + '/views/quiz.hbs', options);
+      if (req.query.mode == "review" && allowTestReviews) {
+        
+        let quizId = req.query.quizId;
+        options = { ...options,
+            currentQuizId: quizId,
+            currentQuestionNumber: 1,
+            reviewMode: true
         }
-      })
+  
+        db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+          if (err) {
+            res.json({error: err.message});
+          } else {
+            options = {
+              ...options,
+              quizName: quiz.name,
+              totalQuestions: quiz.questions.length,
+              currentQuestion: quiz.questions[0]
+            }
+
+            res.render(process.cwd() + '/views/quiz.hbs', options);
+          }
+        })
+      
+      } else {
+
+        db.models.Quiz.find({}, (err,doc) => {
+          if (err) {
+            res.json({error: err.message});
+          } else {
+            options.quizzes = doc;
+            res.render(process.cwd() + '/views/quiz.hbs', options);
+          }
+        })
+
+      }
+
     })
 
-
-
-    // Retrieve the first quiz question and populate existing userAnswers:
+    // Get and return the userQuiz:
     .post(ensureAuthenticated, (req,res) => {
+      let userQuizId = req.body.userQuizId;
 
-      let options = {
-          quizId: req.body.quizId,
-          userQuizId: req.body.userQuizId,
-          admin: req.user.roles.includes('admin'),
-          allowTestReviews: allowTestReviews,
-          standardMode: false
-      }
-
-      db.models.Quiz.find({_id: options.quizId}, (err,doc) => {
+      db.models.User.findOne({_id: req.user._id}, (err,user) => {
         if (err) {
           res.json({error: err.message});
         } else {
-          options = {...options, doc};
-          res.render(process.cwd() + '/views/partials/quizActive.hbs', options);
+          let subDoc = user.quizzes.id(userQuizId);
+          res.json(subDoc);
         }
       })
-    })
-
+    })   
 
   app.route('/quiz/:quizId/:index')
 
@@ -220,7 +236,8 @@ module.exports = function (app, db, upload) {
           currentQuizId: req.params.quizId,
           currentQuestionNumber: Number(req.params.index) + 1,
           admin: req.user.roles.includes('admin'),
-          showAnswers: req.query.showAnswers == "true"
+          reviewMode: req.query.mode == 'review',
+          showAnswers: showAnswers
       }
 
       db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {

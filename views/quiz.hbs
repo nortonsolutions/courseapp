@@ -18,13 +18,13 @@
                 <div class="row">
                     <div class="col-12">
                         <span class="text-primary" id="feedback">{{feedback}} </span>
-                        <span class="text-primary d-none" id="reviewQuiz">{{#if allowTestReviews}}Click here to review!{{/if}}</span>
                     </div>
                 </div>
 
                 {{!-- quizMain innerHTML replaced by quizActive during runtime --}}
                 <main id="quizMain">
                     
+                    {{#unless reviewMode}}
                     <div class="limit-mt jumbotron jumbotron-fluid">
                         <div class="container">
                             <h1 class="display-4">Main Quiz Interface</h1>
@@ -37,7 +37,9 @@
 
                         </div>
                     </div>
-
+                    {{else}}
+                        {{> quizActive }}
+                    {{/unless}}
                 </main>
             </div>
         </div>

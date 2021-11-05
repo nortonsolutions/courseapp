@@ -15,15 +15,18 @@ document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
 Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
     userQuiz.addEventListener('click', (e) => {
 
-        let quizId = document.getElementById('quizId').value;
-        let userQuizId = document.getElementById('userQuizId').value;
+        let userQuizId = e.target.elements.userQuizId.value;
 
-        handlePostTextResponse('/quiz', {
-            quizId: quizId,
+        handlePost('/quiz', {
             userQuizId: userQuizId
         }, (response) => {
-            document.getElementById('profileMain').innerHTML = response;
+            let userQuiz = JSON.parse(response);
+            localStorage.setItem('quizId', userQuiz.quizId);
+            localStorage.setItem('userAnswers', JSON.stringify(userQuiz.answers));
+            window.location.href='/quiz?mode=review&quizId=' + userQuiz.quizId;
         })
+
+        e.preventDefault();
 
     })
 })
