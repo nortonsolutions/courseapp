@@ -15,61 +15,26 @@
 
             <div class="limit-mt jumbotron jumbotron-fluid">
                 <div class="container">
-                    <h1 class="display-4">Hello {{firstname}}!</h1>
-                    <hr class="my-2">
-                    <div class="row">
 
-                        <div class="col-6">
-                            <h4>Change account details:</h4>
-                            <form id="userUpdateForm" action="/updateAccount" method="post">
-                                <input type="hidden" name="id" value="{{_id}}">
-                                <div>
-                                    <label for="username">Username:</label>
-                                    <input type="text" id="username" name="username" value="{{username}}">
-                                </div>
-                                <div>
-                                    <label for="firstname">First name:</label>
-                                    <input type="text" id="firstname" name="firstname" value="{{firstname}}">
-                                </div>
-                                <div>
-                                    <label for="surname">Last name:</label>
-                                    <input type="text" id="surname" name="surname" value="{{surname}}">
-                                </div>
-                                <div>
-                                    <label for="password">Password:</label>
-                                    <input type="password" name="password" id="password">
-                                </div>
-                                <div>
-                                    <label for="confirm">Confirm:</label>
-                                    <input type="password" name="confirm" id="confirm">
-                                </div>
-                                <div>
-                                    <button type="submit" class="btn btn-primary my-2" value="Register">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="col-6">
-                            <h4>My Quiz History:</h4>
-                            <div id="quizListContainer">
-                                {{> quizList}}
-                            </div>
-                        </div>
-                        
-                    </div>
 
                     <div class="row">
                         <div class="col-12">
-                                <span class="text-primary" id="feedback">{{feedback}}</span>
+                            <span class="text-primary" id="feedback">{{feedback}} </span>
+                            <span class="text-primary d-none" id="reviewQuiz">{{#if allowTestReviews}}Click here to review!{{/if}}</span>
                         </div>
                     </div>
+
+                    {{!-- profileMain innerHTML replaced by quizActive during runtime --}}
+                    <main id="profileMain">
+                        
+                        {{> profileMain}}
+
+                    </main>
                     <hr class="my-2">
                     <p>Copyright <i class="fas fa-copyright"></i> Norton 2021</p>
                     <p class="lead">
                         <a class="btn btn-primary btn-lg" href="/quiz" role="button">Take a quiz</a>
                     </p>
-
-
             </div>
 
     </div>

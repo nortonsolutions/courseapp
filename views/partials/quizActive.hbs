@@ -21,7 +21,7 @@
                         {{/if}}
 
                         <div class="col-1 checkboxContainer" >
-                            <input id="checkbox{{@index}}" name="checkbox{{@index}}" type="checkbox" {{{unless ../showAnswers}}}>
+                            <input id="checkbox{{@index}}" name="checkbox{{@index}}" type="checkbox" {{{disabledIf ../showAnswers}}}>
                         </div>
                         <div class="col-10">
                             <input name="text{{@index}}" type="text" disabled class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">

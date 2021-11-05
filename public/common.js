@@ -35,6 +35,17 @@ handleFormPost = (url, data, callback) => {
     })
 }
 
+handlePostTextResponse = (url, data, callback) => {
+    fetch(url, postOptions(data))
+    .then(response => response.text())
+    .catch(error => {
+        callback(error.message);
+    })
+    .then(response => { 
+        callback(response);
+    })
+}
+
 getOptions = () => {
     return {
         method: 'GET',

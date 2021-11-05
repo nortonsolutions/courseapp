@@ -171,9 +171,9 @@ module.exports = function (app, db, upload) {
     .get(ensureAuthenticated, (req,res) => {
 
       let options = {
-          currentQuiz: '',
           admin: req.user.roles.includes('admin'),
-          allowTestReviews: allowTestReviews
+          allowTestReviews: allowTestReviews,
+          standardMode: true
       }
 
       db.models.Quiz.find({}, 'name', (err,doc) => {
@@ -185,6 +185,30 @@ module.exports = function (app, db, upload) {
         }
       })
     })
+
+
+
+    // Retrieve the first quiz question and populate existing userAnswers:
+    .post(ensureAuthenticated, (req,res) => {
+
+      let options = {
+          quizId: req.body.quizId,
+          userQuizId: req.body.userQuizId,
+          admin: req.user.roles.includes('admin'),
+          allowTestReviews: allowTestReviews,
+          standardMode: false
+      }
+
+      db.models.Quiz.find({_id: options.quizId}, (err,doc) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          options = {...options, doc};
+          res.render(process.cwd() + '/views/partials/quizActive.hbs', options);
+        }
+      })
+    })
+
 
   app.route('/quiz/:quizId/:index')
 
@@ -210,8 +234,6 @@ module.exports = function (app, db, upload) {
         }
       })
     })
-
-
   
   app.route('/quiz/grade/:quizId')
     .post(ensureAuthenticated, (req,res) => {

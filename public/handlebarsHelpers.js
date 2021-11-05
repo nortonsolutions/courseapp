@@ -32,7 +32,7 @@ module.exports = function(hbs) {
 
     });
 
-    hbs.registerHelper("unless", function(boolean) {
+    hbs.registerHelper("disabledIf", function(boolean) {
         let str = '';
         if (boolean) str = "disabled";
         return new hbs.SafeString(str);

@@ -10,3 +10,20 @@ document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
     })
     e.preventDefault();
 })
+
+
+Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
+    userQuiz.addEventListener('click', (e) => {
+
+        let quizId = document.getElementById('quizId').value;
+        let userQuizId = document.getElementById('userQuizId').value;
+
+        handlePostTextResponse('/quiz', {
+            quizId: quizId,
+            userQuizId: userQuizId
+        }, (response) => {
+            document.getElementById('profileMain').innerHTML = response;
+        })
+
+    })
+})
