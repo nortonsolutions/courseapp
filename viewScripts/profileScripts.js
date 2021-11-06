@@ -1,5 +1,6 @@
 document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
     handlePost('/updateAccount', {
+        _id: e.target.elements.id.value,
         username: e.target.elements.username.value,
         firstname: e.target.elements.firstname.value,
         surname: e.target.elements.surname.value,

@@ -115,14 +115,20 @@ module.exports = function (app, db, upload) {
         if (err) {
           res.json({error: err.message});
         } else {
-          res.json({success: "User " + username + " was successfully deleted."});
+          db.models.User.find({}, 'username firstname surname', (err,users) => {
+            if (err) {
+              res.json({error: err.message});
+            } else {
+              res.render(process.cwd() + '/views/partials/selectUser.hbs', {users: users});
+            }
+          })
         }
       })
     })
 
   app.route('/updateAccount')
     .post(ensureAuthenticated,(req,res) => {
-      db.models.User.findOne({_id : req.user._id}, (err,user) => {
+      db.models.User.findOne({_id : req.body._id}, (err,user) => {
         if (err) {
           res.json({error: err.message});
         } else {
@@ -332,7 +338,7 @@ module.exports = function (app, db, upload) {
         feedback: req.query.feedback? req.query.feedback : ''
       };
       
-      // Grab list of quizzes:
+      // Grab list of quizzes and users:
       db.models.Quiz.find({}, 'name', (err,quizzes) => {
         if (err) {
           res.json({error: err.message});
@@ -361,6 +367,18 @@ module.exports = function (app, db, upload) {
           res.json(doc);
         }
       });
+    })
+  
+  app.route('/admin/getUserUpdateForm')
+    .get(ensureAuthenticated,ensureAdmin, (req,res) => {
+      let userId = req.query.userId;
+      db.models.User.findOne({_id: userId}, 'username firstname surname',(err,user) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          res.render(process.cwd() + '/views/partials/userUpdateForm.hbs', user);
+        }
+      })
     })
 
   // Grab list of quizzes for selectQuiz partial
@@ -518,9 +536,10 @@ module.exports = function (app, db, upload) {
   app.route('/profile')
     // Get and render the whole profile view  
     .get(ensureAuthenticated, (req,res) => {
-
+      
       let context = req.user;
-
+      context.admin = req.user.roles.includes('admin');
+      
       // Get the quiz name and add to the context
       res.render(process.cwd() + '/views/profile.hbs', context);
     })

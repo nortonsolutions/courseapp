@@ -36,7 +36,7 @@ var upload = multer({ storage: storage });
 // For unit and functional testing with Chai later:
 // var expect            = require('chai').expect;
 // var fccTestingRoutes  = require('./routes/fcctesting.js');
-// var runner            = require('./test-runner');
+var runner            = require('./test-runner');
 
 const database = require('./database.js');
 const app = express();
@@ -94,7 +94,7 @@ database(mongoose, (db) => {
       console.log('Running Tests...');
       setTimeout(function () {
         try {
-          // runner.run();
+          runner.run();
         } catch(e) {
           var error = e;
             console.log('Tests are not valid:');
