@@ -22,3 +22,10 @@ document.getElementById('selectQuiz').addEventListener('submit', (e) => {
     window.location.href = url;
     e.preventDefault();
 })
+
+document.getElementById('selectUser').addEventListener('submit', (e) => {
+    let userId = e.target.elements.userName.value;
+    let url = "/quizAdmin/" + quizId;
+    window.location.href = url;
+    e.preventDefault();
+})

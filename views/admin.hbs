@@ -30,10 +30,21 @@
                     </form>
                     </div>
                     <div class="col-3">
-                            <form id='selectQuiz' action="/quiz" method="get">
-                        {{> selectQuiz }}
+                        <form id='selectQuiz' action="/quiz" method="get">
+                            {{> selectQuiz }}
                         </form>
                     </div>
+                    {{!-- <div class="col-6">
+                        <form id='selectUser' action="/" method="get">
+                            {{> selectUser }}
+                        </form>
+                        <form class="mt-4 d-none" id="userUpdateForm" action="/updateAccount" method="post">
+                            {{> userUpdateForm }}
+                            <div>
+                                <button type="submit" class="btn btn-danger my-2" value="Delete">Delete</button>
+                            </div>
+                        </form>
+                    </div> --}}
                 </div>
                 <div class="row">
                     <div class="col-12">

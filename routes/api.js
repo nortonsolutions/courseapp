@@ -109,6 +109,17 @@ module.exports = function (app, db, upload) {
       }
     );
 
+  app.route('/deleteAccount')
+    .post(ensureAuthenticated, ensureAdmin, (req,res) => {
+      db.models.User.remove({_id: req.body._id}, (err,body) => {
+        if (err) {
+          res.json({error: err.message});
+        } else {
+          res.json({success: "User " + username + " was successfully deleted."});
+        }
+      })
+    })
+
   app.route('/updateAccount')
     .post(ensureAuthenticated,(req,res) => {
       db.models.User.findOne({_id : req.user._id}, (err,user) => {
@@ -322,12 +333,19 @@ module.exports = function (app, db, upload) {
       };
       
       // Grab list of quizzes:
-      db.models.Quiz.find({}, 'name', (err,doc) => {
+      db.models.Quiz.find({}, 'name', (err,quizzes) => {
         if (err) {
           res.json({error: err.message});
         } else {
-          options.quizzes = doc
-          res.render(process.cwd() + '/views/admin.hbs', options);
+          options.quizzes = quizzes
+          db.models.User.find({}, (err,users) => {
+            if (err) {
+              res.json({error: err.message});
+            } else {
+              options.users = users;
+              res.render(process.cwd() + '/views/admin.hbs', options);
+            }
+          })
         }
       })
     })

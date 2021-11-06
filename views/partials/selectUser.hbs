@@ -1,0 +1,12 @@
+
+                            
+                            <div class="form-group">
+                                <label for="userName">Select a User:</label>
+                                <select class="form-control" id="userName">
+                                {{#each users}}
+                                    <option value="{{_id}}">{{surname}}, {{firstname}}</option>
+                                {{/each}}
+                                </select>
+                                <small id="helpId2" class="form-text text-muted">Select a User</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
