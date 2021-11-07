@@ -540,6 +540,15 @@ module.exports = function (app, db, upload) {
       let context = req.user;
       context.admin = req.user.roles.includes('admin');
       
+      // Create object with arrays of scores, one for each quizName
+      let scoreArrays = {};
+      req.user.quizzes.forEach(quiz => {
+        if (! scoreArrays[quiz.quizName]) scoreArrays[quiz.quizName] = [];
+        scoreArrays[quiz.quizName].push({ score: quiz.score, date: quiz.date});
+      });
+
+      context.scoreArrays = JSON.stringify(scoreArrays);
+
       // Get the quiz name and add to the context
       res.render(process.cwd() + '/views/profile.hbs', context);
     })

@@ -36,7 +36,7 @@
                                 </form>
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-6" style="max-height: 260px; overflow: scroll;">
                                 <h4>My Quiz History:</h4>
                                 <div id="quizListContainer">
                                     <label>Quizzes:</label>
@@ -55,7 +55,13 @@
                             </div>
                             
                         </div>
+                        <div class="row">
+                            <div id="quizGraph" class="col-12 text-center my-3">
+                                <canvas id="quizGraphCanvas" width="640" height="200"></canvas>
+                                <svg id="quizGraphSVG" width="640" height="200"></svg>
 
+                            </div>
+                        </div>
                     </main>
                     <hr class="my-2">
                     <p>Copyright <i class="fas fa-copyright"></i> Norton 2021</p>
@@ -64,7 +70,11 @@
                     </p>
             </div>
 
+            <div class="d-none" id="scoreArrays">{{scoreArrays}}</div>
+
     </div>
     <script src="/viewScripts/profileScripts.js"></script>
+    <script src="http://redrockcodecamp.org/educationMaterials/frameworks/js/d3/4.3.0/d3.min.js"></script>
+    <script src="/viewScripts/profileScripts_d3.js"></script>
 </body>
 </html>

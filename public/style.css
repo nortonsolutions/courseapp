@@ -118,3 +118,13 @@ textarea:disabled, input:disabled {
 body {
   min-width: 800px;
 }
+
+#quizGraph {
+  width: 100%;
+}
+
+canvas { border: 1px solid black; }
+
+svg {
+  overflow: visible !important;
+}
