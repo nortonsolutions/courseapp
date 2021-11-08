@@ -9,13 +9,15 @@ module.exports = function (mongoose, callback) {
     const CONNECTION_STRING = process.env.DB;
 
     const quizQuestionSchema = mongoose.Schema({
-      type: { type: String, required: true, default: 'multi' },
+      type: { type: String, required: true, default: 'single' },
       question: { type: String, required: true },
       choices: [{
         text: String,
         correct: Boolean
       }],
-      imageLocation: String
+      imageLocation: String,
+      answerTextRegex: String,
+      answerEssayRegex: String
     })
 
 

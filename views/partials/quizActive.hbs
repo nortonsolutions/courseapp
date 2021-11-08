@@ -6,31 +6,48 @@
                 <div class="col-7">
                     <label style="width: 100%" for="question">Question #{{currentQuestionNumber}}:</label>
                     <textarea class="form-control" disabled name="question" id="question" rows="4" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
-                    <label for="question">Select your answer(s):</label>
-                    {{#each currentQuestion.choices}}
-                    <div class="row">
-                        {{#if ../reviewMode}}
-                            {{#if ../showAnswers}}
-                            <div class="col-1">
-                                <label class="customCheckboxContainer">
-                                <input disabled id="answer{{@index}}" name="answer{{@index}}" type="checkbox" {{{booleanCheckboxHelper correct}}}>
-                                <span class="checkmark"></span>
-                                </label>
-                            </div>
+                    
+                    <div id="responseCheckboxes" class="{{{hideIfNotEqual currentQuestion.type "multi" "single"}}}">
+                        <label for="question">Select your answer(s):</label>
+                        {{#each currentQuestion.choices}}
+                        <div class="row">
+                            {{#if ../reviewMode}}
+                                {{#if ../showAnswers}}
+                                <div class="col-1">
+                                    <label class="customCheckboxContainer">
+                                    <input disabled id="answer{{@index}}" name="answer{{@index}}" type="checkbox" {{{booleanCheckboxHelper correct}}}>
+                                    <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                {{/if}}
+                            {{else}}
+                                <div class="col-1"></div>
                             {{/if}}
-                        {{else}}
-                            <div class="col-1"></div>
-                        {{/if}}
 
-                        <div class="col-1 checkboxContainer" >
-                            <input id="checkbox{{@index}}" name="checkbox{{@index}}" type="checkbox" {{{disabledIf ../reviewMode}}}>
-                        </div>
-                        <div class="col-10">
-                            <input name="text{{@index}}" type="text" disabled class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">
-                        </div>
+                            <div class="col-1 checkboxContainer" >
+                                <input id="checkbox{{@index}}" name="checkbox{{@index}}" type="checkbox" {{{disabledIf ../reviewMode}}}>
+                            </div>
+                            <div class="col-10">
+                                <input name="text{{@index}}" type="text" disabled class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">
+                            </div>
 
+                        </div>
+                        {{/each}}
                     </div>
-                    {{/each}}
+                    
+
+                    <div id="responseText" class="{{{hideIfNotEqual currentQuestion.type "text"}}}">
+                        <label for="text">Response:</label>
+                        <input type="text" class="form-control" name="text" id="text" aria-describedby="helpId" placeholder="Enter response...">
+                        <small id="helpId" class="form-text text-muted">Enter your response above.</small>
+                    </div>
+                    
+                    <div id="responseEssay" class="{{{hideIfNotEqual currentQuestion.type "essay"}}}">
+                        <label for="essay">Essay:</label>
+                        <textarea class="form-control" name="essay" id="essay" rows="3" placeholder="Enter response..."></textarea>
+                        <small id="helpId" class="form-text text-muted">Enter your response above.</small>
+                    </div>
+
                     <hr>
 
                     <div class="row">

@@ -44,7 +44,26 @@ module.exports = function(hbs) {
         return new hbs.SafeString(str);
     });
 
+    hbs.registerHelper("hideIfNotEqual", function(string1, string2, string3) {
+        let str = '';
+        if (string1 != string2) {
+            if (string3) {
+                if (string1 != string3) str = "d-none";
+            } else {
+                str = "d-none";
+            }
+        }
+        return new hbs.SafeString(str);
+    });
+
+    hbs.registerHelper("selectedIfEqual", function(string1, string2, string3) {
+        let str = '';
+        if (string1 == string2 || string1 == string3) str = "selected";
+        return new hbs.SafeString(str);
+    });
+
     hbs.registerHelper("shortDate", function(date) {
         return date.toLocaleDateString();
     });
+
 }

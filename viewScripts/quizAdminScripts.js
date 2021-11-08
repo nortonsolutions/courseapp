@@ -8,10 +8,7 @@
             Array.from(questions).forEach(question => {
                 question.addEventListener('click', (e) => {
                     currentQuestionId = e.target.id;
-                    handleGet('/quizAdmin/' + currentQuizId + '/' + currentQuestionId, (response) => {
-                        showQuestionForm();
-                        document.getElementById('questionDetail').innerHTML = response;
-                    })
+                    rerenderQuestionDetail();
                 })
             })
 
@@ -39,6 +36,47 @@
             })
         }
         
+        applyQuestionDetailHandlers = () => {
+            document.getElementById('questionType').addEventListener('change', (e) => {
+                switch (e.target.value) {
+                    case 'single':
+                        document.getElementById('responseCheckboxes').classList.remove('d-none');
+                        document.getElementById('responseText').classList.add('d-none');
+                        document.getElementById('responseEssay').classList.add('d-none');
+                        break;
+                    case 'multi':
+                        document.getElementById('responseCheckboxes').classList.remove('d-none');
+                        document.getElementById('responseText').classList.add('d-none');
+                        document.getElementById('responseEssay').classList.add('d-none');
+                        break;
+                    case 'text':
+                        document.getElementById('responseCheckboxes').classList.add('d-none');
+                        document.getElementById('responseText').classList.remove('d-none');
+                        document.getElementById('responseEssay').classList.add('d-none');
+                        break;
+                    case 'essay':
+                        document.getElementById('responseCheckboxes').classList.add('d-none');
+                        document.getElementById('responseText').classList.add('d-none');
+                        document.getElementById('responseEssay').classList.remove('d-none');
+                        break;
+                }
+            })
+
+            let checkboxArray = Array.from(document.querySelectorAll(".checkbox"));
+            checkboxArray.forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    let currentItem = e.target;
+                    if (document.getElementById('questionType').value == 'single' && currentItem.checked) {
+                        // Unselect the others
+                        checkboxArray.forEach(item => {
+                            if (item.name != currentItem.name) item.checked = false;
+                        })
+                    }
+                })
+            })
+
+        }
+
         showQuestionForm = () => {
             document.getElementById('questionDetail').classList.remove('d-none');
             document.getElementById('btnSaveQuestion').classList.remove('d-none');
@@ -73,15 +111,17 @@
             let formElements = document.getElementById('questionDetail').elements;
 
             let questionJson = {
-                question: formElements[0].value,
+                question: formElements.question.value,
                 choices: [
-                    { text: formElements[2].value, correct: formElements[1].checked},
-                    { text: formElements[4].value, correct: formElements[3].checked},
-                    { text: formElements[6].value, correct: formElements[5].checked},
-                    { text: formElements[8].value, correct: formElements[7].checked}
+                    { text: formElements.text0.value, correct: formElements.checkbox0.checked},
+                    { text: formElements.text1.value, correct: formElements.checkbox1.checked},
+                    { text: formElements.text2.value, correct: formElements.checkbox2.checked},
+                    { text: formElements.text3.value, correct: formElements.checkbox3.checked}
                 ],
-                _id: formElements[9].value,
-                type: 'multi'
+                _id: formElements.questionId.value,
+                type: formElements.questionType.value,
+                text: formElements.text.value,
+                essay: formElements.essay.value
             }
 
             var formData = new FormData(document.getElementById('questionDetail'));
@@ -123,8 +163,10 @@
             handleGet('/quizAdmin/' + currentQuizId + '/' + currentQuestionId, (response) => {
                 showQuestionForm();
                 document.getElementById('questionDetail').innerHTML = response;
+                applyQuestionDetailHandlers();
                 if (callback) callback();
             })
         }
 
         applyQuestionListHandlers();
+        applyQuestionDetailHandlers();

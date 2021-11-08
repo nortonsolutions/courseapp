@@ -11,7 +11,7 @@ var passport          = require('passport');
 
 const blankQuestion = {
   _id: 0,
-  type: 'multi',
+  type: 'single',
   question: '',
   choices: [
       { text: '', correct: false},
@@ -19,7 +19,9 @@ const blankQuestion = {
       { text: '', correct: false},
       { text: '', correct: false}
   ],
-  imageLocation: ''
+  imageLocation: '',
+  answerTextRegex: '',
+  answerEssayRegex: ''
 }
 
 
@@ -435,7 +437,9 @@ module.exports = function (app, db, upload) {
               question: question.question, 
               choices: question.choices,
               type: question.type,
-              imageLocation: req.file? req.file.originalname: ''
+              imageLocation: req.file? req.file.originalname: '',
+              answerTextRegex: question.text,
+              answerEssayRegex: question.essay
             }];
 
           } else {
@@ -444,7 +448,10 @@ module.exports = function (app, db, upload) {
             subDoc.question = question.question;
             subDoc.choices = question.choices;
             subDoc.type = question.type;
-            subDoc.imageLocation = req.file? req.file.originalname: ''
+            subDoc.imageLocation = req.file? req.file.originalname: '';
+            subDoc.answerTextRegex = question.text;
+            subDoc.answerEssayRegex = question.essay;
+
           }
           
           doc.save((err,doc) => {
