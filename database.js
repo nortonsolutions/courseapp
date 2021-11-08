@@ -32,6 +32,8 @@ module.exports = function (mongoose, callback) {
     const userQuizQuestionSchema = mongoose.Schema({
       questionId: { type: String, required: true },
       answer: [Boolean],
+      answerText: String,
+      answerEssay: String,
       correct: Boolean
     })
 

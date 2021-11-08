@@ -296,18 +296,28 @@ module.exports = function (app, db, upload) {
 
                 // Is the answer correct?  Compare against the quizId/questionId
                 var question = quiz.questions.id(userAnswer.questionId);
-                var wrong = question.choices.reduce((total, current, index) => {
-                  return total + (current.correct != userAnswer.answer[index]);
-                }, 0)
-        
-                // Update the userAnswer
-                if (wrong > 0) {
-                  correctAnswer = false;
-                  totalMissed++;
+                var wrong = 0;
+
+                if (question.type == 'single' || question.type == 'multi') {
+                  wrong = question.choices.reduce((total, current, index) => {
+                    return total + (current.correct != userAnswer.answer[index]);
+                  }, 0)
+          
+                  // Update the userAnswer
+                  if (wrong > 0) {
+                    correctAnswer = false;
+                    totalMissed++;
+                  }
+                  userAnswer.correct = correctAnswer;
+                  
+                } else if (question.type == 'text') {
+
+                } else if (question.type == 'essay') {
+
                 }
-                userAnswer.correct = correctAnswer;
 
               })
+
               let score = (totalQuestions - totalMissed) / totalQuestions;
 
               user.quizzes = [...user.quizzes, {
@@ -438,8 +448,8 @@ module.exports = function (app, db, upload) {
               choices: question.choices,
               type: question.type,
               imageLocation: req.file? req.file.originalname: '',
-              answerTextRegex: question.text,
-              answerEssayRegex: question.essay
+              answerTextRegex: question.answerTextRegex,
+              answerEssayRegex: question.answerEssayRegex
             }];
 
           } else {
@@ -448,10 +458,12 @@ module.exports = function (app, db, upload) {
             subDoc.question = question.question;
             subDoc.choices = question.choices;
             subDoc.type = question.type;
-            subDoc.imageLocation = req.file? req.file.originalname: '';
-            subDoc.answerTextRegex = question.text;
-            subDoc.answerEssayRegex = question.essay;
+            subDoc.answerTextRegex = question.answerTextRegex;
+            subDoc.answerEssayRegex = question.answerEssayRegex;
 
+            if (req.file) {
+              subDoc.imageLocation = req.file.originalname;
+            }
           }
           
           doc.save((err,doc) => {

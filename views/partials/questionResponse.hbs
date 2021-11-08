@@ -6,17 +6,17 @@
                         <input class="checkbox" name="checkbox{{@index}}" type="checkbox" {{{booleanCheckboxHelper correct}}}>
                     </div>
                     <div class="col-11">
-                        <input name="text{{@index}}" type="text" class="form-control" aria-describedby="helpId" placeholder="Enter text..." value="{{text}}">
+                        <textarea name="text{{@index}}" rows="{{{calculateRowsShort text}}}" type="text" class="form-control" aria-describedby="helpId" placeholder="Enter text...">{{text}}</textarea>
                     </div>
                 </div>
                 {{/each}}
             </div>
             <div id="responseText" class="{{{hideIfNotEqual currentQuestion.type "text"}}}">
                   <label for="text">Response:</label>
-                  <input type="text" class="form-control" name="text" id="text" aria-describedby="helpId" placeholder="Enter regex for response" value="{{currentQuestion.answerTextRegex}}">
+                  <input type="text" class="form-control" name="answerTextRegex" id="answerTextRegex" aria-describedby="helpId" placeholder="Enter regex for response" value="{{currentQuestion.answerTextRegex}}">
                   <small id="helpId" class="form-text text-muted">Enter regular expression to grade answer.</small>
             </div>
             <div id="responseEssay" class="{{{hideIfNotEqual currentQuestion.type "essay"}}}">
                   <label for="essay">Essay:</label>
-                  <textarea class="form-control" name="essay" id="essay" rows="3" placeholder="Enter regex for response" value="{{currentQuestion.answerEssayRegex}}"></textarea>
+                  <textarea class="form-control" name="answerEssayRegex" id="answerEssayRegex" rows="3" placeholder="Enter regex for response">{{currentQuestion.answerEssayRegex}}</textarea>
             </div>

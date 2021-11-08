@@ -44,6 +44,12 @@ module.exports = function(hbs) {
         return new hbs.SafeString(str);
     });
 
+    hbs.registerHelper("hideIfNot", function(boolean) {
+        let str = '';
+        if (!boolean) str = "d-none";
+        return new hbs.SafeString(str);
+    });
+
     hbs.registerHelper("hideIfNotEqual", function(string1, string2, string3) {
         let str = '';
         if (string1 != string2) {
@@ -64,6 +70,16 @@ module.exports = function(hbs) {
 
     hbs.registerHelper("shortDate", function(date) {
         return date.toLocaleDateString();
+    });
+
+    hbs.registerHelper("calculateRows", function(string) {
+        if (string.length == 0) return 4;
+        return Math.ceil(string.length / 45);
+    });
+    
+    hbs.registerHelper("calculateRowsShort", function(string) {
+        if (string.length == 0) return 2;
+        return Math.ceil(string.length / 37);
     });
 
 }

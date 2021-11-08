@@ -120,8 +120,8 @@
                 ],
                 _id: formElements.questionId.value,
                 type: formElements.questionType.value,
-                text: formElements.text.value,
-                essay: formElements.essay.value
+                answerTextRegex: formElements.answerTextRegex.value,
+                answerEssayRegex: formElements.answerEssayRegex.value
             }
 
             var formData = new FormData(document.getElementById('questionDetail'));

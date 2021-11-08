@@ -7,7 +7,7 @@
                     <option {{{selectedIfEqual currentQuestion.type "essay"}}} value="essay">Essay response</option>
                   </select>
                 <label style="width: 100%" for="question">Question:</label>
-                <textarea class="form-control" name="question" id="question" rows="2" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
+                <textarea class="form-control" name="question" id="question" rows="{{{calculateRows currentQuestion.question}}}"" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
                 {{> questionResponse }}
                 {{!-- <input type="file" name="file" id="file" accept=".jpg, .jpeg, .png"> --}}
                 

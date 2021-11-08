@@ -11,6 +11,7 @@ getCurrentQuestion = (reviewMode) => {
         document.getElementById('quizMain').innerHTML = response;
         questionId = document.getElementById('questionId').value;
         addQuizActiveButtonListeners();
+        applyCheckboxHandlers();
         populateCurrentAnswer();
     })
 }
@@ -19,7 +20,9 @@ populateCurrentAnswer = () => {
     if (userAnswers[currentQuestionIndex]) {
         userAnswers[currentQuestionIndex].answer.forEach((check, index) => {
             document.getElementById('checkbox' + index).checked = check;
-        })
+        });
+        document.getElementById('answerText').value = userAnswers[currentQuestionIndex].answerText;
+        document.getElementById('answerEssay').value = userAnswers[currentQuestionIndex].answerEssay;
     }
 }
 
@@ -31,7 +34,9 @@ saveCurrentAnswer = () => {
             document.getElementById('checkbox1').checked,
             document.getElementById('checkbox2').checked,
             document.getElementById('checkbox3').checked
-       ]
+       ],
+       answerText: document.getElementById('answerText').value,
+       answerEssay: document.getElementById('answerEssay').value
     }
 }
 
@@ -45,6 +50,22 @@ submitQuiz = () => {
         hideInterface();
     })
 }
+
+applyCheckboxHandlers = () => {
+        let checkboxArray = Array.from(document.querySelectorAll(".checkbox"));
+        checkboxArray.forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                let currentItem = e.target;
+                if (document.getElementById('questionType').value == 'single' && currentItem.checked) {
+                    // Unselect the others
+                    checkboxArray.forEach(item => {
+                        if (item.name != currentItem.name) item.checked = false;
+                    })
+                }
+            })
+        })
+}
+
 
 addQuizActiveButtonListeners = () => {
     document.getElementById('previousQuestion').addEventListener('click', (e) => {
