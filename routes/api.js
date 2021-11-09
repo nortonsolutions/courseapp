@@ -417,7 +417,7 @@ module.exports = function (app, db, upload) {
         currentQuestion: blankQuestion
       };
 
-      db.models.Quiz.findOne({_id: quizId}, 'name questions', (err,quiz) => {
+      db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
         if (err) {
           res.json({error: err.message});
         } else {
@@ -482,7 +482,26 @@ module.exports = function (app, db, upload) {
         }
       });
       
-    })  
+    })
+    
+    .put(ensureAuthenticated, ensureAdmin, (req,res) => {
+      db.models.Quiz.findOne({_id: req.params.quizId}, (err,quiz) => {
+        if (err) {
+          res.json({response: err.message});
+        } else {
+          quiz.description = req.body.quizDescription;
+          quiz.timeLimit = req.body.quizTimeLimit;
+          quiz.maxAttempts = req.body.quizMaxAttempts;
+          quiz.save(err => {
+            if (err) {
+              res.json({response: err.message});
+            } else {
+              res.json({response: 'Successfully updated quiz.'});
+            } 
+          })
+        }
+      })
+    })
 
   app.route('/quizAdmin/:quizId/questions')
     

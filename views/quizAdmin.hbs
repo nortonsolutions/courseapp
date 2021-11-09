@@ -16,9 +16,33 @@
             <div id="adminInterface" class="container">
                 <div id='quizId' class='d-none'>{{quiz._id}}</div>
                 <div class="row">
-                    <div class="col-9"><h2 class="display-4">{{quiz.name}}</h2></div>
+                    <div class="col-9">
+                        <h2 class="display-4">{{quiz.name}}</h2>
+                    </div>
                     <div class="col-3 mt-4"><button id="deleteQuiz" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete Quiz</button></div>
                 </div>
+                <div class="row">
+                    <div class="col-6">
+                      <label for="quizDescription"></label>
+                      <input type="text" class="form-control" name="quizDescription" id="quizDescription" aria-describedby="helpId" value="{{quiz.description}}">
+                      <small id="helpId" class="form-text text-muted">Quiz description</small>
+                    </div>
+                    <div class="col-2">
+                          <label for="quizTimeLimit"></label>
+                          <input type="text" class="form-control" name="quizTimeLimit" id="quizTimeLimit" aria-describedby="helpId2" value="{{quiz.timeLimit}}">
+                          <small id="helpId2" class="form-text text-muted">Time limit (min)</small>
+                    </div>
+                    <div class="col-2">
+                          <label for="quizMaxAttempts"></label>
+                          <input type="text" class="form-control" name="quizMaxAttempts" id="quizMaxAttempts" aria-describedby="helpId3" value="{{quiz.maxAttempts}}">
+                          <small id="helpId3" class="form-text text-muted">Max attempts</small>
+                    </div>
+                    <div class="col-2">
+                          <button type="button" id="saveQuiz" class="btn btn-primary mt-4"><i class="fas fa-save"></i> Save</button>
+                    </div>
+
+                </div>
+                <hr>
                 <div class="row">
                     <div class="col-6">
                         <form class="d-none" id="questionDetail" method="post" action="/quizAdmin/{{quiz._id}}">

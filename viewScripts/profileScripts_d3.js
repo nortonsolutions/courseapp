@@ -73,25 +73,16 @@ Object.keys(scoreArrays).forEach(quizName => {
 
 // SVG
 const svg = d3.select('#quizGraphSVG');
-svg.append('g')
-   .attr("transform", "translate(" + padding + ", " + padding + ")")
-   .call(yAxis)
-
-svg.append('g')
-   .attr("transform", "translate(0," + (height - padding) + ")")
-   .call(xAxis)
 
 selectedColor = 0;
 
+let masterArray = [];
+
 Object.keys(scoreArrays).forEach(quizName => {
 
-    // var xScaled = x(new Date(quiz.date));
-    // var yScaled = y(quiz.score);
     var line = d3.line(scoreArrays[quizName])
         .x(quiz => x(new Date(quiz.date)))
         .y(quiz => y(quiz.score))
-    
-
 
     svg.append("path")
         .datum(scoreArrays[quizName])
@@ -99,30 +90,35 @@ Object.keys(scoreArrays).forEach(quizName => {
         .attr("transform", "translate(0, " + padding + ")")
         .attr("fill", "none")
         .attr("stroke", colors[selectedColor]);
-
-    // svg.selectAll("text")
-    //     .data(scoreArrays[quizName])
-    //     .enter()
-    //     .append("text")
-    //     .text(quiz => (quiz.score))
-    //     .attr("x", quiz => x(new Date(quiz.date)))
-    //     .attr("y", quiz => y(quiz.score))
-    //     .attr("fill", "black");
     
     selectedColor++;
+    masterArray = [...masterArray, ...scoreArrays[quizName]];
 });
 
-// let quizGraphSVG = document.getElementById('quizGraphSVG');
 
-// Object.keys(scoreArrays).forEach(quizName => {
+svg.selectAll("text")
+    .data(masterArray)
+    .enter()
+    .append("text")
+    .text(d => (d.score))
+    .attr('x', d => x(new Date(d.date)) + 5)
+    .attr('y', d => y(d.score)+ 5)
+    .attr("fill", "black")
+    .style('font-size', '11px')
 
-//     scoreArrays[quizName].forEach(quiz => {
-//         let label = document.createElement('text');
-//         label.setAttribute('x', x(new Date(quiz.date)));
-//         label.setAttribute('y', y(quiz.score));
-//         label.setAttribute('fill', 'black');
-//         label.innerText = quiz.score;
+svg.append("text")
+    .text("test")
+    .attr('x', 100)
+    .attr('y', 100)
+    .attr("fill", "black")
+    .style('font-size', '11px')
 
-//         quizGraphSVG.append(label);
-//     })
-// })
+// These have to be last (after labels):
+
+svg.append('g')
+    .attr("transform", "translate(" + padding + ", " + padding + ")")
+    .call(yAxis)
+ 
+svg.append('g')
+    .attr("transform", "translate(0," + (height - padding) + ")")
+    .call(xAxis)
