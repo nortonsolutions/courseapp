@@ -5,7 +5,7 @@
 
                 <div class="col-7">
                     <input type="hidden" id="questionType" name="questionType" value="{{currentQuestion.type}}">
-                    <label style="width: 100%" for="question">Question #{{currentQuestionNumber}}:</label>
+                    <label style="width: 100%" for="question">Question #{{currentQuestionNumber}}: <span id="correctOrIncorrect"></span></label>
                     <textarea class="form-control" rows="{{{calculateRows currentQuestion.question}}}" disabled name="question" id="question" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
                     
                     <div id="responseCheckboxes" class="{{{hideIfNotEqual currentQuestion.type "multi" "single"}}}">
@@ -41,14 +41,27 @@
                         <label for="answerText">Response:</label>
                         <input type="text" class="form-control" name="answerText" id="answerText" aria-describedby="helpId" placeholder="Enter response..." value="{{currentQuestion.answerText}}">
                         <small id="helpId" class="form-text text-muted">Enter your response above.</small>
+
+                        {{#if reviewMode}}
+                            {{#if showAnswers}}
+                            <label>Expected Response (Regex):</label><br>
+                            /{{currentQuestion.answerTextRegex}}/
+                            {{/if}}
+                        {{/if}}
+
                     </div>
                     
                     <div id="responseEssay" class="{{{hideIfNotEqual currentQuestion.type "essay"}}}">
                         <label for="answerEssay">Essay:</label>
                         <textarea class="form-control" name="answerEssay" id="answerEssay" rows="4" placeholder="Enter response...">{{currentQuestion.answerEssay}}</textarea>
                         <small id="helpId" class="form-text text-muted">Enter your response above.</small>
+                        {{#if reviewMode}}
+                            {{#if showAnswers}}
+                            <label>Expected Response (Regex):</label><br>
+                            /{{currentQuestion.answerEssayRegex}}/
+                            {{/if}}
+                        {{/if}}
                     </div>
-
                     <hr>
 
                     <div class="row">

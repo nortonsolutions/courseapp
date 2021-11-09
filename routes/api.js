@@ -302,23 +302,19 @@ module.exports = function (app, db, upload) {
                   wrong = question.choices.reduce((total, current, index) => {
                     return total + (current.correct != userAnswer.answer[index]);
                   }, 0)
-          
-                  // Update the userAnswer
-                  if (wrong > 0) {
-                    correctAnswer = false;
-                    totalMissed++;
-                  }
-                  userAnswer.correct = correctAnswer;
-                  
+                  userAnswer.correct = (wrong == 0);
+
                 } else if (question.type == 'text') {
+                  userAnswer.correct = RegExp(question.answerTextRegex).test(userAnswer.answerText);
 
                 } else if (question.type == 'essay') {
-
+                  userAnswer.correct = RegExp(question.answerEssayRegex).test(userAnswer.answerEssay);
                 }
 
+                if (!userAnswer.correct) totalMissed++;
               })
 
-              let score = (totalQuestions - totalMissed) / totalQuestions;
+              let score = ((totalQuestions - totalMissed) / totalQuestions).toFixed(2);
 
               user.quizzes = [...user.quizzes, {
                 quizId: quizId,

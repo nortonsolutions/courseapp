@@ -12,11 +12,11 @@
                 {{/each}}
             </div>
             <div id="responseText" class="{{{hideIfNotEqual currentQuestion.type "text"}}}">
-                  <label for="text">Response:</label>
-                  <input type="text" class="form-control" name="answerTextRegex" id="answerTextRegex" aria-describedby="helpId" placeholder="Enter regex for response" value="{{currentQuestion.answerTextRegex}}">
+                  <label for="text">Response:</label><br>
+                  <div class="row ml-1 align-items-center">/<input type="text" style="width: 92% !important" class="form-control" name="answerTextRegex" id="answerTextRegex" aria-describedby="helpId" placeholder="Enter regex for response" value="{{currentQuestion.answerTextRegex}}">/</div>
                   <small id="helpId" class="form-text text-muted">Enter regular expression to grade answer.</small>
             </div>
             <div id="responseEssay" class="{{{hideIfNotEqual currentQuestion.type "essay"}}}">
                   <label for="essay">Essay:</label>
-                  <textarea class="form-control" name="answerEssayRegex" id="answerEssayRegex" rows="3" placeholder="Enter regex for response">{{currentQuestion.answerEssayRegex}}</textarea>
+                  <div class="row ml-1 align-items-center">/<textarea style="width: 92% !important" class="form-control" name="answerEssayRegex" id="answerEssayRegex" rows="1" placeholder="Enter regex for response">{{currentQuestion.answerEssayRegex}}</textarea>/</div>
             </div>

@@ -23,21 +23,32 @@ populateCurrentAnswer = () => {
         });
         document.getElementById('answerText').value = userAnswers[currentQuestionIndex].answerText;
         document.getElementById('answerEssay').value = userAnswers[currentQuestionIndex].answerEssay;
+        let correctOrIncorrect = document.getElementById('correctOrIncorrect');
+        if (userAnswers[currentQuestionIndex].correct) {
+            correctOrIncorrect.style.color = 'green';
+            correctOrIncorrect.style.fontStyle = 'bold';
+            correctOrIncorrect.innerText = 'Correct!';
+        } else {
+            correctOrIncorrect.style.color = 'red';
+            correctOrIncorrect.style.fontStyle = 'bold';
+            correctOrIncorrect.innerText = 'Incorrect';
+        }
+
     }
 }
 
 saveCurrentAnswer = () => {
-    userAnswers[currentQuestionIndex] = {
-        questionId: questionId,
-        answer:     [
+    
+    userAnswers[currentQuestionIndex].questionId = questionId;
+    userAnswers[currentQuestionIndex].answer = [
             document.getElementById('checkbox0').checked,
             document.getElementById('checkbox1').checked,
             document.getElementById('checkbox2').checked,
             document.getElementById('checkbox3').checked
-       ],
-       answerText: document.getElementById('answerText').value,
-       answerEssay: document.getElementById('answerEssay').value
-    }
+       ];
+    userAnswers[currentQuestionIndex].answerText = document.getElementById('answerText').value;
+    userAnswers[currentQuestionIndex].answerEssay = document.getElementById('answerEssay').value;
+
 }
 
 hideInterface = () => {

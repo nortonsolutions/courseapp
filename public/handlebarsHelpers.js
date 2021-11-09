@@ -82,4 +82,16 @@ module.exports = function(hbs) {
         return Math.ceil(string.length / 37);
     });
 
+    hbs.registerHelper("correctOrIncorrrect", function(correct) {
+        let str = '';
+        if (correct) { 
+            str = '<strong style="color: green">Correct!</strong>';
+        } else {
+            str = '<strong style="color: red">Incorrect</strong>';
+        }
+
+        return new hbs.SafeString(str);
+    });
+    
+
 }

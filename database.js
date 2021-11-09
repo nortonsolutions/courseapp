@@ -24,7 +24,8 @@ module.exports = function (mongoose, callback) {
     const quizSchema = mongoose.Schema({
       name: { type: String, required: true, unique: true },
       questions: {type: [quizQuestionSchema], default: []},
-      decription: String
+      decription: String,
+      timeLimit: Number
     })
 
     const QuizModel = mongoose.model('Quiz', quizSchema);
