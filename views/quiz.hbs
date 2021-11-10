@@ -11,14 +11,15 @@
 
     <div class="outerContainer">
         {{> navbar quizActive='active' }}
+        
 
         <div class="limit-mt jumbotron jumbotron-fluid">
             <div class="container">
-
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-10">
                         <span class="text-primary" id="feedback">{{feedback}} </span>
                     </div>
+                    <div id="timerContainer" class="col-2"></div>
                 </div>
 
                 {{!-- quizMain innerHTML replaced by quizActive during runtime --}}
@@ -46,6 +47,5 @@
     </div>
 
     <script src="/viewScripts/quizScripts.js"></script>
-
 </body>
 </html>

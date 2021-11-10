@@ -13,6 +13,7 @@ var multer      = require('multer');
 
 var auth              = require('./auth.js');
 var apiRoutes         = require('./routes/api.js');
+var apiReactRoutes    = require('./routes/apiReact.js');
 var hbsHelpers        = require('./public/handlebarsHelpers.js')
 var helmet            = require('helmet');
 var passport          = require('passport');
@@ -78,7 +79,9 @@ database(mongoose, (db) => {
   
   auth(app, db.models.User);
   
-  apiRoutes(app, db, upload);
+  // apiRoutes(app, db, upload);
+
+  apiReactRoutes(app, db, upload);
 
   //404 Not Found Middleware
   app.use(function(req, res, next) {

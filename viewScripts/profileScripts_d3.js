@@ -89,13 +89,13 @@ Object.keys(scoreArrays).forEach(quizName => {
         .attr("d", line)
         .attr("transform", "translate(0, " + padding + ")")
         .attr("fill", "none")
-        .attr("stroke", colors[selectedColor]);
+        .attr("stroke", colors[selectedColor])
     
     selectedColor++;
     masterArray = [...masterArray, ...scoreArrays[quizName]];
 });
 
-
+// Add score labels:
 svg.selectAll("text")
     .data(masterArray)
     .enter()
@@ -106,15 +106,35 @@ svg.selectAll("text")
     .attr("fill", "black")
     .style('font-size', '11px')
 
-svg.append("text")
-    .text("test")
-    .attr('x', 100)
-    .attr('y', 100)
-    .attr("fill", "black")
-    .style('font-size', '11px')
+// Add labels with keycodes:
+selectedColor = 0;
 
-// These have to be last (after labels):
+var xStart = 480;
+var yStart = 20;
 
+Object.keys(scoreArrays).forEach(quizName => {
+
+    let lineArray = [[xStart,yStart],[xStart+15,yStart]];
+
+    var line = d3.line(lineArray)
+    svg.append("path")
+       .datum(lineArray)
+       .attr('d', line)
+       .attr("fill", "none")
+       .attr("stroke", colors[selectedColor])
+       
+    svg.append("text")
+       .text(quizName)
+       .attr('x', xStart+20)
+       .attr('y', yStart+2)
+       .attr("fill", "black")
+       .style('font-size', '11px')
+
+    selectedColor++;
+    yStart += 20;
+})
+
+// Axes (must be added last)
 svg.append('g')
     .attr("transform", "translate(" + padding + ", " + padding + ")")
     .call(yAxis)

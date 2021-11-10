@@ -24,11 +24,11 @@ populateCurrentAnswer = () => {
         document.getElementById('answerText').value = userAnswers[currentQuestionIndex].answerText;
         document.getElementById('answerEssay').value = userAnswers[currentQuestionIndex].answerEssay;
         let correctOrIncorrect = document.getElementById('correctOrIncorrect');
-        if (userAnswers[currentQuestionIndex].correct) {
+        if (userAnswers[currentQuestionIndex].correct && userAnswers[currentQuestionIndex].correct == true) {
             correctOrIncorrect.style.color = 'green';
             correctOrIncorrect.style.fontStyle = 'bold';
             correctOrIncorrect.innerText = 'Correct!';
-        } else {
+        } else if (userAnswers[currentQuestionIndex].correct && userAnswers[currentQuestionIndex].correct == false) {
             correctOrIncorrect.style.color = 'red';
             correctOrIncorrect.style.fontStyle = 'bold';
             correctOrIncorrect.innerText = 'Incorrect';
@@ -39,6 +39,10 @@ populateCurrentAnswer = () => {
 
 saveCurrentAnswer = () => {
     
+    if (! userAnswers[currentQuestionIndex]) {
+        userAnswers[currentQuestionIndex] = {};
+    }
+
     userAnswers[currentQuestionIndex].questionId = questionId;
     userAnswers[currentQuestionIndex].answer = [
             document.getElementById('checkbox0').checked,
@@ -63,18 +67,18 @@ submitQuiz = () => {
 }
 
 applyCheckboxHandlers = () => {
-        let checkboxArray = Array.from(document.querySelectorAll(".checkbox"));
-        checkboxArray.forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                let currentItem = e.target;
-                if (document.getElementById('questionType').value == 'single' && currentItem.checked) {
-                    // Unselect the others
-                    checkboxArray.forEach(item => {
-                        if (item.name != currentItem.name) item.checked = false;
-                    })
-                }
-            })
+    let checkboxArray = Array.from(document.querySelectorAll(".checkbox"));
+    checkboxArray.forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            let currentItem = e.target;
+            if (document.getElementById('questionType').value == 'single' && currentItem.checked) {
+                // Unselect the others
+                checkboxArray.forEach(item => {
+                    if (item.name != currentItem.name) item.checked = false;
+                })
+            }
         })
+    })
 }
 
 
