@@ -24,7 +24,7 @@ Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
             let userQuiz = JSON.parse(response);
             localStorage.setItem('quizId', userQuiz.quizId);
             localStorage.setItem('userAnswers', JSON.stringify(userQuiz.answers));
-            window.location.href='/quiz?mode=review&quizId=' + userQuiz.quizId;
+            window.location.href='/quizActive/' + userQuiz.quizId + '?mode=review';
         })
 
         e.preventDefault();

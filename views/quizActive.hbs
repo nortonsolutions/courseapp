@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>nortonQuiz Quiz Interface</title>
+
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true react=true }}
+
+</head>
+<body>
+
+    <div class="outerContainer">
+        {{> navbar quizActive='active' }}
+
+        <div class="limit-mt jumbotron jumbotron-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12"><h1 class="display-4">{{quizName}}</h1></div>
+                    <input type="hidden" id="quizId" value="{{quizId}}">
+                    <input type="hidden" id="reviewMode" value="{{reviewMode}}">
+                    <input type="hidden" id="totalQuestions" value={{totalQuestions}}>
+                    <input type="hidden" id="timeLimit" value={{timeLimit}}>
+                    <input type="hidden" id="maxAttempts" value={{maxAttempts}}>
+                </div>
+                <main id="quizInterface">
+                    {{!-- Populated by QuizInterface React Component --}}
+                    {{!-- {{> quizQuestion }} --}}
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/babel" src="/viewScripts/quizActiveScripts.js"></script>
+
+</body>
+</html>

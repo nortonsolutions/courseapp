@@ -1,5 +1,4 @@
 var questionId = '';
-var currentQuestionIndex = 0;
 var quizId = localStorage.getItem("quizId")? localStorage.getItem("quizId") : '';
 var userAnswers = localStorage.getItem("userAnswers")? JSON.parse(localStorage.getItem("userAnswers")) : []
 let reviewMode = false;

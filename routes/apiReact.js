@@ -247,6 +247,22 @@ module.exports = function (app, db, upload) {
         });
     });
 
+    app.route('/quiz')
+        // Get and return the userQuiz:
+        .post(ensureAuthenticated, (req,res) => {
+            let userQuizId = req.body.userQuizId;
+    
+            db.models.User.findOne({_id: req.user._id}, (err,user) => {
+            if (err) {
+                res.json({error: err.message});
+            } else {
+                let subDoc = user.quizzes.id(userQuizId);
+                res.json(subDoc);
+            }
+            })
+        }) 
+
+
     app.route('/admin')
 
         // Get the full admin view
@@ -497,53 +513,69 @@ module.exports = function (app, db, upload) {
         res.render(process.cwd() + '/views/profile.hbs', context);
         })
 
-        app.route('/quizReact')
+    app.route('/quizSelect')
 
         // Get and render the whole quiz view:
         .get(ensureAuthenticated, (req,res) => {
+
+            let options = { admin: req.user.roles.includes('admin') };
     
-        let options = {
-            admin: req.user.roles.includes('admin'),
-            showAnswers: showAnswers
-        }
-    
-        if (req.query.quizId) {
-    
-            if (req.query.mode == "review" && allowTestReviews) {
-    
-            } else {
-                db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
-                    if (err) {
-                    res.json({error: err.message});
-                    } else {
-                    res.json(quiz);
-                    }
-                });
-            } 
-            
-        } else {
-    
-            db.models.Quiz.find({}, (err,doc) => {
-            if (err) {
-                res.json({error: err.message});
-            } else {
-                options.quizzes = doc;
-                res.render(process.cwd() + '/views/quizReact.hbs', options);
-            }
-            })
-        }
-        })
-    
-    // Grab list of quizzes
-    app.route('/quizReact/quizzes')
-        .get(ensureAuthenticated, (req,res) => {
             db.models.Quiz.find({}, 'name', (err,quizzes) => {
                 if (err) {
                     res.json({error: err.message});
                 } else {
-                    res.json(quizzes);
+                    options.quizzes = quizzes;
+                    res.render(process.cwd() + '/views/quizSelect.hbs', options);
                 }
             })
         })
+    
+    app.route('/quizActive/:quizId')
 
+        // Get and render the active quiz container:
+        .get(ensureAuthenticated, (req,res) => {
+    
+          let quizId = req.params.quizId;
+          let options = {
+              quizId: req.params.quizId,
+              admin: req.user.roles.includes('admin'),
+              reviewMode: req.query.mode == 'review'
+          }
+    
+          db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+            if (err) {
+              res.json({error: err.message});
+            } else {
+              options.quizName = quiz.name;
+              options.timeLimit = quiz.timeLimit;
+              options.maxAttempts = quiz.maxAttempts;
+              options.totalQuestions = quiz.questions.length;
+              res.render(process.cwd() + '/views/quizActive.hbs', options);
+            }
+          })
+    })
+
+    app.route('/quizActive/:quizId/:index')
+
+        // Get and render the quiz question:
+        .get(ensureAuthenticated, (req,res) => {
+    
+          let quizId = req.params.quizId;
+          let options = {
+              quizId: req.params.quizId,
+              currentQuestionNumber: Number(req.params.index) + 1,
+              admin: req.user.roles.includes('admin'),
+              reviewMode: req.query.mode == 'review',
+              showAnswers: showAnswers
+          }
+    
+          db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+            if (err) {
+              res.json({error: err.message});
+            } else {
+              options.currentQuestion = quiz.questions[req.params.index];
+              res.render(process.cwd() + '/views/partials/quizQuestion.hbs', options);
+            }
+          })
+    })
 }
