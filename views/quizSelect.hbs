@@ -8,7 +8,7 @@
 
 </head>
 <body>
-
+    <input type="hidden" id="userId" value="{{userId}}">
     <div class="outerContainer">
         {{> navbar quizActive='active' }}
         <div class="limit-mt jumbotron jumbotron-fluid">
@@ -26,8 +26,11 @@
     <script type="text/babel">
         document.getElementById('selectQuiz').addEventListener('submit', (e) => {
             if (confirm("Are you ready to start the quiz?")) {
-                localStorage.removeItem('userAnswers');
-                window.location.href = '/quizActive/' + e.target.elements.quizSelect.value;
+
+                let userId = document.getElementById('userId').value
+                let quizId = e.target.elements.quizSelect.value;
+                localStorage.removeItem(userId + quizId);
+                window.location.href = '/quizActive/' + quizId;
 
             }
             e.preventDefault();

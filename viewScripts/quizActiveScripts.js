@@ -6,13 +6,33 @@
  *
  */
 
-var userAnswers = localStorage.getItem("userAnswers")? JSON.parse(localStorage.getItem("userAnswers")) : []
+/**
+ * localStorage will contain entries that look like this:
+ * 
+ * { 
+ *    userIdquizId: {
+ *       userAnswers: []
+ *       timeRemaining: 123
+ *    } 
+ * }
+ * 
+ */
+
 var questionId = '';
 var currentQuestionIndex = 0;
+var userId = document.getElementById('userId').value;
 var quizId = document.getElementById('quizId').value;
 var totalQuestions = Number(document.getElementById('totalQuestions').value);
 var reviewMode = Boolean(document.getElementById('reviewMode').value == "true");
+var userAnswers = [];
 var timeLimit = Number(document.getElementById('timeLimit').value);
+
+// Is a quiz already in progress for this user?
+if (localStorage.getItem(userId + quizId)) {
+    let quizObj = JSON.parse(localStorage.getItem(userId + quizId));
+    userAnswers = quizObj.userAnswers;
+    timeLimit = quizObj.timeRemaining;
+} 
 
 const hideQuestionInterface = () => {
     document.getElementById('quizControls').classList.add('d-none');
@@ -22,6 +42,7 @@ const hideQuestionInterface = () => {
 const submitQuiz = () => {
     handlePost('/quiz/grade/' + quizId, {userAnswers: userAnswers}, (response) => {
         document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
+        localStorage.removeItem(userId + quizId);
         hideQuestionInterface();
     })
 }
@@ -72,7 +93,19 @@ class QuizTimer extends React.Component {
         }, 1000)
     }
 }
- 
+
+// const initialReduxState = {
+//     timeRemaining: 
+    
+// }
+
+// const UPDATESTATE = 'UPDATESTATE';
+
+// const updateStateAction = (payload) => ({
+//     type: UPDATESTATE,
+//     payload
+// })
+
 class QuizInterface extends React.Component {
     constructor(props) {
         super(props);
@@ -212,6 +245,10 @@ class QuizInterface extends React.Component {
         userAnswers[currentQuestionIndex].answerText = document.getElementById('answerText').value;
         userAnswers[currentQuestionIndex].answerEssay = document.getElementById('answerEssay').value;
     
+        localStorage.setItem(userId+quizId, JSON.stringify({
+            userAnswers: userAnswers,
+            timeRemaining: this.timeRemaining
+        }))
     }
 
     componentDidMount() {

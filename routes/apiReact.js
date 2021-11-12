@@ -525,6 +525,7 @@ module.exports = function (app, db, upload) {
                     res.json({error: err.message});
                 } else {
                     options.quizzes = quizzes;
+                    options.userId = req.user._id;
                     res.render(process.cwd() + '/views/quizSelect.hbs', options);
                 }
             })
@@ -550,6 +551,7 @@ module.exports = function (app, db, upload) {
               options.timeLimit = quiz.timeLimit;
               options.maxAttempts = quiz.maxAttempts;
               options.totalQuestions = quiz.questions.length;
+              options.userId = req.user._id;
               res.render(process.cwd() + '/views/quizActive.hbs', options);
             }
           })
