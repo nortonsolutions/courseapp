@@ -66,7 +66,7 @@ database(mongoose, (db) => {
   app.use(bodyParser.urlencoded({ extended: true }));
   
   app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "WHATEVER",
     resave: true,
     saveUninitialized: true
   }));
