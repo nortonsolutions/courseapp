@@ -45,12 +45,11 @@ suite('Functional Tests', function() {
         })
     });
 
-    test('GET /quiz without authentication',(done) => {
+    test('GET /quiz',(done) => {
       chai.request(server)
         .get('/quiz')
         .end((err,res) => {
-          assert.equal(res.status, 200, 'Response status should be 200');
-          assert.match(res.text, /Welcome to/, 'GET / should return welcome screen');
+          assert.equal(res.status, 404, 'Response status should be 404');
           done();
         })
     });
@@ -72,7 +71,7 @@ suite('Functional Tests', function() {
       test('Login',(done) => {
         chai.request(server)
           .post('/login')
-          .send({username: 'dave', password: 'dave'})
+          .send({username: 'Leassim', password: 'emkcuf'})
           .end((req,res) => {
             assert.match(res.redirects[0], /main/, 'Response should include a redirect to /main');
             done();
@@ -94,7 +93,45 @@ suite('Functional Tests', function() {
   suite('e2e with Zombie:', () => {
     Browser.site = 'http://localhost:3000'; 
 
-    suite('Login and Logout', function() {
+    suite('Login and Logout as test user', function() {
+
+      const browser = new Browser();
+
+      suiteSetup(function(done) {
+        return browser.visit('/', done); // Browser asynchronous operations take a callback
+      });
+
+      test('Login',(done) => {
+        browser
+          .fill('username', 'Leassim')
+          .fill('password', 'emkcuf')
+          .pressButton('Submit', () => {
+            browser.assert.success();
+            browser.assert.url(/main/)
+            browser.assert.text('p.lead', /Select a Quiz/);
+            done();
+          })
+      });
+
+      test('Access Quiz page',(done) => {
+        browser.visit('/quizSelect', () => {
+          browser.assert.success();
+          browser.assert.url(/quizSelect/);
+          browser.assert.text('h1', /Quiz Selection/);
+          done();
+        });
+      });
+
+      test('Logout',(done) => {
+        browser.visit('/logout', () => {
+          browser.assert.success();
+          browser.assert.text('h2', /Welcome to/);
+          done();
+        });
+      })
+    });
+
+    suite('Login and Logout as admin user', function() {
 
       const browser = new Browser();
 
@@ -114,13 +151,38 @@ suite('Functional Tests', function() {
           })
       });
 
-      test('Access Quiz page',(done) => {
-        browser.visit('/quiz', () => {
+      var testUserId = '';
+      test('Access Admin page',(done) => {
+        browser.visit('/admin', () => {
+          testUserId = browser.response.body.match(/\"(.+?)\"\>Hernandez/)[1];
           browser.assert.success();
-          browser.assert.url(/quiz/);
-          browser.assert.text('h1', /Main Quiz Interface/);
+          browser.assert.url(/admin/);
+          browser.assert.text('h1', /Main Admin/);
           done();
         });
+      });
+
+      test('Delete test user',(done) => {
+        browser.fetch('/deleteAccount', {
+          method: 'POST',
+          body: JSON.stringify({ "_id": testUserId }),
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        })
+        .then(function(response) {
+          // console.log('Status code:', response.status);
+          assert.equal(response.status, 200, 'Response status should be 200');
+          // if (response.status === 200)
+          //   return response.text();
+          done();
+        })
+        // .then(function(text) {
+        //   // console.log('Document:', text);
+        //   done();
+        // })
+        // .catch(function(error) {
+        //   // console.log('Network error');
+        //   done();
+        // });
       });
 
       test('Logout',(done) => {

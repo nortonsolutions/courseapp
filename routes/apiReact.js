@@ -166,10 +166,12 @@ module.exports = function (app, db, upload) {
     app.route('/logout')
         // Logout
         .get((req,res) => {
-        if (req.user) console.log("Logging out: " + req.user.username);
-        res.clearCookie(req.user.id);
-        req.logout();
-        res.redirect('/');
+            if (req.user) {
+                console.log("Logging out: " + req.user.username);
+                res.clearCookie(req.user.id);
+            }
+            req.logout();
+            res.redirect('/');
         });
 
 
