@@ -8,6 +8,7 @@
 var expect            = require('chai').expect;
 var bcrypt            = require('bcrypt');
 var passport          = require('passport');
+var cookie            = require('cookie');
 
 const blankQuestion = {
   _id: 0,
@@ -166,6 +167,7 @@ module.exports = function (app, db, upload) {
         // Logout
         .get((req,res) => {
         if (req.user) console.log("Logging out: " + req.user.username);
+        res.clearCookie(req.user.id);
         req.logout();
         res.redirect('/');
         });
@@ -257,7 +259,16 @@ module.exports = function (app, db, upload) {
                 res.json({error: err.message});
             } else {
                 let subDoc = user.quizzes.id(userQuizId);
-                res.json(subDoc);
+                
+                let responseJson = {
+                    answers: subDoc.answers,
+                    id: subDoc.id,
+                    quizId: subDoc.quizId,
+                    quizName: subDoc.quizName,
+                    score: subDoc.score,
+                    userId: req.user.id
+                }
+                res.json(responseJson);
             }
             })
         }) 
@@ -540,7 +551,13 @@ module.exports = function (app, db, upload) {
           let options = {
               quizId: req.params.quizId,
               admin: req.user.roles.includes('admin'),
-              reviewMode: req.query.mode == 'review'
+          }
+
+          if (req.headers.referer && req.headers.referer.match(/profile/)) {
+              res.cookie(req.user.id, quizId);
+              options.reviewMode = true;
+          } else {
+              res.clearCookie(req.user.id);
           }
     
           db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
@@ -551,6 +568,7 @@ module.exports = function (app, db, upload) {
               options.timeLimit = quiz.timeLimit;
               options.maxAttempts = quiz.maxAttempts;
               options.totalQuestions = quiz.questions.length;
+              
               options.userId = req.user._id;
               res.render(process.cwd() + '/views/quizActive.hbs', options);
             }
@@ -563,11 +581,19 @@ module.exports = function (app, db, upload) {
         .get(ensureAuthenticated, (req,res) => {
     
           let quizId = req.params.quizId;
+
+          // Set reviewMode?
+          var reviewMode = false;
+          var cookies = cookie.parse(req.headers.cookie || '');
+          if (Object.keys(cookies).length > 0) {
+              reviewMode = Array.from(Object.keys(cookies)).includes(req.user.id) && cookies[req.user.id] == quizId;
+          }
+
           let options = {
               quizId: req.params.quizId,
               currentQuestionNumber: Number(req.params.index) + 1,
               admin: req.user.roles.includes('admin'),
-              reviewMode: req.query.mode == 'review',
+              reviewMode: reviewMode,
               showAnswers: showAnswers
           }
     

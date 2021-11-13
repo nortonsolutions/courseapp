@@ -22,9 +22,13 @@ Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
             userQuizId: userQuizId
         }, (response) => {
             let userQuiz = JSON.parse(response);
-            localStorage.setItem('quizId', userQuiz.quizId);
-            localStorage.setItem('userAnswers', JSON.stringify(userQuiz.answers));
-            window.location.href='/quizActive/' + userQuiz.quizId + '?mode=review';
+            
+            localStorage.setItem(userQuiz.userId+userQuiz.quizId, JSON.stringify({
+                userAnswers: userQuiz.answers,
+                timeRemaining: 0
+            }))
+
+            window.location.href='/quizActive/' + userQuiz.quizId;
         })
 
         e.preventDefault();

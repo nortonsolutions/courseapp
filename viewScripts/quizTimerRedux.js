@@ -1,5 +1,14 @@
-// Things go into the state which affect the rendering
+/**
+ * This is meant to follow quizActiveScripts.js
+ * 
+ * Using Redux here to externalize the store/state,
+ * so it can be accessed from outside the component.
+ */ 
+
+
 const initialState = {
+    timeRemaining: 60*timeLimit,
+    running: true
 }
 
 const UPDATESTATE = 'UPDATESTATE';
@@ -17,7 +26,6 @@ const updateStateAction = (payload) => ({
 //     }
 // }
 
-
 const reducer = (state = initialState, { type, payload }) => {
     switch (type) {
     
@@ -32,9 +40,11 @@ const reducer = (state = initialState, { type, payload }) => {
 const store = Redux.createStore(reducer);
 // const store = Redux.createStore(reducer, Redux.applyMiddleware(ReduxThunk.default));
 
+
 const mapStateToProps = (state) => {
     return {
-
+        timeRemaining: state.timeRemaining,
+        running: state.running
     }
 }
 
@@ -49,10 +59,56 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
+class QuizTimer extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div id="timerContainer" className="col-2">
+            {String(this.minutes(this.props.timeRemaining) + ":" + this.seconds(this.props.timeRemaining))}
+            </div>
+        )
+    }
+
+    minutes(totalTime) {
+        return Math.floor(totalTime/60);
+    }
+
+
+    seconds(totalTime) {
+        return (totalTime%60).toLocaleString("en-US", { minimumIntegerDigits: 2 })
+    }
+
+    tick() {
+
+        if (this.props.timeRemaining <= 1) {
+            this.props.updateState({running: false});
+        }
+
+        this.props.updateState({timeRemaining: this.props.timeRemaining - 1});
+    }
+
+    componentDidMount() {
+        // document.getElementById('beep').load();
+        if (this.props.timeRemaining > 1) {
+            setInterval(() => {
+                if (this.props.running) {
+                    this.tick();
+                } else {
+                    submitQuiz();
+                }
+            }, 1000)
+        }
+    }
+}
+
 const QuizTimerConnnected = ReactRedux.connect(
     mapStateToProps,
     mapDispatchToProps
-)(ActiveQuestion);
+)(QuizTimer);
 
 const Provider = ReactRedux.Provider;
 
