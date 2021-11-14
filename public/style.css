@@ -128,3 +128,7 @@ canvas { border: 1px solid black; }
 svg {
   overflow: visible !important;
 }
+
+#questionMarked {
+  font-size: 20px;
+}

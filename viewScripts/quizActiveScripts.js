@@ -27,6 +27,10 @@ var totalQuestions = Number(document.getElementById('totalQuestions').value);
 var userAnswers = [];
 var timeLimit = Number(document.getElementById('timeLimit').value); // minutes
 
+const markedOptions = {
+    breaks: true
+}
+
 // Is a quiz already in progress for this user?
 if (localStorage.getItem(userId + quizId)) {
     let quizObj = JSON.parse(localStorage.getItem(userId + quizId));
@@ -113,6 +117,10 @@ const getQuestion = () => {
     handleGet('/quizActive/' + quizId + '/' + currentQuestionIndex, (response) => {
         document.getElementById('quizQuestion').innerHTML = response;
         questionId = document.getElementById('questionId').value;
+
+        var questionMarked = marked(document.getElementById('questionRaw').innerText, markedOptions);
+        document.getElementById('questionMarked').innerHTML = questionMarked;
+        
         setButtonVisibility();
         applyCheckboxHandlers();
         populateCurrentAnswer();

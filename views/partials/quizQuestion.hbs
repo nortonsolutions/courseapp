@@ -2,8 +2,10 @@
     <div class="col-7">
         <input type="hidden" id="questionType" name="questionType" value="{{currentQuestion.type}}">
         <label style="width: 100%" for="question">Question #{{currentQuestionNumber}}: <span id="correctOrIncorrect"></span></label>
-        <textarea class="form-control" rows="{{{calculateRows currentQuestion.question}}}" disabled name="question" id="question" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
-        
+        {{!-- <textarea class="form-control" rows="{{{calculateRows currentQuestion.question}}}" disabled name="question" id="question" placeholder="Enter question...">{{currentQuestion.question}}</textarea> --}}
+        <div id="questionRaw" class="d-none">{{currentQuestion.question}}</div>
+        <div id="questionMarked"></div>
+
         <div id="responseCheckboxes" class="{{{hideIfNotEqual currentQuestion.type "multi" "single"}}}">
             <label for="question">Select your answer(s):</label>
             {{#each currentQuestion.choices}}

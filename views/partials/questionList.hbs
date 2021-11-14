@@ -3,8 +3,8 @@
                             {{#each quiz.questions}}
                             <div class="row">
                                 <div class="col-1">{{{plusOne @index}}}</div>
-                                <div class="col-8 question" id={{_id}}>{{{limitLength question}}}</div>
-                                <div class="col-2 deleteQuestion text-danger text-center"><span class="fas fa-minus-circle"></span></div>
+                                <div class="col-9 question" id={{_id}}>{{{limitLength question}}}</div>
+                                <div class="col-1 deleteQuestion text-danger text-center"><span class="fas fa-minus-circle"></span></div>
 
                             </div>
                             {{/each}}
