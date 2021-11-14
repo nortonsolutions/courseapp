@@ -92,6 +92,14 @@ module.exports = function(hbs) {
 
         return new hbs.SafeString(str);
     });
+
+    hbs.registerHelper("selectedForRole", function(roles, role) {
+        if (roles && roles.includes(role)) {
+            return 'selected';
+        } else return '';
+    });
+
+    
     
 
 }

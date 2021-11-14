@@ -144,19 +144,23 @@ module.exports = function (app, db, upload) {
                 user.firstname = req.body.firstname;
                 user.surname = req.body.surname;
 
+                if (req.body.roles) {
+                    user.roles = req.body.roles;
+                }
+ 
                 if (req.body.password) {
-                bcrypt.hash(req.body.password, 12).then(hash => {
-                    user.password = hash;
-                    user.save((err,user) => {
-                    if (err) res.json({error: err.message});
-                    res.json({Success: "User successfully updated."})
-                    })
-                });
+                    bcrypt.hash(req.body.password, 12).then(hash => {
+                        user.password = hash;
+                        user.save((err,user) => {
+                        if (err) res.json({error: err.message});
+                        res.json({Success: "User successfully updated."})
+                        })
+                    });
                 } else {
-                user.save((err,user) => {
-                    if (err) res.json({error: err.message});
-                    res.json({Success: "User successfully updated."})
-                })
+                    user.save((err,user) => {
+                        if (err) res.json({error: err.message});
+                        res.json({Success: "User successfully updated."})
+                    })
                 }
             }
             }
@@ -280,27 +284,27 @@ module.exports = function (app, db, upload) {
 
         // Get the full admin view
         .get(ensureAuthenticated, ensureAdmin, (req,res) => {
-        let options = {
-            admin: req.user.roles.includes('admin'),
-            feedback: req.query.feedback? req.query.feedback : ''
-        };
-        
-        // Grab list of quizzes and users:
-        db.models.Quiz.find({}, 'name', (err,quizzes) => {
-            if (err) {
-            res.json({error: err.message});
-            } else {
-            options.quizzes = quizzes
-            db.models.User.find({}, (err,users) => {
+            let options = {
+                admin: req.user.roles.includes('admin'),
+                feedback: req.query.feedback? req.query.feedback : ''
+            };
+            
+            // Grab list of quizzes and users:
+            db.models.Quiz.find({}, 'name', (err,quizzes) => {
                 if (err) {
                 res.json({error: err.message});
                 } else {
-                options.users = users;
-                res.render(process.cwd() + '/views/admin.hbs', options);
+                options.quizzes = quizzes
+                db.models.User.find({}, (err,users) => {
+                    if (err) {
+                    res.json({error: err.message});
+                    } else {
+                    options.users = users;
+                    res.render(process.cwd() + '/views/admin.hbs', options);
+                    }
+                })
                 }
             })
-            }
-        })
         })
 
         // Post a new quiz  
@@ -318,14 +322,16 @@ module.exports = function (app, db, upload) {
     
     app.route('/admin/getUserUpdateForm')
         .get(ensureAuthenticated,ensureAdmin, (req,res) => {
-        let userId = req.query.userId;
-        db.models.User.findOne({_id: userId}, 'username firstname surname',(err,user) => {
-            if (err) {
-            res.json({error: err.message});
-            } else {
-            res.render(process.cwd() + '/views/partials/userUpdateForm.hbs', user);
-            }
-        })
+            
+            let userId = req.query.userId;
+            db.models.User.findOne({_id: userId}, 'username firstname surname roles',(err,user) => {
+                if (err) {
+                res.json({error: err.message});
+                } else {
+                user.admin = req.user.roles.includes('admin');
+                res.render(process.cwd() + '/views/partials/userUpdateForm.hbs', user);
+                }
+            })
         })
 
     // Grab list of quizzes for selectQuiz partial

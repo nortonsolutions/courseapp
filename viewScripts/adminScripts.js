@@ -51,7 +51,8 @@ document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
         firstname: e.target.elements.firstname.value,
         surname: e.target.elements.surname.value,
         password: e.target.elements.password.value,
-        confirm: e.target.elements.confirm.value
+        confirm: e.target.elements.confirm.value,
+        roles: e.target.elements.roles.value
     }, (response) => {
         document.getElementById('feedback').innerHTML = response;
     })
