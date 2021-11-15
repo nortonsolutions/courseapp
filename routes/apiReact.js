@@ -1,5 +1,5 @@
 /*
-* Norton 2021 - QuizApp
+* Norton 2021 - quiZap
 *
 */
 
@@ -58,7 +58,7 @@ module.exports = function (app, db, upload) {
         
         
         let options = {
-            welcomeMessage: "Welcome to QuizApp!",
+            welcomeMessage: "Welcome to quiZap!",
             showRegistration: false,
             showLogin: true
         }
@@ -421,7 +421,7 @@ module.exports = function (app, db, upload) {
         let quizId = req.params.quizId;
         db.models.Quiz.remove({_id: quizId}, (err) => {
             if (err) {
-            res.json({response: err.message});
+            res.json({error: err.message});
             } else {
             res.json({response: 'Successfully removed quiz.'});
             }
@@ -432,14 +432,14 @@ module.exports = function (app, db, upload) {
         .put(ensureAuthenticated, ensureAdmin, (req,res) => {
         db.models.Quiz.findOne({_id: req.params.quizId}, (err,quiz) => {
             if (err) {
-            res.json({response: err.message});
+            res.json({error: err.message});
             } else {
             quiz.description = req.body.quizDescription;
             quiz.timeLimit = req.body.quizTimeLimit;
             quiz.maxAttempts = req.body.quizMaxAttempts;
             quiz.save(err => {
                 if (err) {
-                res.json({response: err.message});
+                res.json({error: err.message});
                 } else {
                 res.json({response: 'Successfully updated quiz.'});
                 } 

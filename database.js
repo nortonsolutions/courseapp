@@ -6,7 +6,7 @@
 
 module.exports = function (mongoose, callback) {
 
-    const CONNECTION_STRING = process.env.DB || "mongodb://localhost:27018/nortonQuiz";
+    const CONNECTION_STRING = process.env.DB || "mongodb://localhost:27018/quiZap";
 
     const quizQuestionSchema = mongoose.Schema({
       type: { type: String, required: true, default: 'single' },
@@ -57,6 +57,40 @@ module.exports = function (mongoose, callback) {
     })
     
     const UserModel = mongoose.model('User', userSchema);
+
+    const replySchema = mongoose.Schema({
+      text: { type: String, required: true },
+      created_on: Date,
+      author: { type: String, required: true },
+      reported: { type: Boolean, default: false }
+    })
+  
+    const ReplyModel = mongoose.model('Reply', replySchema);
+
+    const threadSchema = mongoose.Schema({
+      courseName: { type: String, required: true }, 
+      text: { type: String, required: true },
+      created_on: Date,
+      bumped_on: Date,
+      status: String,
+      author: { type: String, required: true },
+      reported: { type: Boolean, default: false },
+      replies: {type: [replySchema], default: []}
+    })
+
+    const ThreadModel = mongoose.model('Thread', threadSchema);
+
+    const courseSchema = mongoose.Schema({
+      coursename: { type: String, required: true },
+      homeContent: String,
+      description: String,
+      instructorIds: [String],
+      studentIds: [String],
+      quizzes: {type: [quizSchema], default: []},
+      threads: {type: [threadSchema], default: []}
+    })
+
+    const CourseModel = mongoose.model('Course', courseSchema);
 
     mongoose.connect(CONNECTION_STRING, { useMongoClient: true })
     .then(

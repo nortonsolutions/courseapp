@@ -127,7 +127,7 @@ document.getElementById('btnSaveQuestion').addEventListener('click', (e) => {
     formData.append('questionJson', JSON.stringify(questionJson));
 
     handleFormPost('/quizAdmin/' + currentQuizId, formData, (response) => {
-        if (/error/.test(response)) {
+        if (/error:/.test(response)) {
             document.getElementById('feedback').innerHTML = response;
         } else {
             currentQuestionId = 0;

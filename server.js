@@ -1,5 +1,5 @@
 /**
- * Norton 2021 - nortonQuiz App
+ * Norton 2021 - quiZap App
  */
 
 'use strict';
@@ -12,7 +12,6 @@ var fs          = require('fs');
 var multer      = require('multer');
 
 var auth              = require('./auth.js');
-var apiRoutes         = require('./routes/api.js');
 var apiReactRoutes    = require('./routes/apiReact.js');
 var hbsHelpers        = require('./public/handlebarsHelpers.js')
 var helmet            = require('helmet');
