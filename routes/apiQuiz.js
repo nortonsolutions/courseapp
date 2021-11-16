@@ -44,6 +44,33 @@ module.exports = function(app, db, upload) {
         }     
         })
     };
+
+    // ensureAdminOrTeacher - unique for quiz route
+    const ensureAdminOrTeacher = (req,res,next) => {
+        let quizId = req.params.quizId;
+        
+        db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
+        if (user.roles.includes('admin')) {
+            next();
+        } else {
+            if (user.roles.includes('teacher')) {
+                db.models.Course.findOne()
+                .and([{'quizIds': quizId }, {'instructors.instructorId': req.user.id}])
+                .exec((err,course) => {
+                    if (course) {
+                        next();
+                    } else {
+                        res.redirect('/main');
+                    }
+                })
+
+            } else {
+                res.redirect('/main');
+            }
+        }     
+        })
+    };
+
     
     // Grab list of quizzes for selectQuiz partial
     app.route('/quizzes/:courseId')
@@ -163,7 +190,7 @@ module.exports = function(app, db, upload) {
     app.route('/quizAdmin/:quizId')
 
     // Get entire quizAdmin view for a quiz
-    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
         let quizId = req.params.quizId;
 
         let options = {
@@ -184,7 +211,7 @@ module.exports = function(app, db, upload) {
     // Post question for the quiz
     .post(
         ensureAuthenticated, 
-        ensureAdmin, 
+        ensureAdminOrTeacher, 
         upload.single('file'), // req.file
         (req,res) => {
             let quizId = req.params.quizId;
@@ -249,7 +276,7 @@ module.exports = function(app, db, upload) {
         });
     })
 
-    .put(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .put(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
     db.models.Quiz.findOne({_id: req.params.quizId}, (err,quiz) => {
         if (err) {
         res.json({error: err.message});
@@ -271,7 +298,7 @@ module.exports = function(app, db, upload) {
     app.route('/quizAdmin/:quizId/questions')
 
     // Grab list of questions for questionList partial
-    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
     let quizId = req.params.quizId;
     let options = {};
 
@@ -288,7 +315,7 @@ module.exports = function(app, db, upload) {
     app.route('/quizAdmin/:quizId/:questionId')
 
     // Grab question details for questionDetail partial
-    .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
     let questionId = req.params.questionId;
     let quizId = req.params.quizId;
     let options = {}
@@ -309,7 +336,7 @@ module.exports = function(app, db, upload) {
     })
 
     // Remove the question
-    .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
     let questionId = req.params.questionId;
     let quizId = req.params.quizId;
     let options = {}
