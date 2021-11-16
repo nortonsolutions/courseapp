@@ -1,9 +1,9 @@
 var currentCourseId = document.getElementById('courseId').innerText;
+var admin = document.getElementById('admin').innerText == "true";
 
 document.getElementById('newQuiz').addEventListener('submit', (e) => {
-    let url = "/courseAdmin";
+    let url = "/courseAdmin/" + currentCourseId;
     let data = {
-        courseId: currentCourseId,
         quizName: e.target.elements.quizName.value 
     };
     handlePost(url, data, (response) => {
@@ -37,51 +37,59 @@ document.getElementById('deleteCourse').addEventListener('click', (e) => {
     }
 })
 
-document.getElementById('selectTeachers').addEventListener('submit', e => {
-    let url = "/courseAdmin/" + currentCourseId;
-    let data = {
-        instructorId: e.target.elements.instructorId.value 
-    };
-    handlePostTextResponse(url, data, (response) => {
-        if (/error:/.test(response)) {
-            document.getElementById('feedback').innerHTML = response;
-        } else {
-            document.getElementById('instructors').innerHTML = response;
-            addInstructorDeleteListeners();
-
-        }
-    });
-
-    e.preventDefault();
-
-})
-
 document.getElementById('saveCourseDetails').addEventListener('click', e => {
     let url = "/courseAdmin/" + currentCourseId;
     let data = {
         description: document.getElementById('description').value,
         homeContent: document.getElementById('homeContent').value
     };
-    handlePost(url, data, (response) => {
+    handlePut(url, data, (response) => {
         document.getElementById('feedback').innerHTML = response;
     });
 })
 
-addInstructorDeleteListeners = () => {
-    Array.from(document.querySelectorAll('.deleteInstructor')).forEach(el => {
-        el.addEventListener('click', e => {
-            let instructorId = e.target.parentNode.querySelector('div:nth-child(1)').id;
-            handleDelete('/courseAdmin/' + currentCourseId, { instructorId: instructorId }, response => {
-                if (/error:/.test(response)) {
-                    document.getElementById('feedback').innerHTML = response;
-                } else {
-                    document.getElementById('instructors').innerHTML = response;
-                    addInstructorDeleteListeners();
 
-                }
+if (admin) {
+
+    document.getElementById('selectTeachers').addEventListener('submit', e => {
+        let url = "/courseAdmin/" + currentCourseId;
+        let data = {
+            instructorId: e.target.elements.instructorId.value 
+        };
+        handlePutTextResponse(url, data, (response) => {
+            if (/error:/.test(response)) {
+                document.getElementById('feedback').innerHTML = response;
+            } else {
+                document.getElementById('instructors').innerHTML = response;
+                addInstructorDeleteListeners();
+    
+            }
+        });
+    
+        e.preventDefault();
+    
+    })
+
+    addInstructorDeleteListeners = () => {
+        Array.from(document.querySelectorAll('.deleteInstructor')).forEach(el => {
+            el.addEventListener('click', e => {
+                let instructorId = e.target.parentNode.querySelector('div:nth-child(1)').id;
+                handleDelete('/courseAdmin/' + currentCourseId, { instructorId: instructorId }, response => {
+                    if (/error:/.test(response)) {
+                        document.getElementById('feedback').innerHTML = response;
+                    } else {
+                        document.getElementById('instructors').innerHTML = response;
+                        addInstructorDeleteListeners();
+    
+                    }
+                })
             })
         })
-    })
+    }
+
+    addInstructorDeleteListeners();
 }
 
-addInstructorDeleteListeners();
+
+
+

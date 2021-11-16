@@ -1,7 +1,7 @@
 
                             
                             <div>
-                                <label for="quizName">Edit Module:</label>
+                                <label for="quizName">Module:</label>
                                 <select class="form-control" name="quizSelect">
                                 {{#each quizzes}}
                                     <option value="{{_id}}">{{name}}</option>
@@ -9,5 +9,5 @@
                                 </select>
                                 
                             </div>
-                            <small class="form-text text-muted">Select the module to edit</small>
+                            <small class="form-text text-muted">Select the module</small>
                             <button type="submit" class="btn btn-sm btn-primary">Submit</button>

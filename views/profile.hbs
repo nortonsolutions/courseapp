@@ -36,22 +36,40 @@
                                 </form>
                             </div>
 
-                            <div class="col-6" style="max-height: 260px; overflow: scroll;">
-                                <h4>My Quiz History:</h4>
-                                <div id="quizListContainer">
-                                    <label>Quizzes:</label>
-                                    <div class="col" id="quizList">
-                                        {{#each quizzes}}
-                                        <form class="row userQuiz">
-                                            <input type="hidden" name="userQuizId" value="{{_id}}">
-                                            <input type="hidden" name="quizId" value="{{quizId}}">
-                                            <div class="col-6 noclick">{{quizName}}</div>
-                                            <div class="col-4 noclick">{{{shortDate date}}}</div>
-                                            <div class="col-2 noclick">{{score}}%</div>
-                                        </form>
-                                        {{/each}}
+
+
+                            <div class="col-6" >
+                                
+                                {{#if teacher}}
+                                    <div class="row"><h4>My Courses:</h4></div>                                          
+                                    {{#each myCourses}}
+                                    <form class="row">
+                                        <input type="hidden" value="{{_id}}">
+                                        <div class="courseLink" class="col-10">{{name}}</div>
+                                    </form>
+
+                                {{/each}}
+                                <hr>
+                                {{/if}}
+
+                                <div class="channel row">
+                                    <h4>My History:</h4>
+                                    <div id="quizListContainer">
+                                        <label>Modules:</label>
+                                        <div class="col" id="quizList">
+                                            {{#each quizzes}}
+                                            <form class="row userQuiz">
+                                                <input type="hidden" name="userQuizId" value="{{_id}}">
+                                                <input type="hidden" name="quizId" value="{{quizId}}">
+                                                <div class="col-6 noclick">{{quizName}}</div>
+                                                <div class="col-4 noclick">{{{shortDate date}}}</div>
+                                                <div class="col-2 noclick">{{score}}%</div>
+                                            </form>
+                                            {{/each}}
+                                        </div>
                                     </div>
                                 </div>
+                               
                             </div>
                             
                         </div>

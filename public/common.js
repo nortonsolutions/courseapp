@@ -38,6 +38,16 @@ handlePut = (url, data, callback) => {
     })
 }
 
+handlePutTextResponse = (url, data, callback) => {
+    fetch(url, putOptions(data))
+    .then(response => response.text())
+    .catch(error => {
+        callback(error.message);
+    })
+    .then(response => { 
+        callback(response);
+    })
+}
 
 
 formPostOptions = (data) => {

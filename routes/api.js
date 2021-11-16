@@ -19,7 +19,7 @@ module.exports = function (app, db) {
         res.redirect('/');
     };
 
-    // ensureAuthenticated
+    // ensureAdmin
     const ensureAdmin = (req,res,next) => {
         db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
         if (user.roles.includes('admin')) {
@@ -30,6 +30,27 @@ module.exports = function (app, db) {
         })
     };
 
+    // ensureAdminOrTeacher
+    const ensureAdminOrTeacher = (req,res,next) => {
+        let courseId = req.params.courseId;
+        
+        db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
+        if (user.roles.includes('admin')) {
+            next();
+        } else {
+            if (user.roles.includes('teacher')) {
+                db.models.Course.findOne()
+                .and([{_id: courseId}, {'instructors.instructorId': req.user.id}])
+                .exec((err,course) => {
+                    if (course) next();
+                })
+
+            } else {
+                res.redirect('/main');
+            }
+        }     
+        })
+    };
 
     app.route('/')
         // Get and render the index view
@@ -222,20 +243,39 @@ module.exports = function (app, db) {
         // Get and render the whole profile view  
         .get(ensureAuthenticated, (req,res) => {
         
-        let context = req.user;
-        context.admin = req.user.roles.includes('admin');
-        
-        // Create object with arrays of scores, one for each quizName
-        let scoreArrays = {};
-        req.user.quizzes.forEach(quiz => {
-            if (! scoreArrays[quiz.quizName]) scoreArrays[quiz.quizName] = [];
-            scoreArrays[quiz.quizName].push({ score: quiz.score, date: quiz.date});
-        });
+            let context = req.user;
+            context.admin = req.user.roles.includes('admin');
+            context.teacher = req.user.roles.includes('teacher');
 
-        context.scoreArrays = JSON.stringify(scoreArrays);
 
-        // Get the quiz name and add to the context
-        res.render(process.cwd() + '/views/profile.hbs', context);
+
+            // Create object with arrays of scores, one for each quizName
+            let scoreArrays = {};
+            req.user.quizzes.forEach(quiz => {
+                if (! scoreArrays[quiz.quizName]) scoreArrays[quiz.quizName] = [];
+                scoreArrays[quiz.quizName].push({ score: quiz.score, date: quiz.date});
+            });
+
+            context.scoreArrays = JSON.stringify(scoreArrays);
+
+            if (context.teacher) {
+
+                // let idTest = RegExp(req.user.id);
+                // Get the courses for which he is an instructor
+    
+                db.models.Course.find({ 'instructors.instructorId': req.user.id }, 'name', (err,courses) => {
+                    if (err) {
+                        res.json({error: err.message});
+                    } else {
+                        context.myCourses = courses;
+                        res.render(process.cwd() + '/views/profile.hbs', context);
+                    }
+                })
+    
+    
+            } else {
+                res.render(process.cwd() + '/views/profile.hbs', context);
+            }
         })
 
     app.route('/courses')
@@ -257,26 +297,7 @@ module.exports = function (app, db) {
 
     app.route('/courseAdmin')
 
-        // Post a new quiz for the given course
-        .post(ensureAuthenticated, ensureAdmin, (req,res) => {
-    
-            let courseId = req.body.courseId;
-            let quizName = req.body.quizName;
-            db.models.Quiz.create({ name: quizName,  }, (err, quiz) => {
-                if (err) {
-                    res.json({error: err.message});
-                } else {
 
-                    // Link the new quizId to the mother courseId
-                    db.models.Course.findOne({_id: courseId}, (err,course) => {
-                        course.quizIds = [...course.quizIds, quiz.id]
-                        course.save(err => {
-                            res.json(err? {error: err.message} : quiz);
-                        })
-                    })
-                }
-            });
-        })
 
         // Delete the given course
         .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
@@ -289,7 +310,7 @@ module.exports = function (app, db) {
     app.route('/courseAdmin/:courseId')
 
         // Get the full courseAdmin view
-        .get(ensureAuthenticated, ensureAdmin, (req,res) => {
+        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
             let options = {
                 admin: req.user.roles.includes('admin'),
                 feedback: req.query.feedback? req.query.feedback : ''
@@ -322,8 +343,29 @@ module.exports = function (app, db) {
             })
         })
 
+        // Post a new quiz for the given course
+        .post(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+    
+            let courseId = req.params.courseId;
+            let quizName = req.body.quizName;
+            db.models.Quiz.create({ name: quizName,  }, (err, quiz) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+
+                    // Link the new quizId to the mother courseId
+                    db.models.Course.findOne({_id: courseId}, (err,course) => {
+                        course.quizIds = [...course.quizIds, quiz.id]
+                        course.save(err => {
+                            res.json(err? {error: err.message} : quiz);
+                        })
+                    })
+                }
+            });
+        })
+
         // Post details for the course (description, content, instructors, etc.)
-        .post(ensureAuthenticated, ensureAdmin, (req,res) => {
+        .put(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
             let courseId = req.params.courseId;
             
             // instructorID will always be sent by itself, one at a time

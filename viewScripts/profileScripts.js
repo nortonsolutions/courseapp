@@ -35,3 +35,9 @@ Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
 
     })
 })
+
+Array.from(document.querySelectorAll('.courseLink')).forEach(el => {
+    el.addEventListener('click', (e) => {
+        window.location.href='/courseAdmin/' + e.target.parentNode.querySelector('input').value;
+    })
+})
