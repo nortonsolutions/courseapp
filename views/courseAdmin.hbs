@@ -14,32 +14,31 @@
 
         <div class="limit-mt jumbotron jumbotron-fluid">
             <div id="adminInterface" class="container">
-                <h1 class="display-4">Main Admin Interface</h1>
+                
+                <div id='courseId' class='d-none'>{{course._id}}</div>
+                <div class="row">
+                    <div class="col-9">
+                        <h1 class="display-4">{{course.name}}</h1>
+                    </div>
+                <div class="col-3 mt-4"><button id="deleteCourse" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete Course</button></div>
 
+                </div>
                 <div class="row">
                     <div class="col-3">
-                    <form id="newCourse" method="post">
+                    <form id="newQuiz" method="post" action="/quiz">
                         <div class="form-group">
-                            <label for="courseName">Add a course:</label>
+                            <label for="quizName">Add a quiz:</label>
                             <input type="text"
-                                class="form-control" name="courseName" id="courseName" aria-describedby="helpId" placeholder="">
-                            <small id="helpId" class="form-text text-muted">Enter Course Name</small>
+                                class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="">
+                            <small id="helpId" class="form-text text-muted">Enter Quiz Name</small>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                         
                     </form>
                     </div>
                     <div class="col-3">
-                        <form id='selectCourse' action="/course" method="get">
-                            {{> selectCourse }}
-                        </form>
-                    </div>
-                    <div class="col-6">
-                        <form id='selectUser' action="/" method="get">
-                            {{> selectUser }}
-                        </form>
-                        <form class="mt-4 d-none" id="userUpdateForm" action="/updateAccount" method="post">
-                            {{> userUpdateForm }}
+                        <form id='selectQuiz' action="/quiz" method="get">
+                            {{> selectQuiz }}
                         </form>
                     </div>
                 </div>
@@ -53,7 +52,7 @@
 
     </div>
 
-    <script src="/viewScripts/adminScripts.js"></script>
+    <script src="/viewScripts/courseAdminScripts.js"></script>
     
 </body>
 </html>

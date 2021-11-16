@@ -81,12 +81,12 @@ module.exports = function (mongoose, callback) {
     const ThreadModel = mongoose.model('Thread', threadSchema);
 
     const courseSchema = mongoose.Schema({
-      coursename: { type: String, required: true },
+      name: { type: String, required: true },
       homeContent: String,
       description: String,
       instructorIds: [String],
       studentIds: [String],
-      quizzes: {type: [quizSchema], default: []},
+      quizIds: {type: [String], default: []},
       threads: {type: [threadSchema], default: []}
     })
 

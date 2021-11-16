@@ -4,7 +4,7 @@
 
     <title>quiZap Quiz Interface</title>
 
-    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true react=true }}
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true }}
 
 </head>
 <body>
@@ -13,7 +13,7 @@
         {{> navbar quizActive='active' }}
         <div class="limit-mt jumbotron jumbotron-fluid">
             <div class="container">
-                <h1 class="display-4">Quiz Selection</h1>
+                <h1 class="display-4">{{course.name}}</h1>
                 <div class="col-3">
                     <form id='selectQuiz'>
                         {{> selectQuiz}}
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <script type="text/babel">
+    <script>
         document.getElementById('selectQuiz').addEventListener('submit', (e) => {
             if (confirm("Are you ready to start the quiz?")) {
 

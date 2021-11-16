@@ -1,0 +1,12 @@
+
+                            
+                            <div class="form-group">
+                                <label for="quizName">Select Course:</label>
+                                <select class="form-control" name="courseSelect">
+                                {{#each courses}}
+                                    <option value="{{_id}}">{{name}}</option>
+                                {{/each}}
+                                </select>
+                                <small id="helpId2" class="form-text text-muted">Select a Course</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>

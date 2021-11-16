@@ -108,16 +108,16 @@ suite('Functional Tests', function() {
           .pressButton('Submit', () => {
             browser.assert.success();
             browser.assert.url(/main/)
-            browser.assert.text('p.lead', /Select a Quiz/);
+            browser.assert.text('p.lead', /Select a Course/);
             done();
           })
       });
 
-      test('Access Quiz page',(done) => {
-        browser.visit('/quizSelect', () => {
+      test('Access Course page',(done) => {
+        browser.visit('/courseSelect', () => {
           browser.assert.success();
-          browser.assert.url(/quizSelect/);
-          browser.assert.text('h1', /Quiz Selection/);
+          browser.assert.url(/courseSelect/);
+          browser.assert.text('h1', /Course Selection/);
           done();
         });
       });
@@ -146,7 +146,7 @@ suite('Functional Tests', function() {
           .pressButton('Submit', () => {
             browser.assert.success();
             browser.assert.url(/main/)
-            browser.assert.text('p.lead', /Select a Quiz/);
+            browser.assert.text('p.lead', /Select a Course/);
             done();
           })
       });

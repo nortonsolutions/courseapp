@@ -11,14 +11,16 @@ var cors        = require('cors');
 var fs          = require('fs');
 var multer      = require('multer');
 
-var auth              = require('./auth.js');
-var apiReactRoutes    = require('./routes/apiReact.js');
-var hbsHelpers        = require('./public/handlebarsHelpers.js')
-var helmet            = require('helmet');
-var passport          = require('passport');
-var hbs               = require('express-hbs');
+var auth                     = require('./auth.js');
+var apiRoutes                = require('./routes/api.js');
+var apiMessageboardRoutes    = require('./routes/apiMessageboard.js')
+var apiQuizRoutes            = require('./routes/apiQuiz.js')
+var hbsHelpers               = require('./public/handlebarsHelpers.js')
+var helmet                   = require('helmet');
+var passport                 = require('passport');
+var hbs                      = require('express-hbs');
 
-const mongoose          = require('mongoose');
+const mongoose               = require('mongoose');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -79,10 +81,9 @@ database(mongoose, (db) => {
   
   auth(app, db.models.User);
   
-  // apiRoutes(app, db, upload);
-
-  apiReactRoutes(app, db, upload);
-
+  apiRoutes(app, db);
+  apiQuizRoutes(app, db, upload);
+  
   //404 Not Found Middleware
   app.use(function(req, res, next) {
     res.status(404)

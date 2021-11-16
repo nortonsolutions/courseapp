@@ -1,14 +1,14 @@
-document.getElementById('newQuiz').addEventListener('submit', (e) => {
+document.getElementById('newCourse').addEventListener('submit', (e) => {
     let url = "/admin";
-    let data = { quizName: e.target.elements.quizName.value }
+    let data = { courseName: e.target.elements.courseName.value }
     handlePost(url, data, (response) => {
-        if (/error/.test(response)) {
+        if (/error:/.test(response)) {
             document.getElementById('feedback').innerHTML = response;
         } else {
             document.getElementById('feedback').innerHTML = response;
-            document.getElementById('newQuiz').reset();
-            handleGet('/admin/quizzes', (response) => {
-                document.getElementById('selectQuiz').innerHTML = response;
+            document.getElementById('newCourse').reset();
+            handleGet('/courses', (response) => {
+                document.getElementById('selectCourse').innerHTML = response;
             })
         }
     });
@@ -16,12 +16,14 @@ document.getElementById('newQuiz').addEventListener('submit', (e) => {
     e.preventDefault();
 })
 
-document.getElementById('selectQuiz').addEventListener('submit', (e) => {
-    let quizId = e.target.elements.quizSelect.value;
-    let url = "/quizAdmin/" + quizId;
+document.getElementById('selectCourse').addEventListener('submit', (e) => {
+    let courseId = e.target.elements.courseSelect.value;
+    let url = "/courseAdmin/" + courseId;
     window.location.href = url;
     e.preventDefault();
 })
+
+
 
 document.getElementById('selectUser').addEventListener('submit', (e) => {
     let userId = e.target.elements.userName.value;
