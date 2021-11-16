@@ -131,14 +131,12 @@ module.exports = function (app, db) {
                     bcrypt.hash(req.body.password, 12).then(hash => {
                         user.password = hash;
                         user.save((err,user) => {
-                        if (err) res.json({error: err.message});
-                        res.json({Success: "User successfully updated."})
+                            res.json(err? {error: err.message} : {success: "User updated."});
                         })
                     });
                 } else {
                     user.save((err,user) => {
-                        if (err) res.json({error: err.message});
-                        res.json({Success: "User successfully updated."})
+                        res.json(err? {error: err.message} : {success: "User updated."});
                     })
                 }
             }
@@ -202,11 +200,7 @@ module.exports = function (app, db) {
         
             let courseName = req.body.courseName;
             db.models.Course.create({ name: courseName }, (err, doc) => {
-                if (err) {
-                res.json({error: err.message});
-                } else {
-                res.json(doc);
-                }
+                res.json(err? {error: err.message} : doc);
             });
         })
     
@@ -216,10 +210,10 @@ module.exports = function (app, db) {
             let userId = req.query.userId;
             db.models.User.findOne({_id: userId}, 'username firstname surname roles',(err,user) => {
                 if (err) {
-                res.json({error: err.message});
+                    res.json({error: err.message});
                 } else {
-                user.admin = req.user.roles.includes('admin');
-                res.render(process.cwd() + '/views/partials/userUpdateForm.hbs', user);
+                    user.admin = req.user.roles.includes('admin');
+                    res.render(process.cwd() + '/views/partials/userUpdateForm.hbs', user);
                 }
             })
         })
@@ -263,7 +257,7 @@ module.exports = function (app, db) {
 
     app.route('/courseAdmin')
 
-        // Post a new quiz  
+        // Post a new quiz for the given course
         .post(ensureAuthenticated, ensureAdmin, (req,res) => {
     
             let courseId = req.body.courseId;
@@ -277,14 +271,18 @@ module.exports = function (app, db) {
                     db.models.Course.findOne({_id: courseId}, (err,course) => {
                         course.quizIds = [...course.quizIds, quiz.id]
                         course.save(err => {
-                            if (err) {
-                                res.json({error: err.message});
-                            } else {
-                                res.json(quiz);
-                            }
+                            res.json(err? {error: err.message} : quiz);
                         })
                     })
                 }
+            });
+        })
+
+        // Delete the given course
+        .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+            let courseId = req.body.courseId;
+            db.models.Course.remove({_id: courseId}, (err) => {
+                res.json(err? {error: err.message} : {success: "Course removed."});
             });
         })
 
@@ -307,20 +305,93 @@ module.exports = function (app, db) {
                             res.json({error: err.message});
                         } else {
                             options.quizzes = quizzes;
-                            res.render(process.cwd() + '/views/courseAdmin.hbs', options);
+                            options.teachers = [];
+
+                            // Also get the Users marked with teacher role
+                            db.models.User.find((err, users) => {
+                                users.forEach(user => {
+                                    if (user.roles.includes('teacher')) {
+                                        options.teachers = [...options.teachers, user]
+                                    }
+                                })
+                                res.render(process.cwd() + '/views/courseAdmin.hbs', options);
+                            })
                         }
                     })
                 }
             })
         })
-        
-        .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+
+        // Post details for the course (description, content, instructors, etc.)
+        .post(ensureAuthenticated, ensureAdmin, (req,res) => {
             let courseId = req.params.courseId;
-            db.models.Course.remove({_id: courseId}, (err) => {
+            
+            // instructorID will always be sent by itself, one at a time
+            if (req.body.instructorId) {
+
+                let instructorId = req.body.instructorId;
+                db.models.Course.findOne({ _id : courseId}, (err, course) => {
+                    if (err) {
+                        res.json({error: err.message});
+                    } else {
+
+                        if (course.instructors.filter(el => el.instructorId == instructorId).length == 0) {
+                            
+                            db.models.User.findOne({ _id: instructorId }, 'surname firstname', (err,user) => {
+                                
+                                course.instructors = [...course.instructors, { 
+                                    instructorId: instructorId,
+                                    instructorName: user.surname + ', ' + user.firstname
+                                }];
+                                course.save(err => {
+                                    let options = { course: course };
+                                    res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                                })
+                            })
+
+                        } else {
+                            res.json({success: "Instructor already exists."});
+                        }
+                    }
+                })
+    
+            // Handle other details (description, homeContent....)
+            } else {
+
+                db.models.Course.findOne({ _id : courseId}, (err, course) => {
+                    if (err) {
+                        res.json({error: err.message});
+                    } else {
+                        course.description = req.body.description;
+                        course.homeContent = req.body.homeContent;
+                        course.save(err => {
+                            res.json(err? {error: err.message} : {success: "Course updated."});
+                        })
+                    }   
+                });
+            }
+        })
+
+        // Delete an instructor for this course
+        .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+            
+            let courseId = req.params.courseId;
+            let instructorId = req.body.instructorId;
+
+            db.models.Course.findOne({_id: courseId}, (err,course) => {
                 if (err) {
-                res.json({error: err.message});
+                    res.json({error: err.message});
                 } else {
-                res.json({response: 'Successfully removed course.'});
+
+                    course.instructors = course.instructors.filter(el => el.instructorId != instructorId);
+                    course.save(err => {
+                        if (err) {
+                            res.json({error: err.message});
+                        } else {
+                            let options = { course: course };
+                            res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                        }
+                    })
                 }
             });
         })

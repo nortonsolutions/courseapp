@@ -17,7 +17,7 @@ applyQuestionListHandlers = () => {
             if (confirm('Are you sure you want to delete this question?')) {
 
                 questionIdToDelete = e.target.parentNode.querySelector('div:nth-child(2)').id;
-                handleDelete('/quizAdmin/' + currentQuizId + '/' + questionIdToDelete, (response) => {
+                handleDelete('/quizAdmin/' + currentQuizId + '/' + questionIdToDelete, {}, (response) => {
                     rerenderQuestionList();
                     document.getElementById('feedback').innerHTML = response;
 
@@ -144,7 +144,7 @@ document.getElementById('btnSaveQuestion').addEventListener('click', (e) => {
 document.getElementById('deleteQuiz').addEventListener('click', (e) => {
     
     if (confirm('Are you sure you want to delete this quiz?')) {
-        handleDelete('/quizAdmin/' + currentQuizId, (response) => {
+        handleDelete('/quizAdmin/' + currentQuizId, {}, (response) => {
             window.location.href = encodeURI('/admin?feedback=' + JSON.parse(response).response);
         })
     }
@@ -175,6 +175,7 @@ rerenderQuestionDetail = (callback) => {
         showQuestionForm();
         document.getElementById('questionDetail').innerHTML = response;
         applyQuestionDetailHandlers();
+        window.scroll(0,300);
         if (callback) callback();
     })
 }

@@ -1,12 +1,13 @@
 
                             
-                            <div class="form-group">
-                                <label for="quizName">Select a Quiz:</label>
+                            <div>
+                                <label for="quizName">Edit Module:</label>
                                 <select class="form-control" name="quizSelect">
                                 {{#each quizzes}}
                                     <option value="{{_id}}">{{name}}</option>
                                 {{/each}}
                                 </select>
-                                <small id="helpId2" class="form-text text-muted">Select a Quiz</small>
+                                
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <small class="form-text text-muted">Select the module to edit</small>
+                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>

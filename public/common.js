@@ -86,14 +86,16 @@ handleGet = (url, callback) => {
     })
 }
 
-deleteOptions = () => {
+deleteOptions = (data) => {
     return {
         method: 'DELETE',
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json; charset=utf-8" }
     }
 }
 
-handleDelete = (url, callback) => {
-    fetch(url, deleteOptions())
+handleDelete = (url, data, callback) => {
+    fetch(url, deleteOptions(data))
     .then(response => response.text())
     .catch(error => {
         callback(error.message);

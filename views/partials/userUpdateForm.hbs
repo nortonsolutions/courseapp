@@ -25,11 +25,13 @@
                                     <div>
                                         
                                         <label style="position: absolute" for="roles">Roles:</label>
-                                        <select style="margin: 6px 0px 0px 104px; width: 178px;" multiple name="roles">
+                                        <select style="margin: 6px 0px 0px 104px; width: 178px;" multiple name="roles" id="roles">
                                             <option value="admin" {{{selectedForRole roles "admin"}}}>Administrator</option>
                                             <option value="student" {{{selectedForRole roles "student"}}}>Student</option>
+                                            <option value="teacher" {{{selectedForRole roles "teacher"}}}>Teacher</option>
                                         </select>
                                     </div>
+
                                     {{/if}}
                                     <div>
                                         <button type="submit" class="btn btn-primary my-2" value="Register">Submit</button>

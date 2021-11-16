@@ -46,18 +46,25 @@ module.exports = function(app, db, upload) {
     };
     
     // Grab list of quizzes for selectQuiz partial
-    app.route('/quizzes')
+    app.route('/quizzes/:courseId')
         .get(ensureAuthenticated, (req,res) => {
         let options = {
             admin: req.user.roles.includes('admin')
         };
         
-        db.models.Quiz.find({}, 'name', (err,doc) => {
+        db.models.Course.findOne({ _id : req.params.courseId}, (err, course) => {
             if (err) {
-            res.json({error: err.message});
+                res.json({error: err.message});
             } else {
-            options.quizzes = doc
-            res.render(process.cwd() + '/views/partials/selectQuiz.hbs', options);
+                options.course = course;
+                db.models.Quiz.find().where('_id').in(course.quizIds).exec((err, quizzes) => {
+                    if (err) {
+                        res.json({error: err.message});
+                    } else {
+                        options.quizzes = quizzes;
+                        res.render(process.cwd() + '/views/partials/selectQuiz.hbs', options);
+                    }
+                })
             }
         })
     })
@@ -240,7 +247,6 @@ module.exports = function(app, db, upload) {
                 })
             }
         });
-
     })
 
     .put(ensureAuthenticated, ensureAdmin, (req,res) => {

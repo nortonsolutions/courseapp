@@ -47,6 +47,13 @@ document.getElementById('deleteUser').addEventListener('click', (e) => {
 })
 
 document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
+    
+    // Get the roles
+    var rolesArray = [];
+    Array.from(document.querySelectorAll('#roles option')).forEach(option => {
+        if (option.selected) rolesArray.push(option.value);
+    })
+    
     handlePost('/updateAccount', {
         _id: e.target.elements.id.value,
         username: e.target.elements.username.value,
@@ -54,7 +61,7 @@ document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
         surname: e.target.elements.surname.value,
         password: e.target.elements.password.value,
         confirm: e.target.elements.confirm.value,
-        roles: e.target.elements.roles.value
+        roles: rolesArray
     }, (response) => {
         document.getElementById('feedback').innerHTML = response;
     })

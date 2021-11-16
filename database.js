@@ -84,9 +84,12 @@ module.exports = function (mongoose, callback) {
       name: { type: String, required: true },
       homeContent: String,
       description: String,
-      instructorIds: [String],
+      instructors: [{
+        instructorId: String,
+        instructorName: String
+      }],
       studentIds: [String],
-      quizIds: {type: [String], default: []},
+      quizIds: [String],
       threads: {type: [threadSchema], default: []}
     })
 
