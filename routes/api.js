@@ -325,7 +325,25 @@ module.exports = function (app, db) {
             })
         })
 
+    app.route('/course/messageBoard/:courseId')
 
+        .get(ensureAuthenticated, (req,res) => {
+
+            let options = { admin: req.user.roles.includes('admin') };
+            var courseId = req.params.courseId;
+                
+                db.models.Thread.find({courseId: courseId}).limit(10).sort({ bumped_on: -1 }).select('-reported').exec((err, threads) => {
+                    
+                    threads.forEach(thread => {
+                        thread.replies = thread.replies.sort((a,b) => {
+                        return (a.created_on < b.created_on);
+                        }).slice(0,3);
+                    })
+                    options.threads = threads;
+                    res.render(process.cwd() + '/views/partials/messageBoard.hbs', options);
+                })
+            })
+    
 
     app.route('/courseAdmin')
 

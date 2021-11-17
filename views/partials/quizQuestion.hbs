@@ -1,3 +1,7 @@
+
+<div class="progress my-1">
+    <div class="progress-bar" role="progressbar" style="width: {{{divide currentQuestionNumber totalQuestions}}}%;" aria-valuenow="{{currentQuestionNumber}}" aria-valuemin="0" aria-valuemax="{{totalQuestions}}">{{currentQuestionNumber}} of {{totalQuestions}}</div>
+</div>
 <div class="form-group row">
     <div class="col-7">
         <input type="hidden" id="questionType" name="questionType" value="{{currentQuestion.type}}">
@@ -68,5 +72,7 @@
         {{/if}}
         <input class="d-none" type="text" name="questionId" id="questionId" value="{{currentQuestion._id}}">
     </div>
+
+
 </div>
 

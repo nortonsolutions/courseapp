@@ -420,6 +420,7 @@ module.exports = function(app, db, upload) {
             if (err) {
               res.json({error: err.message});
             } else {
+              options.totalQuestions = quiz.questions.length  
               options.currentQuestion = quiz.questions[req.params.index];
               res.render(process.cwd() + '/views/partials/quizQuestion.hbs', options);
             }

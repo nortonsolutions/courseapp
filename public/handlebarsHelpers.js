@@ -99,6 +99,9 @@ module.exports = function(hbs) {
         } else return '';
     });
 
+    hbs.registerHelper("divide", function(one, two) {
+        return one / two * 100;
+    });
     
     
 

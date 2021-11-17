@@ -16,16 +16,18 @@
 //     replies: {type: [replySchema], default: []}
 //   })
 
-// ensureAuthenticated
-const ensureAuthenticated = (req,res,next) => {
+module.exports = function(app,db) {
+
+  // ensureAuthenticated
+  const ensureAuthenticated = (req,res,next) => {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/');
-};
+  };
 
-// ensureAdmin
-const ensureAdmin = (req,res,next) => {
+  // ensureAdmin
+  const ensureAdmin = (req,res,next) => {
     db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
       if (user.roles.includes('admin')) {
           next();
@@ -33,9 +35,7 @@ const ensureAdmin = (req,res,next) => {
           res.redirect('/main');
       }     
     })
-};
-
-module.exports = function(app,db) {
+  };
 
   app.route('/api/threads/:courseId')
     .post(ensureAuthenticated, (req,res) => {
@@ -66,6 +66,7 @@ module.exports = function(app,db) {
           
       })
 
+    // Use
     .get(ensureAuthenticated, (req,res) => {
       let courseId = req.params.courseId;
 
@@ -84,7 +85,7 @@ module.exports = function(app,db) {
     })
 
     .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
-      let courseId = req.params.courseId;
+
       let threadId = req.body.threadId;
 
       db.models.Thread.findOne({ _id: threadId }, (err,thread) => {
@@ -98,24 +99,24 @@ module.exports = function(app,db) {
         })
       })
 
-      .put(ensureAuthenticated, (req,res) => {
-        
-        let thread_id = req.body.report_id;
-        ThreadModel.findOne({ _id: thread_id }, (err,thread) => {
-          if (err) {
-            res.send(err.message);
-          } else {
-            thread.reported = true;
-            thread.save(err => {
-              if (err) {
-                res.send(err.message);
-              } else {
-                res.send('thread has been reported');
-              }
-            })
-          }
-        })
+    .put(ensureAuthenticated, (req,res) => {
+      
+      let threadId = req.body.threadId;
+      db.models.Thread.findOne({ _id: threadId }, (err,thread) => {
+        if (err) {
+          res.send(err.message);
+        } else {
+          thread.reported = true;
+          thread.save(err => {
+            if (err) {
+              res.send(err.message);
+            } else {
+              res.send('thread has been reported');
+            }
+          })
+        }
       })
+    })
 
 
   app.route('/api/replies/:courseId')

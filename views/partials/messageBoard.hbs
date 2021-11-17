@@ -1,33 +1,19 @@
-<div class="col-12"><div class="col-12">
-
-<hr>
-<h4>Messageboard:</h4>
-
-<div id='submitNewThread'>
-      <label for="newThread">Submit a new thread:</h4>
-      <form id="newThread" method="post" action="/api/">
-        <textarea rows="2" cols="90" type='text' placeholder='Thread text...' id='newThreadText' required=''></textarea><br>
-        <button class='btn btn-sm btn-primary' type="submit" value="Submit">Submit</button>
-      </form>
-    </div>
-    
-<div id='boardDisplay'>
     {{#each threads}}
     <hr>
+
         <div class="thread">
             <div class="main">
-                <p class="id">id: {{id}} ({{created_on}})</p>
-                <form id="reportThread"><input type="hidden" name="reportId" value="{{id}}"><input
-                        type="submit" value="Report"></form>
-                <form id="deleteThread"><input type="hidden" value="{{id}}" name="threadId"
-                        required=""><input
-                        type="submit" value="Delete"></form>
-                <h3>{{text}}</h3>
+                <div class="id d-none">{{id}}</div>
+                <p>({{created_on}})</p>
+                
+                <h4>{{text}}</h4>
+                <input class="btn btn-sm btnReport" type="button" value="Report">
+                {{#if ../admin}}<input class="btn btn-sm btnDelete" type="button" value="Delete">{{/if}}
+                <span class="text-primary feedback"></span>
             </div>
             
             <div class="replies">
-                <a href="/b/general/61943ed9b5b37234f8e4051e">See the full thread
-                        here</a>.</h5>
+                <a href="#">See the full thread here</a>.</h5>
                 <div class="newReply">
                     <form action="/api/replies/{{../id}}/" method="post" id="newReply"><input type="hidden" name="threadId"
                             value="{{id}}"><textarea rows="1" cols="80" type="text"
@@ -38,11 +24,3 @@
             
         </div>
     {{/each}}
-
-
-</div>
-
-
-
-</div></div>
-

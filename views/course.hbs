@@ -39,8 +39,17 @@
                     </div>
                 </div>
 
-                <div id="messageBoard" class="row">
-                    {{> messageBoard }}
+                <div id="messageBoardContainer">
+                    <hr>
+                    <div class="lead font-weight-bold">Messageboard:</div>
+
+                    <div id='submitNewThread'>
+                        <label for="newThreadText">Submit a new thread:</h4>
+                        <textarea rows="2" cols="90" type='text' placeholder='Thread text...' id='newThreadText' required=''></textarea><br>
+                        <button class='btn btn-sm btn-primary' id="btnSubmitNewThread" type="submit" value="Submit">Submit</button>
+                    </div>
+                    <div id='messageBoard'></div>
+
                 </div>
                 <div class="row">
                     <div class="col-12"><div class="col-12">

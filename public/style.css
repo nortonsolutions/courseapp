@@ -139,3 +139,7 @@ svg {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+#newThreadText {
+  min-width: 100%;
+}
