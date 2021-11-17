@@ -359,7 +359,7 @@ module.exports = function(app, db, upload) {
         })
     })
 
-    app.route('/quizSelect/:courseId')
+    app.route('/course/:courseId')
 
         .get(ensureAuthenticated, (req,res) => {
 
@@ -376,7 +376,7 @@ module.exports = function(app, db, upload) {
                         } else {
                             options.quizzes = quizzes;
                             options.userId = req.user._id;
-                            res.render(process.cwd() + '/views/quizSelect.hbs', options);
+                            res.render(process.cwd() + '/views/course.hbs', options);
                         }
                     })
                 }

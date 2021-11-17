@@ -68,7 +68,7 @@ module.exports = function (mongoose, callback) {
     const ReplyModel = mongoose.model('Reply', replySchema);
 
     const threadSchema = mongoose.Schema({
-      courseName: { type: String, required: true }, 
+      courseId: { type: String, required: true }, 
       text: { type: String, required: true },
       created_on: Date,
       bumped_on: Date,
@@ -90,7 +90,6 @@ module.exports = function (mongoose, callback) {
       }],
       studentIds: [String],
       quizIds: [String],
-      threads: {type: [threadSchema], default: []}
     })
 
     const CourseModel = mongoose.model('Course', courseSchema);

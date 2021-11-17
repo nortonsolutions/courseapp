@@ -83,6 +83,7 @@ database(mongoose, (db) => {
   
   apiRoutes(app, db);
   apiQuizRoutes(app, db, upload);
+  apiMessageboardRoutes(app,db);
   
   //404 Not Found Middleware
   app.use(function(req, res, next) {

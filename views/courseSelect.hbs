@@ -29,7 +29,7 @@
             let userId = document.getElementById('userId').value;
             let courseId = e.target.elements.courseSelect.value;
             localStorage.removeItem(userId + courseId);
-            window.location.href = '/quizSelect/' + courseId;
+            window.location.href = '/course/' + courseId;
             e.preventDefault();
         })
     </script>

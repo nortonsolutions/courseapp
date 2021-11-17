@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>quiZap Course Page</title>
+
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true marked=true }}
+
+</head>
+<body>
+    <input type="hidden" id="userId" value="{{userId}}">
+    <div class="outerContainer">
+        {{> navbar quizActive='active' }}
+        <div class="limit-mt jumbotron jumbotron-fluid">
+            <div class="container">
+                <input type="hidden" id="courseId" value="{{course.id}}">
+                <div class="row">
+                    <div class="col-12"><h1 class="form-text display-4">{{course.name}}</h1></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-7">
+                        
+
+                        <div class="col-12">
+                        <label for="description">Description:</label>
+                        <div id="description">{{course.description}}</div>
+                        
+                        <label for="homeContentMarked"></label>
+                        <div class="d-none" id="homeContentRaw">{{course.homeContent}}</div>
+                        <div class="form-text border" id="homeContentMarked"></div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-5">
+                        <form id='selectQuiz'>
+                            {{> selectQuiz}}
+                        </form>
+                    </div>
+                </div>
+
+                <div id="messageBoard" class="row">
+                    {{> messageBoard }}
+                </div>
+                <div class="row">
+                    <div class="col-12"><div class="col-12">
+                        <span class="text-primary" id="feedback"></span>
+                   </div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../viewScripts/courseScripts.js"></script>
+</body>
+</html>

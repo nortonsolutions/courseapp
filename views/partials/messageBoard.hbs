@@ -1,0 +1,47 @@
+<div class="col-12"><div class="col-12">
+
+<hr>
+<h4>Messageboard:</h4>
+
+<div id='submitNewThread'>
+      <label for="newThread">Submit a new thread:</h4>
+      <form id="newThread" method="post" action="/api/">
+        <textarea rows="2" cols="90" type='text' placeholder='Thread text...' id='newThreadText' required=''></textarea><br>
+        <button class='btn btn-sm btn-primary' type="submit" value="Submit">Submit</button>
+      </form>
+    </div>
+    
+<div id='boardDisplay'>
+    {{#each threads}}
+        <div class="thread">
+            <div class="main">
+                <p class="id">id: 61943ed9b5b37234f8e4051e (2021-11-16T23:29:29.054Z)</p>
+                <form id="reportThread"><input type="hidden" name="report_id" value="61943ed9b5b37234f8e4051e"><input
+                        type="submit" value="Report"></form>
+                <form id="deleteThread"><input type="hidden" value="61943ed9b5b37234f8e4051e" name="thread_id"
+                        required=""><input type="text" placeholder="password" name="delete_password" required=""><input
+                        type="submit" value="Delete"></form>
+                <h3>Testing newer thread.</h3>
+            </div>
+            <div class="replies">
+                <h5>undefined replies total (NaN hidden)- <a href="/b/general/61943ed9b5b37234f8e4051e">See the full thread
+                        here</a>.</h5>
+                <div class="newReply">
+                    <form action="/api/replies/general/" method="post" id="newReply"><input type="hidden" name="thread_id"
+                            value="61943ed9b5b37234f8e4051e"><textarea rows="5" cols="80" type="text"
+                            placeholder="Quick reply..." name="text" required=""></textarea><br><input type="text"
+                            placeholder="password to delete" name="delete_password" required=""><input style="margin-left: 5px"
+                            type="submit" value="Submit"></form>
+                </div>
+            </div>
+        </div>
+
+    {{/each}}
+
+
+</div>
+
+
+
+</div></div>
+
