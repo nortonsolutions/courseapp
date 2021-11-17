@@ -13,29 +13,30 @@
     
 <div id='boardDisplay'>
     {{#each threads}}
+    <hr>
         <div class="thread">
             <div class="main">
-                <p class="id">id: 61943ed9b5b37234f8e4051e (2021-11-16T23:29:29.054Z)</p>
-                <form id="reportThread"><input type="hidden" name="report_id" value="61943ed9b5b37234f8e4051e"><input
+                <p class="id">id: {{id}} ({{created_on}})</p>
+                <form id="reportThread"><input type="hidden" name="reportId" value="{{id}}"><input
                         type="submit" value="Report"></form>
-                <form id="deleteThread"><input type="hidden" value="61943ed9b5b37234f8e4051e" name="thread_id"
-                        required=""><input type="text" placeholder="password" name="delete_password" required=""><input
+                <form id="deleteThread"><input type="hidden" value="{{id}}" name="threadId"
+                        required=""><input
                         type="submit" value="Delete"></form>
-                <h3>Testing newer thread.</h3>
+                <h3>{{text}}</h3>
             </div>
+            
             <div class="replies">
-                <h5>undefined replies total (NaN hidden)- <a href="/b/general/61943ed9b5b37234f8e4051e">See the full thread
+                <a href="/b/general/61943ed9b5b37234f8e4051e">See the full thread
                         here</a>.</h5>
                 <div class="newReply">
-                    <form action="/api/replies/general/" method="post" id="newReply"><input type="hidden" name="thread_id"
-                            value="61943ed9b5b37234f8e4051e"><textarea rows="5" cols="80" type="text"
-                            placeholder="Quick reply..." name="text" required=""></textarea><br><input type="text"
-                            placeholder="password to delete" name="delete_password" required=""><input style="margin-left: 5px"
-                            type="submit" value="Submit"></form>
+                    <form action="/api/replies/{{../id}}/" method="post" id="newReply"><input type="hidden" name="threadId"
+                            value="{{id}}"><textarea rows="1" cols="80" type="text"
+                            placeholder="Quick reply..." name="text" required=""></textarea><br>
+                            <input style="margin-left: 5px" type="submit" value="Submit"></form>
                 </div>
             </div>
+            
         </div>
-
     {{/each}}
 
 

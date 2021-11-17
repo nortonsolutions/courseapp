@@ -359,29 +359,7 @@ module.exports = function(app, db, upload) {
         })
     })
 
-    app.route('/course/:courseId')
 
-        .get(ensureAuthenticated, (req,res) => {
-
-            let options = { admin: req.user.roles.includes('admin') };
-            
-            db.models.Course.findOne({ _id : req.params.courseId}, (err, course) => {
-                if (err) {
-                    res.json({error: err.message});
-                } else {
-                    options.course = course;
-                    db.models.Quiz.find().where('_id').in(course.quizIds).select('name').exec((err, quizzes) => {
-                        if (err) {
-                            res.json({error: err.message});
-                        } else {
-                            options.quizzes = quizzes;
-                            options.userId = req.user._id;
-                            res.render(process.cwd() + '/views/course.hbs', options);
-                        }
-                    })
-                }
-            })
-        })
     
     app.route('/quizActive/:quizId')
 

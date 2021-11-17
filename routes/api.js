@@ -294,10 +294,40 @@ module.exports = function (app, db) {
             })
         })
 
+    app.route('/course/:courseId')
+
+        .get(ensureAuthenticated, (req,res) => {
+
+
+            let options = { admin: req.user.roles.includes('admin') };
+            let courseId = req.params.courseId;
+
+            db.models.Course.findOne({ _id : courseId}, (err, course) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+                    options.course = course;
+                    db.models.Quiz.find().where('_id').in(course.quizIds).select('name').exec((err, quizzes) => {
+                        if (err) {
+                            res.json({error: err.message});
+                        } else {
+                            options.quizzes = quizzes;
+                            options.userId = req.user._id;
+
+                            // Add messageboard threads to options
+                            db.models.Thread.find({courseId: courseId}, (err,threads) => {
+                                options.threads = threads;
+                                res.render(process.cwd() + '/views/course.hbs', options);
+                            })
+                        }
+                    })
+                }
+            })
+        })
+
+
 
     app.route('/courseAdmin')
-
-
 
         // Delete the given course
         .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
