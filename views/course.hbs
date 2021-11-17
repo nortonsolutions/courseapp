@@ -12,41 +12,46 @@
     <div class="outerContainer">
         {{> navbar quizActive='active' }}
         <div class="limit-mt jumbotron jumbotron-fluid">
-            <div class="container">
+            <div class="container p-0">
                 <input type="hidden" id="courseId" value="{{course.id}}">
                 <div class="row">
-                    <div class="col-12"><h1 class="form-text display-4">{{course.name}}</h1></div>
+                    <div class="col-9"><h1 class="form-text display-4">{{course.name}}</h1></div>
+                    <div class="col-3">
+                        <nav class="navbar navbar-expand navbar-light">
+                            <ul class="nav navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#messageBoardContainer">Messageboard</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
 
-                <div class="row">
+                <header class="row">
                     <div class="col-7">
-                        
-
-                        <div class="col-12">
-                        <label for="description">Description:</label>
                         <div id="description">{{course.description}}</div>
-                        
-                        <label for="homeContentMarked"></label>
-                        <div class="d-none" id="homeContentRaw">{{course.homeContent}}</div>
-                        <div class="form-text border" id="homeContentMarked"></div>
-                        </div>
-                        
                     </div>
                     <div class="col-5">
                         <form id='selectQuiz'>
                             {{> selectQuiz}}
                         </form>
                     </div>
-                </div>
+                </header>
+
+                <main class="row"><div class="col-12 p-0">
+                    <label for="homeContentMarked"></label>
+                    <div class="d-none" id="homeContentRaw">{{course.homeContent}}</div>
+                    <div class="form-text border" id="homeContentMarked"></div>
+                </div></main>
 
                 <div id="messageBoardContainer">
                     <hr>
-                    <div class="lead font-weight-bold">Messageboard:</div>
+                    <div class="h3 font-weight-bold">{{course.name}} Messageboard:</div>
 
-                    <div id='submitNewThread'>
-                        <label for="newThreadText">Submit a new thread:</h4>
-                        <textarea rows="2" cols="90" type='text' placeholder='Thread text...' id='newThreadText' required=''></textarea><br>
-                        <button class='btn btn-sm btn-primary' id="btnSubmitNewThread" type="submit" value="Submit">Submit</button>
+                    <label for="newThreadText">Submit a new thread:</label>
+                    <div id='submitNewThread' class="row m-auto">
+                        <textarea rows="2" type='text' placeholder='Thread text...' id='newThreadText' required=''></textarea><br>
+                        <button class='btn btn-sm btn-primary btn-limitedHeight' id="btnSubmitNewThread" type="submit" value="Submit">Submit</button>
                     </div>
                     <div id='messageBoard'></div>
 

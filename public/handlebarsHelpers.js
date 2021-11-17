@@ -103,6 +103,8 @@ module.exports = function(hbs) {
         return one / two * 100;
     });
     
-    
+    hbs.registerHelper("reportedHelper", function(reported) {
+        return reported? 'reported' : '';
+    });
 
 }

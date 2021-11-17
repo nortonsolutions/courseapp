@@ -31,27 +31,68 @@ addThreadListeners = () => {
     Array.from(document.querySelectorAll('.btnReport')).forEach(el => {
 
         el.addEventListener('click', e => {
-            
-            let threadId = e.target.parentNode.querySelector('.id').innerText;
+            let threadId = e.target.parentNode.querySelector('.threadId').innerText;
             let threadFeedback = e.target.parentNode.querySelector('.feedback');
-
             handlePutTextResponse('/api/threads/' + courseId, {threadId: threadId}, (response) => {
                 threadFeedback.innerHTML = response;
             })
         })
-
     })
 
     Array.from(document.querySelectorAll('.btnDelete')).forEach(el => {
+        el.addEventListener('click', e => {
+
+            if (confirm("Are you sure?")) {
+                let threadId = e.target.parentNode.querySelector('.threadId').innerText;
+                handleDelete('/api/threads/' + courseId, {threadId: threadId}, (response) => {
+                    loadMessageboardContent();
+                })
+            }
+
+        })
+    })
+
+    Array.from(document.querySelectorAll('.btnReportReply')).forEach(el => {
 
         el.addEventListener('click', e => {
+            let threadId = e.target.parentNode.querySelector('.threadId').innerText;
+            let replyId = e.target.parentNode.querySelector('.replyId').innerText;
+            let threadFeedback = e.target.parentNode.querySelector('.feedback');
+            handlePutTextResponse('/api/replies/' + courseId, {threadId: threadId, replyId: replyId}, (response) => {
+                threadFeedback.innerHTML = response;
+            })
+        })
+    })
+
+    Array.from(document.querySelectorAll('.btnDeleteReply')).forEach(el => {
+        el.addEventListener('click', e => {
+
+            if (confirm("Are you sure?")) {
+                let threadId = e.target.parentNode.querySelector('.threadId').innerText;
+                let replyId = e.target.parentNode.querySelector('.replyId').innerText;
+                handleDelete('/api/replies/' + courseId, {threadId: threadId, replyId: replyId}, (response) => {
+                    loadMessageboardContent();
+                })
+            }
+
+        })
+    })
+
+
+    Array.from(document.querySelectorAll('.btnSubmitNewReply')).forEach(el => {
+        el.addEventListener('click', e => {
+
+            let threadId = e.target.parentNode.querySelector('.threadId').innerText;
+            let newReplyText = e.target.parentNode.querySelector('.newReplyText').value;
             
-            let threadId = e.target.parentNode.querySelector('.id').innerText;
-            handleDelete('/api/threads/' + courseId, {threadId: threadId}, (response) => {
+            handlePost('/api/replies/' + courseId, {
+                text: newReplyText,
+                threadId: threadId
+
+            }, (response) => {
                 loadMessageboardContent();
             })
         })
-
     })
 }
 

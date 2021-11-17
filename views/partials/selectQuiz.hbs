@@ -1,13 +1,19 @@
 
                             
-                            <div>
+                            <div class="row">
                                 <label for="quizName">Module:</label>
-                                <select class="form-control" name="quizSelect">
-                                {{#each quizzes}}
-                                    <option value="{{_id}}">{{name}}</option>
-                                {{/each}}
-                                </select>
-                                
+                                <div class="col-12 p-0">
+                                    <select class="form-control" name="quizSelect">
+                                    {{#each quizzes}}
+                                        <option value="{{_id}}">{{name}}</option>
+                                    {{/each}}
+                                    </select>
+                                </div>
+                                <div class="col-4 p-0">
+                                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                                    
+                                </div>
+                                <small class="form-text text-muted ml-5">Select from list</small>
                             </div>
-                            <small class="form-text text-muted">Select the module</small>
-                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                            
+                            

@@ -1,24 +1,46 @@
     {{#each threads}}
     <hr>
 
-        <div class="thread">
+        <div class="thread" id="{{id}}">
             <div class="main">
-                <div class="id d-none">{{id}}</div>
-                <p>({{created_on}})</p>
-                
-                <h4>{{text}}</h4>
-                <input class="btn btn-sm btnReport" type="button" value="Report">
-                {{#if ../admin}}<input class="btn btn-sm btnDelete" type="button" value="Delete">{{/if}}
-                <span class="text-primary feedback"></span>
+                <div class="row">
+                    <div class="col-9">
+                        <small>({{created_on}}) <span class="text-danger font-weight-bold">{{{reportedHelper reported}}}</span></small><br>
+                        <small><em>{{author}}</em> wrote:</small>
+                        <h5>{{text}}</h5>
+                    </div>
+                    <div class="col-3 text-right">
+                        <div class="threadId d-none">{{id}}</div>
+                        <input class="btn btn-sm btnReport" type="button" value="Report">
+                        {{#if ../admin}}<input class="btn btn-sm btnDelete" type="button" value="Delete">{{/if}}
+                        <small class="text-primary feedback"></small>
+                    </div>
+                </div>
             </div>
-            
+
             <div class="replies">
                 <a href="#">See the full thread here</a>.</h5>
-                <div class="newReply">
-                    <form action="/api/replies/{{../id}}/" method="post" id="newReply"><input type="hidden" name="threadId"
-                            value="{{id}}"><textarea rows="1" cols="80" type="text"
-                            placeholder="Quick reply..." name="text" required=""></textarea><br>
-                            <input style="margin-left: 5px" type="submit" value="Submit"></form>
+
+                {{#each replies}}
+                <div class="reply row">
+                        <div class="col-9 p-0">
+                            <small>({{created_on}}) <span class="text-danger font-weight-bold">{{{reportedHelper reported}}}</span></small>
+                            <h6>{{text}}</h6><small class="font-italic">--{{author}}</small>
+                        </div>
+                        <div class="col-3 p-0 text-right">
+                            <div class="threadId d-none">{{../id}}</div>
+                            <div class="replyId d-none">{{id}}</div>
+                            <input class="btn btn-sm btnReportReply" type="button" value="Report">
+                            {{#if ../../admin}}<input class="btn btn-sm btnDeleteReply" type="button" value="Delete">{{/if}}
+                            <br><small class="text-primary feedback"></small>
+                        </div>
+                </div>
+                {{/each}}
+                
+                <div class="newReply row">
+                    <div class="threadId d-none">{{id}}</div>
+                    <textarea rows="1" type='text' placeholder='Quick reply...' class='newReplyText' required=''></textarea><br>
+                    <button class='btn btn-sm btn-primary btnSubmitNewReply btn-limitedHeight' type="submit" value="Submit">Submit</button>
                 </div>
             </div>
             

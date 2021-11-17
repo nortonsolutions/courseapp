@@ -332,7 +332,7 @@ module.exports = function (app, db) {
             let options = { admin: req.user.roles.includes('admin') };
             var courseId = req.params.courseId;
                 
-                db.models.Thread.find({courseId: courseId}).limit(10).sort({ bumped_on: -1 }).select('-reported').exec((err, threads) => {
+                db.models.Thread.find({courseId: courseId}).limit(10).sort({ bumped_on: -1 }).exec((err, threads) => {
                     
                     threads.forEach(thread => {
                         thread.replies = thread.replies.sort((a,b) => {

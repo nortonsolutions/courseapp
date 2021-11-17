@@ -93,7 +93,7 @@ module.exports = function(app,db) {
             res.send(err.message);
           } else {
               thread.remove((err) => {
-                  res.send('successfully deleted thread');
+                  res.send('thread deleted');
               })
           }
         })
@@ -111,7 +111,7 @@ module.exports = function(app,db) {
             if (err) {
               res.send(err.message);
             } else {
-              res.send('thread has been reported');
+              res.send('thread reported');
             }
           })
         }
@@ -133,7 +133,7 @@ module.exports = function(app,db) {
         } else {
             let date = new Date();
             thread.bumped_on = date;
-            thread.replies = [...thread.replies, new ReplyModel({
+            thread.replies = [...thread.replies, new db.models.Reply({
               text: text,
               author: req.user.firstname + ' ' + req.user.surname,
               created_on: date
@@ -180,7 +180,7 @@ module.exports = function(app,db) {
           });
           thread.replies[replyIndex].text = '[deleted]';
           thread.save(err => {
-            res.send(err? err.message: 'success');
+            res.send(err? err.message: 'reply deleted');
           })
         }
       })
@@ -201,7 +201,7 @@ module.exports = function(app,db) {
 
             thread.replies[replyIndex].reported = true;
             thread.save(err => {
-                res.send(err? err.message: 'success');
+                res.send(err? err.message: 'reply reported');
             })
           }
         })

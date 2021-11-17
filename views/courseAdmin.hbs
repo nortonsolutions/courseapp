@@ -44,35 +44,40 @@
                     </div>
 
                     <div class="col-4 border">
+                        
                         <form class="form-group" id="newQuiz" method="post" action="/quiz">
-                            <div>
-                                <label for="quizName">Add Module:</label>
-                                
-                                <input type="text"
-                                    class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="">
-                                
+                            <div class="row">
+                                <label>Add Module:</label>
+                                <div class="col-12 p-0">
+                                    <input type="text" class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="">
+                                </div>
+                                <div class="col-4 p-0">
+                                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                                </div>
+                                <small class="form-text text-muted ml-5">Enter the name</small>
                             </div>
-                            <small class="form-text text-muted">Enter the new module name</small>
-                            <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                            
                         </form>
                         <form class="form-group" id='selectQuiz' action="/quiz" method="get">
                             {{> selectQuiz }}
                         </form>
-
                         {{#if admin}}
 
                         <form id='selectTeachers' class="form-group">
-                            <div>
-                                <label for="userName">Add teacher:</label>
-                                <select class="form-control" id="instructorId" name="instructorId">
-                                {{#each teachers}}
-                                    <option value="{{_id}}">{{surname}}, {{firstname}}</option>
-                                {{/each}}
-                                </select>
-                                
+                            <div class="row">
+                                <label>Add teacher:</label>
+                                <div class="col-12 p-0">
+                                    <select class="form-control" id="instructorId" name="instructorId">
+                                    {{#each teachers}}
+                                        <option value="{{_id}}">{{surname}}, {{firstname}}</option>
+                                    {{/each}}
+                                    </select>
+                                </div>
+                                <div class="col-4 p-0">
+                                    <button id="addTeacher" type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                                <small class="form-text text-muted ml-5">Select from list</small>
                             </div>
-                            <small class="form-text text-muted">User must have the teacher role</small>
-                            <button id="addTeacher" type="submit" class="btn btn-sm btn-primary">Submit</button>
                         </form>
 
                         {{/if}}

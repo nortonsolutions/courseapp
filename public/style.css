@@ -141,5 +141,34 @@ svg {
 }
 
 #newThreadText {
-  min-width: 100%;
+  min-width: 91%;
+}
+
+.newReplyText {
+  min-width: 88%;
+}
+
+
+.thread {
+  border: 2px solid black;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.replies {
+  margin-left: 20px;
+}
+
+.reply {
+  border: 1px dotted black;
+  margin: 5px !important;
+  padding: 5px;
+}
+
+.btn-limitedHeight {
+  max-height: 31px;
+}
+
+.btn-limitedWidth {
+  max-width: 62px;
 }
