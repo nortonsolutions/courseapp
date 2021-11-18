@@ -172,3 +172,33 @@ svg {
 .btn-limitedWidth {
   max-width: 62px;
 }
+
+.navGrid {
+  display: grid !important;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.nav1 {
+  grid-column-start: 1; 
+  grid-column-end: 2; 
+}
+
+.nav2 {
+  grid-column-start: 2; 
+  grid-column-end: 3;   
+}
+
+.nav3 {
+  grid-column-start: 3; 
+  grid-column-end: 4;   
+}
+
+.nav4 {
+  grid-column-start: 11; 
+  grid-column-end: 12;   
+}
+
+.nav5 {
+  grid-column-start: 12; 
+  grid-column-end: 13;   
+}

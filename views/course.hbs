@@ -14,21 +14,9 @@
         <div class="limit-mt jumbotron jumbotron-fluid">
             <div class="container p-0">
                 <input type="hidden" id="courseId" value="{{course.id}}">
-                <div class="row">
-                    <div class="col-9"><h1 class="form-text display-4">{{course.name}}</h1></div>
-                    <div class="col-3">
-                        <nav class="navbar navbar-expand navbar-light">
-                            <ul class="nav navbar-nav">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#messageBoardContainer">Messageboard</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-
                 <header class="row">
-                    <div class="col-7">
+                    <div class="col-7 p-0">
+                        <h1 class="form-text display-5">{{course.name}}</h1>
                         <div id="description">{{course.description}}</div>
                     </div>
                     <div class="col-5">
@@ -37,7 +25,6 @@
                         </form>
                     </div>
                 </header>
-
                 <main class="row"><div class="col-12 p-0">
                     <label for="homeContentMarked"></label>
                     <div class="d-none" id="homeContentRaw">{{course.homeContent}}</div>

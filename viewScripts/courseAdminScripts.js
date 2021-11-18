@@ -73,7 +73,7 @@ if (admin) {
     addInstructorDeleteListeners = () => {
         Array.from(document.querySelectorAll('.deleteInstructor')).forEach(el => {
             el.addEventListener('click', e => {
-                let instructorId = e.target.parentNode.querySelector('.id').id;
+                let instructorId = e.target.parentNode.querySelector('.instructorId').id;
                 handleDelete('/courseAdmin/' + currentCourseId, { instructorId: instructorId }, response => {
                     if (/error:/.test(response)) {
                         document.getElementById('feedback').innerHTML = response;
