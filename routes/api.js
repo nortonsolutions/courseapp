@@ -118,7 +118,7 @@ module.exports = function (app, db) {
             if (err) {
                 res.json({error: err.message});
             } else {
-            db.models.User.find({}, 'username firstname surname', (err,users) => {
+            db.models.User.find({}).select('username firstname surname').sort({ surname: 1 }).exec((err,users) => {
                 if (err) {
                 res.json({error: err.message});
                 } else {
@@ -199,12 +199,12 @@ module.exports = function (app, db) {
             };
             
             // Grab list of courses and users:
-            db.models.Course.find({}, 'name', (err,courses) => {
+            db.models.Course.find({}).select('name').sort({name: 1}).exec((err,courses) => {
                 if (err) {
                 res.json({error: err.message});
                 } else {
                 options.courses = courses
-                db.models.User.find({}, (err,users) => {
+                db.models.User.find({}).sort({surname: 1}).exec((err,users) => {
                     if (err) {
                     res.json({error: err.message});
                     } else {
@@ -263,7 +263,7 @@ module.exports = function (app, db) {
                 // let idTest = RegExp(req.user.id);
                 // Get the courses for which he is an instructor
     
-                db.models.Course.find({ 'instructors.instructorId': req.user.id }, 'name', (err,courses) => {
+                db.models.Course.find({ 'instructors.instructorId': req.user.id }).select('name').sort({ name: 1}).exec((err,courses) => {
                     if (err) {
                         res.json({error: err.message});
                     } else {
@@ -271,7 +271,6 @@ module.exports = function (app, db) {
                         res.render(process.cwd() + '/views/profile.hbs', context);
                     }
                 })
-    
     
             } else {
                 res.render(process.cwd() + '/views/profile.hbs', context);
@@ -283,8 +282,8 @@ module.exports = function (app, db) {
             let options = {
                 admin: req.user.roles.includes('admin')
             };
-            
-            db.models.Course.find({}, 'name', (err,doc) => {
+
+            db.models.Course.find({}).select('name').sort({ name: 1 }).exec((err,doc) => {
                 if (err) {
                 res.json({error: err.message});
                 } else {
@@ -307,7 +306,7 @@ module.exports = function (app, db) {
                     res.json({error: err.message});
                 } else {
                     options.course = course;
-                    db.models.Quiz.find().where('_id').in(course.quizIds).select('name').exec((err, quizzes) => {
+                    db.models.Quiz.find().where('_id').in(course.quizIds.map(el => el.quizId)).select('name').sort({ name: 1}).exec((err, quizzes) => {
                         if (err) {
                             res.json({error: err.message});
                         } else {
@@ -369,7 +368,9 @@ module.exports = function (app, db) {
                     res.json({error: err.message});
                 } else {
                     options.course = course;
-                    db.models.Quiz.find().where('_id').in(course.quizIds).exec((err, quizzes) => {
+
+                    // Use Course finder
+                    db.models.Quiz.find().select('name').sort({ name: 1}).where('_id').in(course.quizIds.map(el => el.quizId)).exec((err, quizzes) => {
                         if (err) {
                             res.json({error: err.message});
                         } else {
@@ -403,7 +404,11 @@ module.exports = function (app, db) {
 
                     // Link the new quizId to the mother courseId
                     db.models.Course.findOne({_id: courseId}, (err,course) => {
-                        course.quizIds = [...course.quizIds, quiz.id]
+                        
+                        // TODO: Determine the highest sortKey
+                        
+                        
+                        course.quizIds = [...course.quizIds, {quizId: quiz.id, sortKey: 0}]
                         course.save(err => {
                             res.json(err? {error: err.message} : quiz);
                         })
@@ -493,7 +498,7 @@ module.exports = function (app, db) {
 
             let options = { admin: req.user.roles.includes('admin') };
 
-            db.models.Course.find({}, 'name', (err,courses) => {
+            db.models.Course.find({}).select('name').sort({name: 1}).exec((err,courses) => {
                 if (err) {
                     res.json({error: err.message});
                 } else {

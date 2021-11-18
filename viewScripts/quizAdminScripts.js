@@ -58,6 +58,12 @@ applyQuestionDetailHandlers = () => {
                 document.getElementById('responseText').classList.add('d-none');
                 document.getElementById('responseEssay').classList.remove('d-none');
                 break;
+            default:  // instructional and projectSubmission
+                document.getElementById('responseCheckboxes').classList.add('d-none');
+                document.getElementById('responseText').classList.add('d-none');
+                document.getElementById('responseEssay').classList.add('d-none');
+                break;
+
         }
     })
 

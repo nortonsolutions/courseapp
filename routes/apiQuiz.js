@@ -55,7 +55,7 @@ module.exports = function(app, db, upload) {
         } else {
             if (user.roles.includes('teacher')) {
                 db.models.Course.findOne()
-                .and([{'quizIds': quizId }, {'instructors.instructorId': req.user.id}])
+                .and([{'quizIds.quizId': quizId }, {'instructors.instructorId': req.user.id}])
                 .exec((err,course) => {
                     if (course) {
                         next();
@@ -84,7 +84,8 @@ module.exports = function(app, db, upload) {
                 res.json({error: err.message});
             } else {
                 options.course = course;
-                db.models.Quiz.find().where('_id').in(course.quizIds).exec((err, quizzes) => {
+                
+                db.models.Quiz.find().where('_id').in(course.quizIds.map(el => el.quizId)).select('name').sort({ name: 1 }).exec((err, quizzes) => {
                     if (err) {
                         res.json({error: err.message});
                     } else {
@@ -266,7 +267,7 @@ module.exports = function(app, db, upload) {
                         res.json({error: err.message});
                     } else {
                         courses.forEach(course => {
-                            course.quizIds = course.quizIds.filter(el => el != quizId);
+                            course.quizIds = course.quizIds.filter(el => el.quizId != quizId);
                             course.save();
                         })
                         res.json({response: 'Successfully removed quiz.'});

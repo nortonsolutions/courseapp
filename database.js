@@ -22,7 +22,7 @@ module.exports = function (mongoose, callback) {
 
 
     const quizSchema = mongoose.Schema({
-      name: { type: String, required: true, unique: true },
+      name: { type: String, required: true },
       questions: {type: [quizQuestionSchema], default: []},
       description: String,
       timeLimit: Number,
@@ -48,7 +48,7 @@ module.exports = function (mongoose, callback) {
     })
 
     const userSchema = mongoose.Schema({
-      username: { type: String, required: true },
+      username: { type: String, required: true, unique: true },
       password: { type: String, required: true },
       roles: {type: [String], default: ['student']},
       quizzes: {type: [userQuizSchema], default: []},
@@ -81,7 +81,7 @@ module.exports = function (mongoose, callback) {
     const ThreadModel = mongoose.model('Thread', threadSchema);
 
     const courseSchema = mongoose.Schema({
-      name: { type: String, required: true },
+      name: { type: String, required: true, unique: true },
       homeContent: String,
       description: String,
       instructors: [{
@@ -89,7 +89,10 @@ module.exports = function (mongoose, callback) {
         instructorName: String
       }],
       studentIds: [String],
-      quizIds: [String],
+      quizIds: [{
+        quizId: String,
+        sortKey: Number
+      }]
     })
 
     const CourseModel = mongoose.model('Course', courseSchema);

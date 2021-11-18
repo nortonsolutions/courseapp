@@ -7,6 +7,10 @@ form label, form button {
     width: 100px;
 }
 
+.widerLabel {
+  width: 150px !important;
+}
+
 .outerContainer {
     margin: 40px;
 }

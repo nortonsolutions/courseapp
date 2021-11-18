@@ -11,16 +11,16 @@
     <div class="outerContainer">
 
         {{> navbar }}
-
+        
         <div class="limit-mt jumbotron jumbotron-fluid">
             <div id="adminInterface" class="container">
                 <div id='admin' class='d-none'>{{admin}}</div>
                 <div id='courseId' class='d-none'>{{course._id}}</div>
                 <div class="row">
-                    <div class="col-9">
-                        <h1 class="display-4">{{course.name}}</h1>
+                    <div class="col-10">
+                        <h1 class="display-4">Admin: {{course.name}}</h1>
                     </div>
-                    <div class="col-3 mt-4"><button id="deleteCourse" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete Course</button></div>
+                    <div class="col-2 mt-4"><button id="deleteCourse" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete</button></div>
                 </div>
 
                 <div class="row">
@@ -60,9 +60,10 @@
                         </form>
                         <form class="form-group" id='selectQuiz' action="/quiz" method="get">
                             {{> selectQuiz }}
+                            <button type="button" class="btn btn-sm btn-secondary row mt-1" data-toggle="modal" data-target="#modalModules">Ordering</button>
                         </form>
+                        
                         {{#if admin}}
-
                         <form id='selectTeachers' class="form-group">
                             <div class="row">
                                 <label>Add teacher:</label>
@@ -79,7 +80,6 @@
                                 <small class="form-text text-muted ml-5">Select from list</small>
                             </div>
                         </form>
-
                         {{/if}}
 
                     </div>
@@ -94,7 +94,7 @@
         </div>
 
     </div>
-
+    {{> modalModules }}
     <script src="/viewScripts/courseAdminScripts.js"></script>
     
 </body>

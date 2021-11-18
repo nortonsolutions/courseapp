@@ -64,6 +64,13 @@
                 {{/if}}
             {{/if}}
         </div>
+
+        <div id="projectSubmission" class="{{{hideIfNotEqual currentQuestion.type "projectSubmission"}}}">
+            <label for="answerEssay">Submit Project:</label>
+            <input type="file" class="form-control-file" name="video" id="video" placeholder="Upload video" aria-describedby="helpVideo" accept="*">
+            <small id="helpVideo" class="form-text text-muted">Enter your project above.</small>
+        </div>
+
         <hr>
     </div>
     <div class="col-5">

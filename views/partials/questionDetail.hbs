@@ -5,6 +5,8 @@
                     <option {{{selectedIfEqual currentQuestion.type "multi"}}} value="multi">Multiple choice, multiple answers</option>
                     <option {{{selectedIfEqual currentQuestion.type "text"}}} value="text">Text response</option>
                     <option {{{selectedIfEqual currentQuestion.type "essay"}}} value="essay">Essay response</option>
+                    <option {{{selectedIfEqual currentQuestion.type "instructional"}}} value="instructional">Instructional</option>
+                    <option {{{selectedIfEqual currentQuestion.type "projectSubmission"}}} value="projectSubmission">Project Submission</option>
                   </select>
                 <label style="width: 100%" for="question">Question:</label>
                 <textarea class="form-control" name="question" id="question" rows="{{{calculateRows currentQuestion.question}}}" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
@@ -20,6 +22,11 @@
                 {{/if}}
 
                   <label style="width: 100%" for="file">Upload new image:</label>
-                  <input type="file" class="form-control-file" name="file" id="file" placeholder="Upload image" aria-describedby="fileHelpId" accept=".jpg, .jpeg, .png">
+                  <input type="file" class="form-control-file" name="file" id="file" placeholder="Upload image" aria-describedby="" accept=".jpg, .jpeg, .png">
+
+                <div class="{{{hideIfNotEqual currentQuestion.type 'instructional'}}}">
+                  <label style="width: 100%" for="video">Upload new video:</label>
+                  <input type="file" class="form-control-file" name="video" id="video" placeholder="Upload video" aria-describedby="" accept="audio/*,video/*">
+                </div>
 
               </div>
