@@ -306,11 +306,23 @@ module.exports = function (app, db) {
                     res.json({error: err.message});
                 } else {
                     options.course = course;
-                    db.models.Quiz.find().where('_id').in(course.quizIds.map(el => el.quizId)).select('name').sort({ name: 1}).exec((err, quizzes) => {
+                    db.models.Quiz.find()
+                    .where('_id').in(course.quizIds.map(el => el.quizId))
+                    .select('name').exec((err, quizzes) => {
                         if (err) {
                             res.json({error: err.message});
                         } else {
-                            options.quizzes = quizzes;
+
+                            // Sort quizzes according to course quizIds sortKey
+                            var sortLookupTable = {}
+                            Array.from(course.quizIds).forEach(el => {
+                                sortLookupTable[el.quizId] = el.sortKey;
+                            })
+                            
+                            options.quizzes = Array.from(quizzes).sort((a,b) => {
+                                return sortLookupTable[a.id] - sortLookupTable[b.id]
+                            });
+
                             options.userId = req.user._id;
 
                             // Add messageboard threads to options
@@ -369,9 +381,9 @@ module.exports = function (app, db) {
                 } else {
                     options.course = course;
 
-                    db.models.Quiz.find().select('name')
-                    .sort({ name: 1})
-                    .where('_id').in(course.quizIds.map(el => el.quizId)).exec((err, quizzes) => {
+                    db.models.Quiz.find()
+                    .where('_id').in(course.quizIds.map(el => el.quizId))
+                    .select('name').exec((err, quizzes) => {
                         if (err) {
                             res.json({error: err.message});
                         } else {
@@ -553,7 +565,9 @@ module.exports = function (app, db) {
                 if (err) {
                     res.json({error: err.message});
                 } else {
-                    db.models.Quiz.find().select('name').where('_id').in(course.quizIds.map(el => el.quizId)).exec((err, quizzes) => {
+                    db.models.Quiz.find()
+                    .where('_id').in(course.quizIds.map(el => el.quizId))
+                    .select('name').exec((err, quizzes) => {
                         if (err) {
                             res.json({error: err.message});
                         } else {
