@@ -206,3 +206,11 @@ svg {
   grid-column-start: 12; 
   grid-column-end: 13;   
 }
+
+#selectQuiz {
+  margin-bottom: 0px !important
+}
+
+#btnOrdering {
+  width: 100px;
+}

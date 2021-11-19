@@ -1,5 +1,7 @@
 var currentQuestionId = 0;
 var currentQuizId = document.getElementById('quizId').innerText;
+var currentCourseId = document.getElementById('courseId').innerText;
+
 
 applyQuestionListHandlers = () => {
 
@@ -151,7 +153,7 @@ document.getElementById('deleteQuiz').addEventListener('click', (e) => {
     
     if (confirm('Are you sure you want to delete this quiz?')) {
         handleDelete('/quizAdmin/' + currentQuizId, {}, (response) => {
-            window.location.href = encodeURI('/admin?feedback=' + JSON.parse(response).response);
+            window.location.href = encodeURI('/courseAdmin/' + currentCourseId + '?feedback=' + JSON.parse(response).response);
         })
     }
 })

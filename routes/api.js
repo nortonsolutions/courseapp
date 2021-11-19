@@ -369,12 +369,24 @@ module.exports = function (app, db) {
                 } else {
                     options.course = course;
 
-                    // Use Course finder
-                    db.models.Quiz.find().select('name').sort({ name: 1}).where('_id').in(course.quizIds.map(el => el.quizId)).exec((err, quizzes) => {
+                    db.models.Quiz.find().select('name')
+                    .sort({ name: 1})
+                    .where('_id').in(course.quizIds.map(el => el.quizId)).exec((err, quizzes) => {
                         if (err) {
                             res.json({error: err.message});
                         } else {
-                            options.quizzes = quizzes;
+
+                            // Re-sort just in case data was imported
+                            var sortLookupTable = {}
+                            Array.from(course.quizIds).forEach(el => {
+                                sortLookupTable[el.quizId] = el.sortKey;
+                            })
+                            
+                            options.quizzes = Array.from(quizzes).sort((a,b) => {
+                                return sortLookupTable[a.id] - sortLookupTable[b.id]
+                            });
+
+                            options.quizzesHighIndex = quizzes.length - 1;
                             options.teachers = [];
 
                             // Also get the Users marked with teacher role
@@ -397,7 +409,7 @@ module.exports = function (app, db) {
     
             let courseId = req.params.courseId;
             let quizName = req.body.quizName;
-            db.models.Quiz.create({ name: quizName,  }, (err, quiz) => {
+            db.models.Quiz.create({ name: quizName }, (err, quiz) => {
                 if (err) {
                     res.json({error: err.message});
                 } else {
@@ -406,9 +418,18 @@ module.exports = function (app, db) {
                     db.models.Course.findOne({_id: courseId}, (err,course) => {
                         
                         // TODO: Determine the highest sortKey
-                        
-                        
-                        course.quizIds = [...course.quizIds, {quizId: quiz.id, sortKey: 0}]
+                        let highestSortKey = course.quizIds.reduce((acc,cur) => {
+                            if (cur.sortKey > acc) {
+                                return cur.sortKey;
+                            } else return acc;
+                        },0);
+
+                        let newQuizId = {
+                            quizId: quiz._id,
+                            sortKey: highestSortKey + 1
+                        }
+
+                        course.quizIds = [...course.quizIds, newQuizId];
                         course.save(err => {
                             res.json(err? {error: err.message} : quiz);
                         })
@@ -449,7 +470,33 @@ module.exports = function (app, db) {
                         }
                     }
                 })
-    
+
+            // Handle module (aka 'quiz') sort change
+            } else if (req.body.changeSort) {
+
+                let quizId = req.body.quizId;
+                let changeSort = req.body.changeSort;
+
+                db.models.Course.findOne({ _id : courseId})
+                    .select('quizIds')
+                    .exec((err, course) => {
+
+                        // Re-sort to match display just in case data was imported
+                        course.quizIds = Array.from(course.quizIds).sort((a,b) => {
+                            return a.sortKey - b.sortKey;
+                        });
+
+                        let quizIndex = course.quizIds.findIndex(e => e.quizId == quizId);
+                        let indexToSwap = changeSort=="up"? quizIndex - 1 : quizIndex + 1;
+                        let swapSortKey = course.quizIds[indexToSwap].sortKey;
+                        course.quizIds[indexToSwap].sortKey = course.quizIds[quizIndex].sortKey;
+                        course.quizIds[quizIndex].sortKey = swapSortKey;
+                        course.save(err => {
+                            res.json(err? {error: err.message} : {});
+                        })
+                    }
+                );
+
             // Handle other details (description, homeContent....)
             } else {
 
@@ -490,6 +537,45 @@ module.exports = function (app, db) {
                 }
             });
         })
+
+    app.route('/courseAdmin/:courseId/modalModules')
+        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            let courseId = req.params.courseId;
+
+            let options = {
+                admin: req.user.roles.includes('admin'),
+                feedback: req.query.feedback? req.query.feedback : ''
+            };
+            
+            db.models.Course.findOne({ _id : courseId})
+                .select('quizIds')
+                .exec((err, course) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+                    db.models.Quiz.find().select('name').where('_id').in(course.quizIds.map(el => el.quizId)).exec((err, quizzes) => {
+                        if (err) {
+                            res.json({error: err.message});
+                        } else {
+
+                            var sortLookupTable = {}
+                            Array.from(course.quizIds).forEach(el => {
+                                sortLookupTable[el.quizId] = el.sortKey;
+                            })
+                            
+                            options.quizzes = Array.from(quizzes).sort((a,b) => {
+                                return sortLookupTable[a.id] - sortLookupTable[b.id]
+                            });
+
+                            options.quizzesHighIndex = quizzes.length - 1;
+                            res.render(process.cwd() + '/views/partials/modalModules.hbs', options);
+                        }
+                    })
+                }
+            })
+        })
+    
+
 
     app.route('/courseSelect')
 

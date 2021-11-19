@@ -17,7 +17,7 @@
                 <div id='admin' class='d-none'>{{admin}}</div>
                 <div id='courseId' class='d-none'>{{course._id}}</div>
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-10 p-0">
                         <h1 class="display-4">Admin: {{course.name}}</h1>
                     </div>
                     <div class="col-2 mt-4"><button id="deleteCourse" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete</button></div>
@@ -56,13 +56,11 @@
                                 </div>
                                 <small class="form-text text-muted ml-5">Enter the name</small>
                             </div>
-                            
                         </form>
                         <form class="form-group" id='selectQuiz' action="/quiz" method="get">
                             {{> selectQuiz }}
-                            <button type="button" class="btn btn-sm btn-secondary row mt-1" data-toggle="modal" data-target="#modalModules">Ordering</button>
                         </form>
-                        
+                        <button id="btnOrdering" type="button" class="btn btn-sm btn-secondary row mt-1" data-toggle="modal" data-target="#modalContainer">Ordering</button>
                         {{#if admin}}
                         <form id='selectTeachers' class="form-group">
                             <div class="row">
@@ -94,7 +92,7 @@
         </div>
 
     </div>
-    {{> modalModules }}
+    {{> modalContainer }}
     <script src="/viewScripts/courseAdminScripts.js"></script>
     
 </body>

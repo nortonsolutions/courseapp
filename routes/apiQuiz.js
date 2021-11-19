@@ -45,7 +45,7 @@ module.exports = function(app, db, upload) {
         })
     };
 
-    // ensureAdminOrTeacher - unique for quiz route
+    // ensureAdminOrTeacher - unique for course route
     const ensureAdminOrTeacher = (req,res,next) => {
         let quizId = req.params.quizId;
         
@@ -79,7 +79,7 @@ module.exports = function(app, db, upload) {
             admin: req.user.roles.includes('admin')
         };
         
-        db.models.Course.findOne({ _id : req.params.courseId}, (err, course) => {
+        db.models.Course.findOne({ _id : req.params.courseId}, 'name quizIds', (err, course) => {
             if (err) {
                 res.json({error: err.message});
             } else {
@@ -89,7 +89,17 @@ module.exports = function(app, db, upload) {
                     if (err) {
                         res.json({error: err.message});
                     } else {
-                        options.quizzes = quizzes;
+
+                        // Re-sort just in case data was imported
+                        var sortLookupTable = {}
+                        Array.from(course.quizIds).forEach(el => {
+                            sortLookupTable[el.quizId] = el.sortKey;
+                        })
+                        
+                        options.quizzes = Array.from(quizzes).sort((a,b) => {
+                            return sortLookupTable[a.id] - sortLookupTable[b.id]
+                        });
+
                         res.render(process.cwd() + '/views/partials/selectQuiz.hbs', options);
                     }
                 })
@@ -193,6 +203,7 @@ module.exports = function(app, db, upload) {
     // Get entire quizAdmin view for a quiz
     .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
         let quizId = req.params.quizId;
+        let courseId = req.query.courseId;
 
         let options = {
             admin: req.user.roles.includes('admin'),
@@ -203,7 +214,8 @@ module.exports = function(app, db, upload) {
             if (err) {
             res.json({error: err.message});
             } else {
-            options.quiz = quiz
+            options.quiz = quiz;
+            options.courseId = courseId;
             res.render(process.cwd() + '/views/quizAdmin.hbs', options);
             }
         })
@@ -254,7 +266,7 @@ module.exports = function(app, db, upload) {
             })
         })
 
-    .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
         let quizId = req.params.quizId;
         db.models.Quiz.remove({_id: quizId}, (err) => {
             if (err) {

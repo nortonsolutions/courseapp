@@ -15,6 +15,10 @@ document.getElementById('newQuiz').addEventListener('submit', (e) => {
             handleGet('/quizzes/' + currentCourseId, (response) => {
                 document.getElementById('selectQuiz').innerHTML = response;
             })
+            handleGet('/courseAdmin/' + currentCourseId + '/modalModules', (response) => {
+                document.querySelector('.modal-body').innerHTML = response;
+                addModalModulesListeners();
+            })
         }
     });
 
@@ -23,7 +27,7 @@ document.getElementById('newQuiz').addEventListener('submit', (e) => {
 
 document.getElementById('selectQuiz').addEventListener('submit', (e) => {
     let quizId = e.target.elements.quizSelect.value;
-    let url = "/quizAdmin/" + quizId;
+    let url = "/quizAdmin/" + quizId + "?courseId=" + currentCourseId;
     window.location.href = url;
     e.preventDefault();
 })
@@ -90,6 +94,44 @@ if (admin) {
     addInstructorDeleteListeners();
 }
 
+// Modal stuff
 
+addModalModulesListeners = () => {
+
+    reloadModuleLists = () => {
+        handleGet('/quizzes/' + currentCourseId, (response) => {
+            document.getElementById('selectQuiz').innerHTML = response;
+        })
+    
+        handleGet('/courseAdmin/' + currentCourseId + '/modalModules', (response) => {
+            document.querySelector('.modal-body').innerHTML = response;
+            addModalModulesListeners();
+        })
+    }
+
+    Array.from(document.querySelectorAll('.orderLower')).forEach(el => {
+        el.addEventListener('click', e => {
+        
+            // This would be an excellent place for an event, rather than
+            // a call to grandfather node!  Hmm.  monitorEvents()?  WebExtensions API?
+            let quizId = e.target.parentNode.parentNode.querySelector('.quizId').id
+            handlePut('/courseAdmin/' + currentCourseId, { quizId: quizId, changeSort: 'down'}, (response) => {
+                reloadModuleLists();                
+            })
+        })
+    })
+
+    Array.from(document.querySelectorAll('.orderHigher')).forEach(el => {
+        el.addEventListener('click', e => {
+        
+            let quizId = e.target.parentNode.parentNode.querySelector('.quizId').id
+            handlePut('/courseAdmin/' + currentCourseId, { quizId: quizId, changeSort: 'up'}, (response) => {
+                reloadModuleLists();
+            })
+        })
+    })
+}
+
+addModalModulesListeners();
 
 
