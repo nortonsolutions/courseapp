@@ -111,7 +111,7 @@ module.exports = function(app,db) {
             if (err) {
               res.send(err.message);
             } else {
-              res.send('thread reported');
+              res.send('thread has been reported');
             }
           })
         }
@@ -201,7 +201,7 @@ module.exports = function(app,db) {
 
             thread.replies[replyIndex].reported = true;
             thread.save(err => {
-                res.send(err? err.message: 'reply reported');
+                res.send(err? err.message: 'reply has been reported');
             })
           }
         })

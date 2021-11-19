@@ -16,6 +16,7 @@ const blankQuestion = {
         { text: '', correct: false}
     ],
     imageLocation: '',
+    videoLocation: '',
     answerTextRegex: '',
     answerEssayRegex: ''
   }
@@ -226,6 +227,7 @@ module.exports = function(app, db, upload) {
         ensureAuthenticated, 
         ensureAdminOrTeacher, 
         upload.single('file'), // req.file
+        upload.single('video'),
         (req,res) => {
             let quizId = req.params.quizId;
             let question = JSON.parse(req.body.questionJson);
@@ -238,6 +240,7 @@ module.exports = function(app, db, upload) {
                 choices: question.choices,
                 type: question.type,
                 imageLocation: req.file? req.file.originalname: '',
+                videoLocation: req.video? req.video.originalname: '',
                 answerTextRegex: question.answerTextRegex,
                 answerEssayRegex: question.answerEssayRegex
                 }];
@@ -252,7 +255,11 @@ module.exports = function(app, db, upload) {
                 subDoc.answerEssayRegex = question.answerEssayRegex;
 
                 if (req.file) {
-                subDoc.imageLocation = req.file.originalname;
+                    subDoc.imageLocation = req.file.originalname;
+                }
+
+                if (req.video) {
+                    subDoc.videoLocation = req.video.originalname;
                 }
             }
             

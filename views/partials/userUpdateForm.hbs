@@ -1,35 +1,58 @@
 
                                     <input type="hidden" name="id" value="{{_id}}">
-                                    <div>
-                                        <label for="username">Username:</label>
-                                        <input type="text" id="username" name="username" value="{{username}}">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="username">Username:</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" class="form-control" id="username" name="username" value="{{username}}">
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label for="firstname">First name:</label>
-                                        <input type="text" id="firstname" name="firstname" value="{{firstname}}">
-                                    </div>
-                                    <div>
-                                        <label for="surname">Last name:</label>
-                                        <input type="text" id="surname" name="surname" value="{{surname}}">
-                                    </div>
-                                    <div>
-                                        <label for="password">Password:</label>
-                                        <input type="password" name="password" id="password">
-                                    </div>
-                                    <div>
-                                        <label for="confirm">Confirm:</label>
-                                        <input type="password" name="confirm" id="confirm">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="firstname">First name:</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{firstname}}">
+                                        </div>
+                                    </div>                                    
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="surname">Last name:</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input type="text" class="form-control" id="surname" name="surname" value="{{surname}}">
+                                        </div>
+                                    </div>                                    
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="password">Password:</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="form-control" type="password" name="password" id="password">
+                                        </div>
+                                    </div>                                    
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="confirm">Confirm:</label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input class="form-control" type="password" name="confirm" id="confirm">
+                                        </div>
                                     </div>
 
                                     {{#if admin}}                                        
-                                    <div>
-                                        
-                                        <label style="position: absolute" for="roles">Roles:</label>
-                                        <select style="margin: 6px 0px 0px 104px; width: 178px;" multiple name="roles" id="roles">
-                                            <option value="admin" {{{selectedForRole roles "admin"}}}>Administrator</option>
-                                            <option value="student" {{{selectedForRole roles "student"}}}>Student</option>
-                                            <option value="teacher" {{{selectedForRole roles "teacher"}}}>Teacher</option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="roles">Roles:</label>
+                                       </div>
+                                        <div class="col-8">
+                                            <select multiple class="form-control" name="roles" id="rolesSelect">
+                                                <option value="admin" {{{selectedForRole roles "admin"}}}>Administrator</option>
+                                                <option value="student" {{{selectedForRole roles "student"}}}>Student</option>
+                                                <option value="teacher" {{{selectedForRole roles "teacher"}}}>Teacher</option>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     {{/if}}

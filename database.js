@@ -16,6 +16,7 @@ module.exports = function (mongoose, callback) {
         correct: Boolean
       }],
       imageLocation: String,
+      videoLocation: String,
       answerTextRegex: String,
       answerEssayRegex: String
     })

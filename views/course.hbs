@@ -11,11 +11,11 @@
     <input type="hidden" id="userId" value="{{userId}}">
     <div class="outerContainer">
         {{> navbar quizActive='active' }}
-        <div class="limit-mt jumbotron jumbotron-fluid">
+        <div class="pt-1 jumbotron jumbotron-fluid">
             <div class="container p-0">
                 <input type="hidden" id="courseId" value="{{course.id}}">
                 <header class="row">
-                    <div class="col-7 p-0">
+                    <div class="col-7 pr-0">
                         <h1 class="form-text display-5">{{course.name}}</h1>
                         <div id="description">{{course.description}}</div>
                     </div>
@@ -25,7 +25,7 @@
                         </form>
                     </div>
                 </header>
-                <main class="row"><div class="col-12 p-0">
+                <main class="row"><div class="col-12">
                     <label for="homeContentMarked"></label>
                     <div class="d-none" id="homeContentRaw">{{course.homeContent}}</div>
                     <div class="form-text border" id="homeContentMarked"></div>

@@ -12,8 +12,8 @@
 
         {{> navbar }}
 
-        <div class="jumbotron jumbotron-fluid limit-mt">
-            <div id="adminInterface" class="container">
+        <div class="jumbotron jumbotron-fluid pt-1">
+            <div id="quizAdminInterface" class="container">
                 <div id='courseId' class='d-none'>{{courseId}}</div>
                 <div id='quizId' class='d-none'>{{quiz._id}}</div>
                 <div class="row">
@@ -45,18 +45,18 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-6 p-0">
+                    <div class="col-6">
                         <div class="row">
-                            <div class="col-4"><button id="btnNewQuestion" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></div>
+                            <div class="col-4 pl-0"><button id="btnNewQuestion" type="button" class="btn btn-block btn-default"><i class="fa fa-plus" aria-hidden="true"></i> Add</button></div>
                             <div class="col-4 pr-1"><button id="btnSaveQuestion" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
                             <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fas fa-backspace"></i> Cancel</button></div>
                         </div>
-                        <form class="d-none" id="questionDetail" method="post" action="/quizAdmin/{{quiz._id}}">
+                        <form class="d-none row" id="questionDetail" method="post" action="/quizAdmin/{{quiz._id}}">
                             {{> questionDetail }}
                         </form>
 
                     </div>
-                    <div class="col-6 p-0">
+                    <div class="col-6 pr-0">
                         <div id="questionListContainer">
                             {{> questionList}}
                         </div>
