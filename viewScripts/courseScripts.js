@@ -2,7 +2,7 @@ var courseId = document.getElementById('courseId').value;
 
 document.getElementById('homeContentMarked').innerHTML = marked(document.getElementById('homeContentRaw').innerText)
 document.getElementById('selectQuiz').addEventListener('submit', (e) => {
-    if (confirm("Are you ready to start the quiz?")) {
+    if (confirm("Are you ready to start?")) {
 
         let userId = document.getElementById('userId').value
         let quizId = e.target.elements.quizSelect.value;

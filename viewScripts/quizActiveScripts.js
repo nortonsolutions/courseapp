@@ -72,6 +72,10 @@ const setButtonVisibility = () => {
         btnPreviousQuestion.classList.remove('d-none');
     }
 
+    if (document.getElementById('questionType').value == "projectSubmission") {
+        btnFinishQuiz.classList.add('d-none');
+    }
+
 }
 
 const addButtonListeners = () => {
@@ -113,6 +117,40 @@ const applyCheckboxHandlers = () => {
     })
 }
 
+const addProjectSubmissionHandling = () => {
+    Array.from(document.querySelectorAll('.custom-file-input')).forEach(el => {
+        el.addEventListener('change', e => {
+            let filename = String(e.target.files[0].name);
+            let ending = Array.from(filename).splice(-3,3).join('');
+            let firstpart = filename.substring(0,filename.indexOf('.')).slice(0,8);
+            e.target.labels[0].innerText = firstpart + "..." + ending;
+        })
+    })
+
+    document.getElementById('projectSubmissionForm').addEventListener('submit', e => {
+
+        if (! userAnswers[currentQuestionIndex]) {
+            userAnswers[currentQuestionIndex] = {};
+        }
+
+        userAnswers[currentQuestionIndex].questionId = questionId;
+        userAnswers[currentQuestionIndex].projectFile = e.target.elements[0].files[0].name;// filename;
+        
+        var formData = new FormData(e.target);
+        formData.append('userAnswers', JSON.stringify(userAnswers));
+        formData.append('projectFile', e.target.elements[0].files[0].name);
+
+        handleFormPost('/quiz/projectSubmission/' + quizId, formData, (response) => {
+            document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
+            localStorage.removeItem(userId + quizId);
+            hideQuestionInterface();
+        }) 
+
+        e.preventDefault();
+    })
+
+}
+
 const getQuestion = () => {
     handleGet('/quizActive/' + quizId + '/' + currentQuestionIndex, (response) => {
         document.getElementById('quizQuestion').innerHTML = response;
@@ -123,6 +161,11 @@ const getQuestion = () => {
         
         setButtonVisibility();
         applyCheckboxHandlers();
+
+        if (document.getElementById('questionType').value == "projectSubmission") {
+            addProjectSubmissionHandling();
+        }
+
         populateCurrentAnswer();
     });
 }
@@ -135,6 +178,10 @@ const populateCurrentAnswer = () => {
         document.getElementById('answerText').value = userAnswers[currentQuestionIndex].answerText;
         document.getElementById('answerEssay').value = userAnswers[currentQuestionIndex].answerEssay;
         
+        if (userAnswers[currentQuestionIndex].projectFile) {
+            document.getElementById('userProjectLink').innerHTML="Existing project: <a href='/public/projects/" + userAnswers[currentQuestionIndex].projectFile + "'>" + userAnswers[currentQuestionIndex].projectFile + "</a>"
+        }
+
         if (reviewMode) {
             let correctOrIncorrect = document.getElementById('correctOrIncorrect');
             if (userAnswers[currentQuestionIndex].correct && userAnswers[currentQuestionIndex].correct == true) {
@@ -147,6 +194,7 @@ const populateCurrentAnswer = () => {
                 correctOrIncorrect.innerText = 'Incorrect';
             }
         }
+
     }
 }
 

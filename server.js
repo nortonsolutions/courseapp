@@ -22,6 +22,7 @@ var hbs                      = require('express-hbs');
 
 const mongoose               = require('mongoose');
 
+// For general-purpose uploads
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/uploads')
@@ -31,9 +32,19 @@ var storage = multer.diskStorage({
   }
 })
 
+// For student projects
+var projectStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/projects')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
 // require and use "multer"...
 var upload = multer({ storage: storage });
-
+var uploadProject = multer({ storage: projectStorage });
 
 // For unit and functional testing with Chai later:
 // var expect            = require('chai').expect;
@@ -82,7 +93,7 @@ database(mongoose, (db) => {
   auth(app, db.models.User);
   
   apiRoutes(app, db);
-  apiQuizRoutes(app, db, upload);
+  apiQuizRoutes(app, db, upload, uploadProject);
   apiMessageboardRoutes(app,db);
   
   //404 Not Found Middleware

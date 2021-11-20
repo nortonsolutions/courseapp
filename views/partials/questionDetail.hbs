@@ -16,23 +16,26 @@
                 <input class="d-none" type="text" name="questionId" id="questionId" value="{{currentQuestion._id}}">
                 
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-6 pr-0">
                     {{#if currentQuestion.imageLocation}}
-                    <div class="row"><label style="width: 100%" for="currentImage">Current image:</label></div>
-                    <div class="row"><img id="currentImage" width="170px" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"></div>
+                    <label style="width: 100%" for="currentImage">Current image:</label>
+                    <div class="mediaContainer"><img id="currentImage" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"></div>
                     {{/if}}
-                    <label style="width: 100%" for="file">Upload new image:</label>
-                    <input type="file" class="form-control-file" name="file" id="file" placeholder="Upload image" aria-describedby="" accept=".jpg, .jpeg, .png">
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" name="file" id="file" accept=".jpg, .jpeg, .png">
+                      <label class="custom-file-label" for="file">New image</label>
+                    </div>
                   </div>
-
-                
-                  <div class="col-6">
+                  <div class="col-6 pl-0">
                     {{#if currentQuestion.videoLocation}}
-                    <div class="row"><label style="width: 100%" for="currentVideo">Current video:</label></div>
-                    <div class="row"><img id="currentVideo" width="170px" src="/public/uploads/{{currentQuestion.videoLocation}}" alt="Question Video"></div>
+                    <label style="width: 100%" for="currentVideo">Current video:</label>
+                    <div class="mediaContainer"><video id="currentVideo" src="/public/uploads/{{currentQuestion.videoLocation}}" alt="Question Video"></video></div>
+                    {{!-- <img id="currentImage" height="100px" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"> --}}
                     {{/if}}
-                    <label style="width: 100%" for="video">Upload new video:</label>
-                    <input type="file" class="form-control-file" name="video" id="video" placeholder="Upload video" aria-describedby="" accept="audio/*,video/*">
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" name="video" id="video" accept="video/*">
+                      <label class="custom-file-label" for="video">New video</label>
+                    </div>
                   </div>
-                  </div>
+                </div>
               </div>

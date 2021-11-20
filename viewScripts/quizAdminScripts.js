@@ -82,6 +82,15 @@ applyQuestionDetailHandlers = () => {
         })
     })
 
+    Array.from(document.querySelectorAll('.custom-file-input')).forEach(el => {
+        el.addEventListener('change', e => {
+            let filename = String(e.target.files[0].name);
+            let ending = Array.from(filename).splice(-3,3).join('');
+            let firstpart = filename.substring(0,filename.indexOf('.')).slice(0,8);
+            e.target.labels[0].innerText = firstpart + "..." + ending;
+        })
+    })
+
 }
 
 showQuestionForm = () => {
@@ -190,3 +199,4 @@ rerenderQuestionDetail = (callback) => {
 
 applyQuestionListHandlers();
 applyQuestionDetailHandlers();
+

@@ -18,10 +18,10 @@ const blankQuestion = {
     imageLocation: '',
     videoLocation: '',
     answerTextRegex: '',
-    answerEssayRegex: ''
+    answerEssayRegex: '',
   }
 
-module.exports = function(app, db, upload) {    
+module.exports = function(app, db, upload, uploadProject) {    
 
     // Allow test reviews and show answers?
     var allowTestReviews = process.env.ALLOW_TEST_REVIEWS == 'true';
@@ -147,6 +147,8 @@ module.exports = function(app, db, upload) {
 
                     } else if (question.type == 'essay') {
                     userAnswer.correct = RegExp(question.answerEssayRegex).test(userAnswer.answerEssay);
+                    } else {
+                    userAnswer.correct = true;
                     }
 
                     if (!userAnswer.correct) totalMissed++;
@@ -174,6 +176,52 @@ module.exports = function(app, db, upload) {
             }
         });
     });
+
+    app.route('/quiz/projectSubmission/:quizId')
+        .post(
+            ensureAuthenticated,
+            uploadProject.single('file'),
+            (req,res) => {
+                let quizId = req.params.quizId;
+                let userAnswers = JSON.parse(req.body.userAnswers);
+                let projectFile = req.body.projectFile;
+            
+                db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+                    if (err) {
+                    res.json({error: err.message});
+                    } else {
+        
+                        db.models.User.findOne({_id: req.user._id}, (err,user) => {
+                            if (err) {
+                                res.json({error: err.message});
+                            } else {
+
+                                user.quizzes = [...user.quizzes, {
+                                    quizId: quizId,
+                                    answers: userAnswers,
+                                    score: 0,
+                                    date: new Date(),
+                                    quizName: quiz.name
+                                }];
+                
+                                user.projects = [...user.projects, {
+                                    quizId: quizId,
+                                    file: projectFile
+                                }]
+
+                                user.save((err,doc) => {
+                                    if (err) {
+                                    res.json({feedback: err.message});
+                                    } else {
+                                    res.json({feedback: "Success.  Score is 0 until graded."});
+                                    }
+                                })
+                            }
+                        });
+                    }
+
+                });
+        });
 
     app.route('/quiz')
         // Get and return the userQuiz:
@@ -226,8 +274,8 @@ module.exports = function(app, db, upload) {
     .post(
         ensureAuthenticated, 
         ensureAdminOrTeacher, 
-        upload.single('file'), // req.file
-        upload.single('video'),
+        // upload.single('file'), // req.file
+        upload.fields([{ name: 'file', maxCount: 1 }, { name: 'video', maxCount: 1 }]),
         (req,res) => {
             let quizId = req.params.quizId;
             let question = JSON.parse(req.body.questionJson);
@@ -239,8 +287,8 @@ module.exports = function(app, db, upload) {
                 question: question.question, 
                 choices: question.choices,
                 type: question.type,
-                imageLocation: req.file? req.file.originalname: '',
-                videoLocation: req.video? req.video.originalname: '',
+                imageLocation: req.files? req.files.file? req.files.file[0].originalname: '': '',
+                videoLocation: req.files? req.files.video? req.files.video[0].originalname: '': '',
                 answerTextRegex: question.answerTextRegex,
                 answerEssayRegex: question.answerEssayRegex
                 }];
@@ -254,12 +302,15 @@ module.exports = function(app, db, upload) {
                 subDoc.answerTextRegex = question.answerTextRegex;
                 subDoc.answerEssayRegex = question.answerEssayRegex;
 
-                if (req.file) {
-                    subDoc.imageLocation = req.file.originalname;
-                }
-
-                if (req.video) {
-                    subDoc.videoLocation = req.video.originalname;
+                if (req.files) {
+                    if (req.files.file) {
+                        subDoc.imageLocation = req.files.file[0].originalname;
+                    }
+    
+                    if (req.files.video) {
+                        subDoc.videoLocation = req.files.video[0].originalname;
+                    }
+    
                 }
             }
             

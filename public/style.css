@@ -4,9 +4,34 @@
   }
 }
 
+#currentImage, #currentVideo {
+  height: 100px;
+}
+
+.mediaContainer {
+  overflow: hidden;
+  height: 100px;
+  text-align: center;
+}
+
+.videoPresentation {
+  width: 100%;
+  max-width: 600px;
+}
+
+.bigMediaContainer {
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+}
+
 label {
     color: blue;
     margin: 8px 0px 0px !important;
+}
+
+.btn-std, .lbl-std {
+  width: 100px;
 }
 
 .btn-limitedHeight {

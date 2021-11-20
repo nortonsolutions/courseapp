@@ -37,6 +37,7 @@ module.exports = function (mongoose, callback) {
       answer: [Boolean],
       answerText: String,
       answerEssay: String,
+      projectFile: String,
       correct: Boolean
     })
 
@@ -53,6 +54,10 @@ module.exports = function (mongoose, callback) {
       password: { type: String, required: true },
       roles: {type: [String], default: ['student']},
       quizzes: {type: [userQuizSchema], default: []},
+      projects: [{
+        quizId: String,
+        file: String
+      }],
       firstname: String,
       surname: String
     })
