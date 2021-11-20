@@ -23,8 +23,7 @@ const blankQuestion = {
 
 module.exports = function(app, db, upload, uploadProject) {    
 
-    // Allow test reviews and show answers?
-    var allowTestReviews = process.env.ALLOW_TEST_REVIEWS == 'true';
+    // Show answers?
     var showAnswers = process.env.SHOW_ANSWERS_ON_REVIEWS == 'true';
 
     // ensureAuthenticated
@@ -33,17 +32,6 @@ module.exports = function(app, db, upload, uploadProject) {
         return next();
         }
         res.redirect('/');
-    };
-
-    // ensureAuthenticated
-    const ensureAdmin = (req,res,next) => {
-        db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
-        if (user.roles.includes('admin')) {
-            next();
-        } else {
-            res.redirect('/main');
-        }     
-        })
     };
 
     // ensureAdminOrTeacher - unique for course route
@@ -109,9 +97,10 @@ module.exports = function(app, db, upload, uploadProject) {
     })
 
 
-    app.route('/quiz/grade/:quizId')
+    app.route('/quiz/grade/:courseId/:quizId')
         .post(ensureAuthenticated, (req,res) => {
-  
+        
+        let courseId = req.params.courseId;
         let quizId = req.params.quizId;
         let userAnswers = req.body.userAnswers;
     
@@ -128,35 +117,36 @@ module.exports = function(app, db, upload, uploadProject) {
                 var totalQuestions = quiz.questions.length;
                 var totalMissed = 0;
 
-                userAnswers.forEach(userAnswer => {
+                Object.keys(userAnswers).forEach(questionId => {
                     
                     let correctAnswer = true;
 
                     // Is the answer correct?  Compare against the quizId/questionId
-                    var question = quiz.questions.id(userAnswer.questionId);
+                    var question = quiz.questions.id(questionId);
                     var wrong = 0;
 
                     if (question.type == 'single' || question.type == 'multi') {
                     wrong = question.choices.reduce((total, current, index) => {
-                        return total + (current.correct != userAnswer.answer[index]);
+                        return total + (current.correct != userAnswers[questionId].answer[index]);
                     }, 0)
-                    userAnswer.correct = (wrong == 0);
+                        userAnswers[questionId].correct = (wrong == 0);
 
                     } else if (question.type == 'text') {
-                    userAnswer.correct = RegExp(question.answerTextRegex).test(userAnswer.answerText);
+                        userAnswers[questionId].correct = RegExp(question.answerTextRegex).test(userAnswers[questionId].answerText);
 
                     } else if (question.type == 'essay') {
-                    userAnswer.correct = RegExp(question.answerEssayRegex).test(userAnswer.answerEssay);
+                        userAnswers[questionId].correct = RegExp(question.answerEssayRegex).test(userAnswers[questionId].answerEssay);
                     } else {
-                    userAnswer.correct = true;
+                        userAnswers[questionId].correct = true;
                     }
 
-                    if (!userAnswer.correct) totalMissed++;
+                    if (!userAnswers[questionId].correct) totalMissed++;
                 })
 
                 let score = ((totalQuestions - totalMissed) / totalQuestions).toFixed(2);
 
                 user.quizzes = [...user.quizzes, {
+                    courseId: courseId,
                     quizId: quizId,
                     answers: userAnswers,
                     score: score*100,
@@ -177,11 +167,12 @@ module.exports = function(app, db, upload, uploadProject) {
         });
     });
 
-    app.route('/quiz/projectSubmission/:quizId')
+    app.route('/quiz/projectSubmission/:courseId/:quizId')
         .post(
             ensureAuthenticated,
             uploadProject.single('file'),
             (req,res) => {
+                let courseId = req.params.courseId;
                 let quizId = req.params.quizId;
                 let userAnswers = JSON.parse(req.body.userAnswers);
                 let projectFile = req.body.projectFile;
@@ -197,6 +188,7 @@ module.exports = function(app, db, upload, uploadProject) {
                             } else {
 
                                 user.quizzes = [...user.quizzes, {
+                                    courseId: courseId,
                                     quizId: quizId,
                                     answers: userAnswers,
                                     score: 0,
@@ -205,6 +197,7 @@ module.exports = function(app, db, upload, uploadProject) {
                                 }];
                 
                                 user.projects = [...user.projects, {
+                                    courseId: courseId,
                                     quizId: quizId,
                                     file: projectFile
                                 }]
@@ -432,11 +425,12 @@ module.exports = function(app, db, upload, uploadProject) {
 
 
     
-    app.route('/quizActive/:quizId')
+    app.route('/quizActive/:courseId/:quizId')
 
         // Get and render the active quiz container:
         .get(ensureAuthenticated, (req,res) => {
     
+          let courseId = req.params.courseId;
           let quizId = req.params.quizId;
           let options = {
               quizId: req.params.quizId,
@@ -458,18 +452,20 @@ module.exports = function(app, db, upload, uploadProject) {
               options.timeLimit = quiz.timeLimit;
               options.maxAttempts = quiz.maxAttempts;
               options.totalQuestions = quiz.questions.length;
-              
+
+              options.courseId = courseId;
               options.userId = req.user._id;
               res.render(process.cwd() + '/views/quizActive.hbs', options);
             }
           })
     })
 
-    app.route('/quizActive/:quizId/:index')
+    app.route('/quizActive/:courseId/:quizId/:index')
 
         // Get and render the quiz question:
         .get(ensureAuthenticated, (req,res) => {
     
+          let courseId = req.params.courseId;  
           let quizId = req.params.quizId;
 
           // Set reviewMode?
@@ -480,7 +476,8 @@ module.exports = function(app, db, upload, uploadProject) {
           }
 
           let options = {
-              quizId: req.params.quizId,
+              courseId: courseId,
+              quizId: quizId,
               currentQuestionNumber: Number(req.params.index) + 1,
               admin: req.user.roles.includes('admin'),
               reviewMode: reviewMode,

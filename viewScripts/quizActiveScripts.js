@@ -11,20 +11,21 @@
  * 
  * { 
  *    userIdquizId: {
- *       userAnswers: [],
+ *       userAnswers: {},
  *       timeRemaining: Number, (seconds)
  *    } 
  * }
  * 
  */
 
-var questionId = '';
 var currentQuestionIndex = 0;
+var questionId = '';
 var userId = document.getElementById('userId').value;
 var quizId = document.getElementById('quizId').value;
+var courseId = document.getElementById('courseId').value;
 var reviewMode = document.getElementById('reviewMode').value;
 var totalQuestions = Number(document.getElementById('totalQuestions').value);
-var userAnswers = [];
+var userAnswers = {};
 var timeLimit = Number(document.getElementById('timeLimit').value); // minutes
 
 const markedOptions = {
@@ -45,7 +46,7 @@ const hideQuestionInterface = () => {
 }
 
 const submitQuiz = () => {
-    handlePost('/quiz/grade/' + quizId, {userAnswers: userAnswers}, (response) => {
+    handlePost('/quiz/grade/' + courseId + '/' + quizId, {userAnswers: userAnswers}, (response) => {
         document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
         localStorage.removeItem(userId + quizId);
         hideQuestionInterface();
@@ -91,7 +92,7 @@ const addButtonListeners = () => {
     })
 
     btnNextQuestion.addEventListener('click', (e) => {
-        saveCurrentAnswer(currentQuestionIndex);
+        saveCurrentAnswer();
         currentQuestionIndex++;
         getQuestion();
     })
@@ -129,18 +130,17 @@ const addProjectSubmissionHandling = () => {
 
     document.getElementById('projectSubmissionForm').addEventListener('submit', e => {
 
-        if (! userAnswers[currentQuestionIndex]) {
-            userAnswers[currentQuestionIndex] = {};
+        if (! userAnswers[questionId]) {
+            userAnswers[questionId] = {};
         }
 
-        userAnswers[currentQuestionIndex].questionId = questionId;
-        userAnswers[currentQuestionIndex].projectFile = e.target.elements[0].files[0].name;// filename;
+        userAnswers[questionId].projectFile = e.target.elements[0].files[0].name;// filename;
         
         var formData = new FormData(e.target);
         formData.append('userAnswers', JSON.stringify(userAnswers));
         formData.append('projectFile', e.target.elements[0].files[0].name);
 
-        handleFormPost('/quiz/projectSubmission/' + quizId, formData, (response) => {
+        handleFormPost('/quiz/projectSubmission/' + courseId + '/' + quizId, formData, (response) => {
             document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
             localStorage.removeItem(userId + quizId);
             hideQuestionInterface();
@@ -152,7 +152,7 @@ const addProjectSubmissionHandling = () => {
 }
 
 const getQuestion = () => {
-    handleGet('/quizActive/' + quizId + '/' + currentQuestionIndex, (response) => {
+    handleGet('/quizActive/' + courseId + '/' + quizId + '/' + currentQuestionIndex, (response) => {
         document.getElementById('quizQuestion').innerHTML = response;
         questionId = document.getElementById('questionId').value;
 
@@ -163,28 +163,33 @@ const getQuestion = () => {
         applyCheckboxHandlers();
 
         if (document.getElementById('questionType').value == "projectSubmission") {
-            addProjectSubmissionHandling();
+            addProjectSubmissionHandling(questionId);
         }
 
-        populateCurrentAnswer();
+        populateCurrentAnswer(questionId);
     });
 }
 
 const populateCurrentAnswer = () => {
-    if (userAnswers[currentQuestionIndex]) {
-        userAnswers[currentQuestionIndex].answer.forEach((check, index) => {
-            document.getElementById('checkbox' + index).checked = check;
-        });
-        document.getElementById('answerText').value = userAnswers[currentQuestionIndex].answerText;
-        document.getElementById('answerEssay').value = userAnswers[currentQuestionIndex].answerEssay;
+
+    let questionType = document.getElementById('questionType').value;
+    if (userAnswers[questionId]) {
+
+        if (userAnswers[questionId].answer) {
+            userAnswers[questionId].answer.forEach((check, index) => {
+                document.getElementById('checkbox' + index).checked = check;
+            });
+            document.getElementById('answerText').value = userAnswers[questionId].answerText;
+            document.getElementById('answerEssay').value = userAnswers[questionId].answerEssay;
+        }
         
-        if (userAnswers[currentQuestionIndex].projectFile) {
-            document.getElementById('userProjectLink').innerHTML="Existing project: <a href='/public/projects/" + userAnswers[currentQuestionIndex].projectFile + "'>" + userAnswers[currentQuestionIndex].projectFile + "</a>"
+        if (userAnswers[questionId].projectFile) {
+            document.getElementById('userProjectLink').innerHTML="Existing project: <a href='/public/projects/" + userAnswers[questionId].projectFile + "'>" + userAnswers[questionId].projectFile + "</a>"
         }
 
-        if (reviewMode) {
+        if (reviewMode && questionType != "instructional" && questionType != "projectSubmission") {
             let correctOrIncorrect = document.getElementById('correctOrIncorrect');
-            if (userAnswers[currentQuestionIndex].correct && userAnswers[currentQuestionIndex].correct == true) {
+            if (userAnswers[questionId].correct && userAnswers[questionId].correct == true) {
                 correctOrIncorrect.style.color = 'green';
                 correctOrIncorrect.style.fontStyle = 'bold';
                 correctOrIncorrect.innerText = 'Correct!';
@@ -200,19 +205,18 @@ const populateCurrentAnswer = () => {
 
 const saveCurrentAnswer = () => {
     
-    if (! userAnswers[currentQuestionIndex]) {
-        userAnswers[currentQuestionIndex] = {};
+    if (! userAnswers[questionId]) {
+        userAnswers[questionId] = {};
     }
 
-    userAnswers[currentQuestionIndex].questionId = questionId;
-    userAnswers[currentQuestionIndex].answer = [
+    userAnswers[questionId].answer = [
             document.getElementById('checkbox0').checked,
             document.getElementById('checkbox1').checked,
             document.getElementById('checkbox2').checked,
             document.getElementById('checkbox3').checked
        ];
-    userAnswers[currentQuestionIndex].answerText = document.getElementById('answerText').value;
-    userAnswers[currentQuestionIndex].answerEssay = document.getElementById('answerEssay').value;
+    userAnswers[questionId].answerText = document.getElementById('answerText').value;
+    userAnswers[questionId].answerEssay = document.getElementById('answerEssay').value;
 
     localStorage.setItem(userId+quizId, JSON.stringify({
         userAnswers: userAnswers,

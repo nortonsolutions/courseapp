@@ -28,7 +28,7 @@ Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
                 timeRemaining: 0
             }))
 
-            window.location.href='/quizActive/' + userQuiz.quizId;
+            window.location.href='/quizActive/review/' +  userQuiz.quizId;
         })
 
         e.preventDefault();

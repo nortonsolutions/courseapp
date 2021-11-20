@@ -32,19 +32,20 @@ module.exports = function (mongoose, callback) {
 
     const QuizModel = mongoose.model('Quiz', quizSchema);
 
-    const userQuizQuestionSchema = mongoose.Schema({
-      questionId: { type: String, required: true },
-      answer: [Boolean],
-      answerText: String,
-      answerEssay: String,
-      projectFile: String,
-      correct: Boolean
-    })
+    // const userQuizQuestionSchema = mongoose.Schema({
+    //   questionId: { type: String, required: true },
+    //   answer: [Boolean],
+    //   answerText: String,
+    //   answerEssay: String,
+    //   projectFile: String,
+    //   correct: Boolean
+    // })
 
     const userQuizSchema = mongoose.Schema({
+      courseId: { type: String, required: true },
       quizId: { type: String, required: true },
       quizName: { type: String, required: true },
-      answers: [userQuizQuestionSchema],
+      answers: Object,
       date: Date,
       score: Number
     })
@@ -55,6 +56,7 @@ module.exports = function (mongoose, callback) {
       roles: {type: [String], default: ['student']},
       quizzes: {type: [userQuizSchema], default: []},
       projects: [{
+        courseId: String,
         quizId: String,
         file: String
       }],

@@ -7,7 +7,7 @@ document.getElementById('selectQuiz').addEventListener('submit', (e) => {
         let userId = document.getElementById('userId').value
         let quizId = e.target.elements.quizSelect.value;
         localStorage.removeItem(userId + quizId);
-        window.location.href = '/quizActive/' + quizId;
+        window.location.href = '/quizActive/' + courseId + '/' + quizId;
 
     }
     e.preventDefault();

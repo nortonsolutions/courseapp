@@ -1,6 +1,26 @@
-@media (min-width: 576px) {
+@media (min-width: 800px) {
   .container {
     max-width: 800px !important;
+  }
+}
+
+@media (max-width: 800px) {
+  label, div, button, input[type=button] {
+    font-size: 12px !important;
+  }
+
+  .newReplyText {
+    min-width: 82% !important;
+  }
+}
+
+@media (max-width: 600px) {
+  label, div, button, input[type=button] {
+    font-size: 11px !important;
+  }
+
+  .newReplyText {
+    min-width: 80% !important;
   }
 }
 
