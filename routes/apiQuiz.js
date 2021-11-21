@@ -1,5 +1,5 @@
 /*
-* Norton 2021 - quiZap
+* Norton 2021 - CourseApp
 *
 */
 
@@ -493,6 +493,7 @@ module.exports = function(app, db, upload, uploadProject) {
               res.json({error: err.message});
             } else {
               options.quizName = quiz.name;
+              options.description = quiz.description;
               options.timeLimit = quiz.timeLimit;
               options.maxAttempts = quiz.maxAttempts;
               options.totalQuestions = quiz.questions.length;

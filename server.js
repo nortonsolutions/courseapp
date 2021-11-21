@@ -1,5 +1,5 @@
 /**
- * Norton 2021 - quiZap App
+ * Norton 2021 - CourseApp App
  */
 
 'use strict';

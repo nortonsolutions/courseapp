@@ -1,5 +1,5 @@
 /*
-* Norton 2021 - quiZap
+* Norton 2021 - CourseApp
 *
 */
 
@@ -58,7 +58,7 @@ module.exports = function (app, db) {
         
         
         let options = {
-            welcomeMessage: "Welcome to quiZap!",
+            welcomeMessage: "Welcome to CourseApp!",
             showRegistration: false,
             showLogin: true
         }
