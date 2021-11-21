@@ -550,7 +550,7 @@ module.exports = function (app, db) {
             });
         })
 
-    app.route('/courseAdmin/:courseId/modalModules')
+    app.route('/courseAdmin/modalModules/:courseId')
         .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
             let courseId = req.params.courseId;
 

@@ -20,7 +20,7 @@
                     <div class="col-10 p-0">
                         <h2 class="display-4">Admin: {{quiz.name}}</h2>
                     </div>
-                    <div class="col-2 mt-4"><button id="deleteQuiz" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete</button></div>
+                    <div class="col-2 mt-4 p-0"><button id="deleteQuiz" type="button" class="form-control btn btn-danger"><i class="fas fa-minus-circle"></i> Delete</button></div>
                 </div>
                 <div class="row">
                     <div class="col-6 p-0">
@@ -39,7 +39,7 @@
                           <small id="helpId3" class="form-text text-muted">Max attempts</small>
                     </div>
                     <div class="col-2 p-0 text-center">
-                          <button type="button" id="saveQuiz" class="btn btn-primary mt-4"><i class="fas fa-save"></i> Save</button>
+                          <button type="button" id="saveQuiz" class="form-control btn btn-primary mt-4"><i class="fas fa-save"></i> Save</button>
                     </div>
 
                 </div>
@@ -57,6 +57,8 @@
 
                     </div>
                     <div class="col-6 pr-0">
+
+                        
                         <div id="questionListContainer">
                             {{> questionList}}
                         </div>
@@ -73,7 +75,7 @@
         </div>
 
     </div>
-
+    {{> modalContainer questions=true}}
     <script src="/viewScripts/quizAdminScripts.js"></script>
 
 </body>

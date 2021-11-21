@@ -15,7 +15,7 @@ document.getElementById('newQuiz').addEventListener('submit', (e) => {
             handleGet('/quizzes/' + currentCourseId, (response) => {
                 document.getElementById('selectQuiz').innerHTML = response;
             })
-            handleGet('/courseAdmin/' + currentCourseId + '/modalModules', (response) => {
+            handleGet('/courseAdmin/modalModules/' + currentCourseId, (response) => {
                 document.querySelector('.modal-body').innerHTML = response;
                 addModalModulesListeners();
             })
@@ -103,7 +103,7 @@ addModalModulesListeners = () => {
             document.getElementById('selectQuiz').innerHTML = response;
         })
     
-        handleGet('/courseAdmin/' + currentCourseId + '/modalModules', (response) => {
+        handleGet('/courseAdmin/modalModules/' + currentCourseId, (response) => {
             document.querySelector('.modal-body').innerHTML = response;
             addModalModulesListeners();
         })
@@ -112,8 +112,8 @@ addModalModulesListeners = () => {
     Array.from(document.querySelectorAll('.orderLower')).forEach(el => {
         el.addEventListener('click', e => {
         
-            // This would be an excellent place for an event, rather than
-            // a call to grandfather node!  Hmm.  monitorEvents()?  WebExtensions API?
+            // TODO: This would be an excellent place for CustomEvent, rather than
+            // a call to grandfather node!
             let quizId = e.target.parentNode.parentNode.querySelector('.quizId').id
             handlePut('/courseAdmin/' + currentCourseId, { quizId: quizId, changeSort: 'down'}, (response) => {
                 reloadModuleLists();                

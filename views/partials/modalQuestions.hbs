@@ -1,0 +1,8 @@
+        {{#each quiz.questions}}
+        <div class="row">
+          <div class="col-1">{{{plusOne @index}}}</div>
+          <div class="col-9 questionId" id={{_id}}>{{{limitLength question}}}</div>
+          <div class="col-1"><div class="orderLower {{{hideIfEqual ../questionsHighIndex @index null}}}"><i class="fa fa-caret-down" aria-hidden="true"></i></div></div>
+          <div class="col-1"><div class="orderHigher {{{hideIfEqual 0 @index null}}}"><i class="fa fa-caret-up" aria-hidden="true"></i></div></div>
+        </div>
+        {{/each}}

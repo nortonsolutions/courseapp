@@ -1,5 +1,9 @@
                         
-                        <label>Questions:</label>
+                        <div class="row">
+                        <div class="col-9"><label>Questions:</label></div>
+                        <div class="col-3 p-0 "><button id="btnOrdering" type="button" class="form-control btn btn-sm btn-secondary row mt-1" data-toggle="modal" data-target="#modalContainer">Ordering</button></div>
+                        </div>
+                        
                         <div class="col" id="questionList">
                             
                             {{#each quiz.questions}}
@@ -7,7 +11,6 @@
                                 <div class="col-1">{{{plusOne @index}}}</div>
                                 <div class="col-9 question" id={{_id}}>{{{limitLength question}}}</div>
                                 <div class="col-1 deleteQuestion text-danger text-center"><span class="fas fa-minus-circle"></span></div>
-
                             </div>
                             {{/each}}
                         </div>

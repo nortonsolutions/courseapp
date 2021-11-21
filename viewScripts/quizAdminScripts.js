@@ -90,7 +90,6 @@ applyQuestionDetailHandlers = () => {
             e.target.labels[0].innerText = firstpart + "..." + ending;
         })
     })
-
 }
 
 showQuestionForm = () => {
@@ -151,6 +150,7 @@ document.getElementById('btnSaveQuestion').addEventListener('click', (e) => {
             document.getElementById('feedback').innerHTML = "Successfully updated question.";
             document.getElementById('questionDetail').reset();
             rerenderQuestionList();
+            addModalQuestionsListeners();
             rerenderQuestionDetail(() => {
                 hideQuestionForm();
             });
@@ -197,6 +197,44 @@ rerenderQuestionDetail = (callback) => {
     })
 }
 
+
+// Modal stuff
+
+addModalQuestionsListeners = () => {
+
+    reloadQuestionLists = () => {
+        rerenderQuestionList();
+        handleGet('/quizAdmin/modalQuestions/' + currentQuizId, (response) => {
+            document.querySelector('.modal-body').innerHTML = response;
+            addModalQuestionsListeners();
+        })
+    }
+
+    Array.from(document.querySelectorAll('.orderLower')).forEach(el => {
+        el.addEventListener('click', e => {
+        
+            // TODO: This would be an excellent place for CustomEvent, rather than
+            // a call to grandfather node!
+            let questionId = e.target.parentNode.parentNode.querySelector('.questionId').id
+            handlePut('/quizAdmin/' + currentQuizId, { questionId: questionId, changeSort: 'down'}, (response) => {
+                reloadQuestionLists();                
+            })
+        })
+    })
+
+    Array.from(document.querySelectorAll('.orderHigher')).forEach(el => {
+        el.addEventListener('click', e => {
+        
+            let questionId = e.target.parentNode.parentNode.querySelector('.questionId').id
+            handlePut('/quizAdmin/' + currentQuizId, { questionId: questionId, changeSort: 'up'}, (response) => {
+                reloadQuestionLists();                
+            })
+        })
+    })
+}
+
+
 applyQuestionListHandlers();
 applyQuestionDetailHandlers();
+addModalQuestionsListeners();
 

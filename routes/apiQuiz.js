@@ -258,6 +258,7 @@ module.exports = function(app, db, upload, uploadProject) {
             } else {
             options.quiz = quiz;
             options.courseId = courseId;
+            options.questionsHighIndex = quiz.questions.length - 1;
             res.render(process.cwd() + '/views/quizAdmin.hbs', options);
             }
         })
@@ -341,87 +342,130 @@ module.exports = function(app, db, upload, uploadProject) {
     })
 
     .put(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-    db.models.Quiz.findOne({_id: req.params.quizId}, (err,quiz) => {
-        if (err) {
-        res.json({error: err.message});
-        } else {
-        quiz.description = req.body.quizDescription;
-        quiz.timeLimit = req.body.quizTimeLimit;
-        quiz.maxAttempts = req.body.quizMaxAttempts;
-        quiz.save(err => {
-            if (err) {
-            res.json({error: err.message});
-            } else {
-            res.json({response: 'Successfully updated quiz.'});
-            } 
-        })
-        }
-    })
-    })
-
-    app.route('/quizAdmin/:quizId/questions')
-
-    // Grab list of questions for questionList partial
-    .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-    let quizId = req.params.quizId;
-    let options = {};
-
-    db.models.Quiz.findOne({_id: quizId}, 'name questions', (err,quiz) => {
-        if (err) {
-        res.json({error: err.message});
-        } else {
-        options.quiz = quiz
-        res.render(process.cwd() + '/views/partials/questionList.hbs', options);
-        }
-    })
-    })
-
-    app.route('/quizAdmin/:quizId/:questionId')
-
-    // Grab question details for questionDetail partial
-    .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-    let questionId = req.params.questionId;
-    let quizId = req.params.quizId;
-    let options = {}
-
-    if (questionId == 0) {
-        options.currentQuestion = blankQuestion;
-        res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
-    } else {
-        db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
-        if (err) {
-            res.json({error: err.message});
-        } else {
-            options.currentQuestion = quiz.questions.find(el => el._id == questionId);
-            res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
-        }
-        })
-    }
-    })
-
-    // Remove the question
-    .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-    let questionId = req.params.questionId;
-    let quizId = req.params.quizId;
-    let options = {}
-
-        db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
-        if (err) {
-            res.json({error: err.message});
-        } else {
-
-            var index = quiz.questions.findIndex((el) => { return el._id == questionId})
-            quiz.questions.splice(index, 1);
-            quiz.save(err => {
+        db.models.Quiz.findOne({_id: req.params.quizId}, (err,quiz) => {
             if (err) {
                 res.json({error: err.message});
             } else {
-                res.json({response: 'Successfully removed question.'});
+
+                if (req.body.changeSort) {
+                    // Find the index of the current quizQuestion
+                    let questionId = req.body.questionId;
+                    let index = quiz.questions.findIndex(el => el.id == questionId);
+                    let indexToSwap = req.body.changeSort == "up"? index - 1: index + 1;
+                    let itemToMove = quiz.questions.splice(index,1)[0];
+                    quiz.questions = [...quiz.questions.slice(0,indexToSwap), itemToMove, ...quiz.questions.slice(indexToSwap,quiz.questions.length)];
+                    quiz.save(err => {
+                        if (err) {
+                            res.json({error: err.message});
+                        } else {
+                            res.json({response: 'Successfully updated quiz.'});
+                        } 
+                    })
+
+                } else {
+                    quiz.description = req.body.quizDescription;
+                    quiz.timeLimit = req.body.quizTimeLimit;
+                    quiz.maxAttempts = req.body.quizMaxAttempts;
+                    quiz.save(err => {
+                        if (err) {
+                            res.json({error: err.message});
+                        } else {
+                            res.json({response: 'Successfully updated quiz.'});
+                        } 
+                    })
+                }
             }
-            })
-        }
         })
     })
+
+    app.route('/quizAdmin/modalQuestions/:quizId/')
+        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            let quizId = req.params.quizId;
+
+            let options = {
+                admin: req.user.roles.includes('admin'),
+                feedback: req.query.feedback? req.query.feedback : ''
+            };
+            
+            db.models.Quiz.findOne({ _id : quizId})
+                .exec((err, quiz) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+                    options.quiz = quiz;
+                    options.questionsHighIndex = quiz.questions.length - 1;
+                    res.render(process.cwd() + '/views/partials/modalQuestions.hbs', options);
+                }
+            })
+        })
+
+    app.route('/quizAdmin/:quizId/questions')
+
+        // Grab list of questions for questionList partial
+        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            let quizId = req.params.quizId;
+            let options = {};
+
+            db.models.Quiz.findOne({_id: quizId}, 'name questions', (err,quiz) => {
+                if (err) {
+                res.json({error: err.message});
+                } else {
+                options.quiz = quiz
+                res.render(process.cwd() + '/views/partials/questionList.hbs', options);
+                }
+            })
+        })
+
+
+
+    app.route('/quizAdmin/:quizId/:questionId')
+
+        // Grab question details for questionDetail partial
+        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            let questionId = req.params.questionId;
+            let quizId = req.params.quizId;
+            let options = {}
+
+            if (questionId == 0) {
+                options.currentQuestion = blankQuestion;
+                res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
+            } else {
+                db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+                    options.currentQuestion = quiz.questions.find(el => el._id == questionId);
+                    res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
+                }
+                })
+            }
+        })
+
+        // Remove the question
+        .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            let questionId = req.params.questionId;
+            let quizId = req.params.quizId;
+            let options = {}
+
+            db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
+            if (err) {
+                res.json({error: err.message});
+            } else {
+
+                var index = quiz.questions.findIndex((el) => { return el._id == questionId})
+                quiz.questions.splice(index, 1);
+                quiz.save(err => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+                    res.json({response: 'Successfully removed question.'});
+                }
+                })
+            }
+            })
+        })
+
+
 
 
     
