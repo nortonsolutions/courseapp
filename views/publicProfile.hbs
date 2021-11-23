@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <title>{{username}} Public Profile</title>
@@ -7,129 +8,119 @@
     {{> headerStuff jQuery=true fontAwesome=true bootStrap=true }}
 
 </head>
+
 <body>
 
     <div class="outerContainer">
 
         {{> navbar profileActive='active' }}
 
-            <div class="pt-1 jumbotron jumbotron-fluid">
-                <div class="container">
+        <div class="pt-1 jumbotron jumbotron-fluid">
+            <div class="container">
 
 
-                    <div class="row">
-                        <div class="col-12">
-                            <span class="text-primary" id="feedback">{{feedback}} </span>
-                        </div>
+                <div class="row">
+                    <div class="col-12">
+                        <span class="text-primary" id="feedback">{{feedback}} </span>
                     </div>
+                </div>
 
-                    <main id="profileMain">
-                        
-                        <h1 class="display-4">Public Profile for {{username}}</h1>
-                        <hr class="my-2">
-                        <div class="row">
+                <main id="profileMain">
 
-                            <div class="col-12">
-                            <h4>Courses</h4>
-                                
-                                    <div id="accordianId" role="tablist" aria-multiselectable="true">
-                                        {{#each scoreArraysObj}}
-                                        
-                                        <div class="card">
-                                            <div class="card-header" role="tab" id="">
-                                                <h5 class="mb-0">
-                                                    <a data-toggle="collapse" data-parent="#accordianId" href="#section1ContentId" aria-expanded="true" aria-controls="section1ContentId">
-                                              {{@key}}      Average score: {{averageScore}}    Overall time: {{overallTime}}
-                                            </a>
-                                                </h5>
-                                            </div>
-                                            {{#each quizzes}}
-                                            <div id="section1ContentId" class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
-                                                <div class="card-body">
-                                                    {{name}}  {{score}}  {{timePassed}}  {{date}}
+                    <h1 class="display-4">Profile: {{username}}</h1>
+                    <hr class="my-2">
+                    <div class="row">
+                        {{#if teacher}}
+                        <div class="col-12">
+
+                                <div class="row card-header pl-1">
+                                    <div class="col-12">
+                                        <h4>My Courses</h4>
+                                    </div>
+                                </div>
+
+                                {{#each myCourses}}
+                                <form class="row card mx-0">
+                                    <div class="col-12">
+                                        <div class="courseLink"><a href="/course/{{_id}}"><h5>{{name}}</h5></a></div>
+                                    </div>
+                                </form>
+                                {{/each}}
+                                <hr>
+                        </div>
+                        {{/if}}
+
+
+                        <div class="col-12 my-3">
+                            <div class="row card-header">
+                                    <div class="col-5 pl-0"><h4>My Activity</h4></div>    
+                                    <div class="col-2">Score:</div>
+                                    <div class="col-2">Time:</div>
+                                    <div class="col-3">Date:</div>
+                            </div>
+                            <div id="accordianId" role="tablist" aria-multiselectable="true">
+                                {{#each scoreArraysObj}}
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="">
+                                        <h5 class="mb-0">
+                                            <a data-toggle="collapse" data-parent="#accordianId"
+                                                href="#section{{@index}}ContentId" aria-expanded="true"
+                                                aria-controls="section{{@index}}ContentId">
+                                                <div class="row">
+                                                    <div class="col-5">{{@key}}</div>    
+                                                    <div class="col-2">{{averageScore}}</div>
+                                                    <div class="col-2">{{{secondsToMMSS overallTime}}}</div>
+                                                    <div class="col-3">{{{shortDate lastQuiz}}}</div>
                                                 </div>
-                                            </div>
-                                            {{/each}}
-                                        </div>
-                                        {{/each}}
-
+                                                  
+                                            </a>
+                                        </h5>
                                     </div>
 
-                                
-                            </div>
-
-
-                            <div class="col-6">
-
-                            </div>
-
-
-
-                            <div class="col-6" >
-                                
-                                {{#if teacher}}
-                                <div class="channel">
-                                    <div class="row"><div class="col-12">
-                                        <h4>My Courses:</h4>
-                                    </div></div>
-
-                                    {{#each myCourses}}
-                                    <form class="row"><div class="col-12">
-                                        <input type="hidden" value="{{_id}}">
-                                        <div class="courseLink" class="col-10">{{name}}</div>
-                                    </div></form>
-                                    {{/each}}
-                                    <hr>
-                                    {{/if}}
-                                </div>
-                                <div class="channel">
-                                    <div class="row"><div class="col-12">
-                                        <h4>My History:</h4>
-                                    </div></div>
-
-                                    <div class="row"><div class="col-12">
-
-                                        <div id="quizListContainer">
-                                            <label>Modules:</label>
-                                            <div class="col" id="quizList">
-                                                {{#each quizzes}}
-                                                <form class="row userQuiz">
-                                                    <input type="hidden" name="userQuizId" value="{{_id}}">
-                                                    <input type="hidden" name="quizId" value="{{quizId}}">
-                                                    <div class="col-5 noclick">{{quizName}}</div>
-                                                    <div class="col-4 noclick">{{{shortDate date}}}</div>
-                                                    <div class="col-2 noclick">{{score}}%</div>
-                                                </form>
-                                                {{/each}}
-                                            </div>
+                                    <div id="section{{@index}}ContentId" class="collapse in" role="tabpanel"
+                                        aria-labelledby="section{{@index}}HeaderId">
+                                        {{#each quizzes}}
+                                        <div class="card-body py-2">
+                                                <div class="row">
+                                                    <div class="col-5">{{name}}</div>    
+                                                    <div class="col-2">{{score}}</div>
+                                                    <div class="col-2">{{{secondsToMMSS timePassed}}}</div>
+                                                    <div class="col-3">{{{shortDate date}}}</div>
+                                                </div>
                                         </div>
-                                    </div></div>
-                                </div>
-                               
-                            </div>
-                            
-                        </div>
-                        <div id="quizGraph" class="text-center my-3">
-                            <div>  
-                                <canvas id="quizGraphCanvas" width="400" height="200"></canvas>
-                            </div>  
-                            <div>  
-                                <svg id="quizGraphSVG" width="400" height="200"></svg>
-                            </div>
-                                
-                                <hr class="my-2">
-                                <p>Copyright <i class="fas fa-copyright"></i> Norton 2021</p>
+                                        {{/each}}
+                                    </div>
 
+                                </div>
+                                {{/each}}
+
+                            </div>
                         </div>
-                    </main>
+                        
+
+                    </div>
+                    <div id="quizGraph" class="text-center my-3">
+                        <div class="d-none">
+                            <canvas id="quizGraphCanvas" width="400" height="200"></canvas>
+                        </div>
+                        <div>
+                            <svg id="quizGraphSVG" width="400" height="200"></svg>
+                        </div>
+
+                        <hr class="my-2">
+                        <p>Copyright <i class="fas fa-copyright"></i> Norton 2021</p>
+
+                    </div>
+                </main>
 
             </div>
 
             <div class="d-none" id="scoreArrays">{{scoreArrays}}</div>
 
-    </div>
-    <script src="/viewScripts/publicProfileScripts.js"></script>
-    <script src="/cdn/js/d3/4.3.0/d3.min.js"></script>
-    <script src="/viewScripts/profileScripts_d3.js"></script>
+        </div>
+        <script src="/viewScripts/publicProfileScripts.js"></script>
+        <script src="/cdn/js/d3/4.3.0/d3.min.js"></script>
+        <script src="/viewScripts/profileScripts_d3.js"></script>
 </body>
+
 </html>

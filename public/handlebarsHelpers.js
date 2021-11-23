@@ -119,4 +119,8 @@ module.exports = function(hbs) {
         return reported? 'reported' : '';
     });
 
+    hbs.registerHelper("secondsToMMSS", function(seconds) {
+        return Math.floor(seconds/60) + ":" + (seconds%60).toLocaleString("en-US", { minimumIntegerDigits: 2 });
+    });
+
 }

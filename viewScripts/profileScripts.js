@@ -1,11 +1,19 @@
 document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
+    
+    // Get the roles
+    var rolesArray = [];
+    Array.from(document.querySelectorAll('#rolesSelect option')).forEach(option => {
+        if (option.selected) rolesArray.push(option.value);
+    })
+    
     handlePost('/updateAccount', {
         _id: e.target.elements.id.value,
         username: e.target.elements.username.value,
         firstname: e.target.elements.firstname.value,
         surname: e.target.elements.surname.value,
         password: e.target.elements.password.value,
-        confirm: e.target.elements.confirm.value
+        confirm: e.target.elements.confirm.value,
+        roles: rolesArray
     }, (response) => {
         document.getElementById('feedback').innerHTML = response;
     })
@@ -33,11 +41,5 @@ Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
 
         e.preventDefault();
 
-    })
-})
-
-Array.from(document.querySelectorAll('.courseLink')).forEach(el => {
-    el.addEventListener('click', (e) => {
-        window.location.href='/courseAdmin/' + e.target.parentNode.querySelector('input').value;
     })
 })

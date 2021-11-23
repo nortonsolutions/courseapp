@@ -50,7 +50,7 @@ document.getElementById('userUpdateForm').addEventListener('submit', (e) => {
     
     // Get the roles
     var rolesArray = [];
-    Array.from(document.querySelectorAll('#roles option')).forEach(option => {
+    Array.from(document.querySelectorAll('#rolesSelect option')).forEach(option => {
         if (option.selected) rolesArray.push(option.value);
     })
     

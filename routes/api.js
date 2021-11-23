@@ -228,7 +228,7 @@ module.exports = function (app, db) {
                 let courseName = courseNameLookup[quiz.courseId];
                 if (! scoreArrays[courseName]) scoreArrays[courseName] = {};
                 if (! scoreArrays[courseName].quizzes) scoreArrays[courseName].quizzes = [];
-                scoreArrays[courseName].quizzes.push({ name: quiz.quizName, score: quiz.score, timePassed: quiz.timePassed, date: quiz.date});
+                scoreArrays[courseName].quizzes.push({ id: quiz.id, quizId: quiz.quizId, name: quiz.quizName, score: quiz.score, timePassed: quiz.timePassed, date: quiz.date});
             });
 
             Object.keys(scoreArrays).forEach(courseName => {
