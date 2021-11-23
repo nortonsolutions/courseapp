@@ -8,7 +8,7 @@ var padding = 10;
 colors = ["red","orange","yellow","green","blue","indigo","violet"]
 
 Object.keys(scoreArrays).forEach((courseName, index) => {
-    scoreArrays[courseName].forEach((entry, index2) => {
+    scoreArrays[courseName].quizzes.forEach((entry, index2) => {
         if (index == 0 && index2 == 0) {
             lowestDate = entry.date;
             highestDate = entry.date;
@@ -49,7 +49,7 @@ Object.keys(scoreArrays).forEach(courseName => {
     ctx.beginPath();
     // ctx.moveTo(10, height-10);
 
-    scoreArrays[courseName].forEach(quiz => {
+    scoreArrays[courseName].quizzes.forEach(quiz => {
         let xScaled = x(new Date(quiz.date));
         let yScaled = y(quiz.score);
         // console.log(quizName + ": xScaled=" + xScaled + ",yScaled=" + yScaled);
@@ -78,21 +78,21 @@ selectedColor = 0;
 
 let masterArray = [];
 
-Object.keys(scoreArrays).forEach(quizName => {
+Object.keys(scoreArrays).forEach(courseName => {
 
-    var line = d3.line(scoreArrays[quizName])
+    var line = d3.line(scoreArrays[courseName].quizzes)
         .x(quiz => x(new Date(quiz.date)))
         .y(quiz => y(quiz.score))
 
     svg.append("path")
-        .datum(scoreArrays[quizName])
+        .datum(scoreArrays[courseName].quizzes)
         .attr("d", line)
         .attr("transform", "translate(0, " + padding + ")")
         .attr("fill", "none")
         .attr("stroke", colors[selectedColor])
     
     selectedColor++;
-    masterArray = [...masterArray, ...scoreArrays[quizName]];
+    masterArray = [...masterArray, ...scoreArrays[courseName].quizzes];
 });
 
 // Add score labels:
@@ -112,7 +112,7 @@ selectedColor = 0;
 var xStart = 280;
 var yStart = 20;
 
-Object.keys(scoreArrays).forEach(quizName => {
+Object.keys(scoreArrays).forEach(courseName => {
 
     let lineArray = [[xStart,yStart],[xStart+15,yStart]];
 
@@ -124,7 +124,7 @@ Object.keys(scoreArrays).forEach(quizName => {
        .attr("stroke", colors[selectedColor])
        
     svg.append("text")
-       .text(quizName)
+       .text(courseName)
        .attr('x', xStart+20)
        .attr('y', yStart+2)
        .attr("fill", "black")

@@ -215,35 +215,60 @@ module.exports = function (app, db) {
             })
         })
 
+    const getScoreArrays = (quizzes, callback) => {
+
+        var courseNameLookup = {};
+        db.models.Course.find({}, (err,courses) => {
+            Array.from(courses).forEach(course => {
+                courseNameLookup[course.id] = course.name;
+            })
+
+            let scoreArrays = {};
+            quizzes.forEach(quiz => {
+                let courseName = courseNameLookup[quiz.courseId];
+                if (! scoreArrays[courseName]) scoreArrays[courseName] = {};
+                if (! scoreArrays[courseName].quizzes) scoreArrays[courseName].quizzes = [];
+                scoreArrays[courseName].quizzes.push({ name: quiz.quizName, score: quiz.score, timePassed: quiz.timePassed, date: quiz.date});
+            });
+
+            Object.keys(scoreArrays).forEach(courseName => {
+
+                scoreArrays[courseName].averageScore = scoreArrays[courseName].quizzes.reduce((acc,cur,index) => {
+                    if (index == scoreArrays[courseName].quizzes.length - 1) {
+                        return (acc+cur.score) / (index + 1);
+                    } else {
+                        return acc+cur.score;
+                    }
+                }, 0)
+
+                scoreArrays[courseName].overallTime = scoreArrays[courseName].quizzes.reduce((acc,cur) => {
+                    return acc+cur.timePassed;
+                }, 0)
+
+                scoreArrays[courseName].lastQuiz = scoreArrays[courseName].quizzes.reduce((acc,cur) => {
+                    if (cur.date > acc) {
+                        return cur.date;
+                    } else return acc;
+                }, 0)
+            
+            
+            })
+            callback(scoreArrays);    
+
+        })
+    }
+
     app.route('/profile')
-        // Get and render the whole profile view  
         .get(ensureAuthenticated, (req,res) => {
         
             let context = req.user;
             context.admin = req.user.roles.includes('admin');
             context.teacher = req.user.roles.includes('teacher');
-
-            // Create a courseName lookup object
-            var courseNameLookup = {};
-            db.models.Course.find({}, (err,courses) => {
-                Array.from(courses).forEach(course => {
-                    courseNameLookup[course.id] = course.name;
-                })
-
-                // Create object with arrays of scores, one for each courseName
-                let scoreArrays = {};
-                req.user.quizzes.forEach(quiz => {
-                    let courseName = courseNameLookup[quiz.courseId];
-                    if (! scoreArrays[courseName]) scoreArrays[courseName] = [];
-                    scoreArrays[courseName].push({ name: quiz.quizName, score: quiz.score, date: quiz.date});
-                });
-
+            getScoreArrays(context.quizzes, (scoreArrays) => {
+                context.scoreArraysObj = scoreArrays;
                 context.scoreArrays = JSON.stringify(scoreArrays);
 
                 if (context.teacher) {
-
-                    // let idTest = RegExp(req.user.id);
-                    // Get the courses for which he is an instructor
 
                     db.models.Course.find({ 'instructors.instructorId': req.user.id }).select('name').sort({ name: 1}).exec((err,courses) => {
                         if (err) {
@@ -253,11 +278,40 @@ module.exports = function (app, db) {
                             res.render(process.cwd() + '/views/profile.hbs', context);
                         }
                     })
-
+    
                 } else {
                     res.render(process.cwd() + '/views/profile.hbs', context);
                 }
-            })
+            });
         })
 
+    app.route('/publicProfile/:username')
+        .get((req,res) => {
+            db.models.User.findOne({'username': req.params.username}, (err,context) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+                    context.teacher = context.roles.includes('teacher');
+                    getScoreArrays(context.quizzes, (scoreArrays) => {
+                        context.scoreArraysObj = scoreArrays;
+                        context.scoreArrays = JSON.stringify(scoreArrays);
+                        
+                        if (context.teacher) {
+        
+                            db.models.Course.find({ 'instructors.instructorId': context.id }).select('name').sort({ name: 1}).exec((err,courses) => {
+                                if (err) {
+                                    res.json({error: err.message});
+                                } else {
+                                    context.myCourses = courses;
+                                    res.render(process.cwd() + '/views/publicProfile.hbs', context);
+                                }
+                            })
+            
+                        } else {
+                            res.render(process.cwd() + '/views/publicProfile.hbs', context);
+                        }
+                    });
+                }
+            })
+        })
 }
