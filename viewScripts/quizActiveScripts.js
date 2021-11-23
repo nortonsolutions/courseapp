@@ -12,7 +12,7 @@
  * { 
  *    userIdquizId: {
  *       userAnswers: {},
- *       timeRemaining: Number, (seconds)
+ *       timePassed: Number, (seconds)
  *    } 
  * }
  * 
@@ -26,7 +26,9 @@ var courseId = document.getElementById('courseId').value;
 var reviewMode = document.getElementById('reviewMode').value;
 var totalQuestions = Number(document.getElementById('totalQuestions').value);
 var userAnswers = {};
-var timeLimit = Number(document.getElementById('timeLimit').value); // minutes
+var timeLimitText = document.getElementById('timeLimit').value;
+var timeLimit = timeLimitText.length==0? Infinity : Number(timeLimitText)*60; //seconds
+var timePassed = 0;
 
 const markedOptions = {
     breaks: true
@@ -36,7 +38,7 @@ const markedOptions = {
 if (localStorage.getItem(userId + quizId)) {
     let quizObj = JSON.parse(localStorage.getItem(userId + quizId));
     userAnswers = quizObj.userAnswers;
-    timeLimit = (quizObj.timeRemaining)/60
+    timePassed = quizObj.timePassed;
 } 
 
 const hideQuestionInterface = () => {
@@ -45,13 +47,7 @@ const hideQuestionInterface = () => {
     document.getElementById('quizTimer').classList.add('d-none');
 }
 
-const submitQuiz = () => {
-    handlePost('/quiz/grade/' + courseId + '/' + quizId, {userAnswers: userAnswers}, (response) => {
-        document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
-        localStorage.removeItem(userId + quizId);
-        hideQuestionInterface();
-    })
-}
+
 
 const setButtonVisibility = () => {
     let btnPreviousQuestion = document.getElementById('previousQuestion');
@@ -130,6 +126,7 @@ const addProjectSubmissionHandling = () => {
 
     document.getElementById('projectSubmissionForm').addEventListener('submit', e => {
 
+        // This is like a hybrid cross of save and submit, for projects
         if (! userAnswers[questionId]) {
             userAnswers[questionId] = {};
         }
@@ -138,7 +135,9 @@ const addProjectSubmissionHandling = () => {
         
         var formData = new FormData(e.target);
         formData.append('userAnswers', JSON.stringify(userAnswers));
+        formData.append('timePassed', store? store.getState()["timePassed"] : 0);
         formData.append('projectFile', e.target.elements[0].files[0].name);
+
 
         handleFormPost('/quiz/projectSubmission/' + courseId + '/' + quizId, formData, (response) => {
             document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
@@ -162,7 +161,7 @@ const getQuestion = () => {
         setButtonVisibility();
         applyCheckboxHandlers();
 
-        if (document.getElementById('questionType').value == "projectSubmission") {
+        if (!reviewMode && document.getElementById('questionType').value == "projectSubmission") {
             addProjectSubmissionHandling(questionId);
         }
 
@@ -204,26 +203,42 @@ const populateCurrentAnswer = () => {
 }
 
 const saveCurrentAnswer = () => {
+
+    if (!reviewMode) {
+        if (! userAnswers[questionId]) {
+            userAnswers[questionId] = {};
+        }
     
-    if (! userAnswers[questionId]) {
-        userAnswers[questionId] = {};
+        userAnswers[questionId].answer = [
+                document.getElementById('checkbox0').checked,
+                document.getElementById('checkbox1').checked,
+                document.getElementById('checkbox2').checked,
+                document.getElementById('checkbox3').checked
+           ];
+        userAnswers[questionId].answerText = document.getElementById('answerText').value;
+        userAnswers[questionId].answerEssay = document.getElementById('answerEssay').value;
+        timePassed = store? store.getState()["timePassed"] : 0;
+
+        localStorage.setItem(userId+quizId, JSON.stringify({
+            userAnswers: userAnswers,
+            timePassed: timePassed
+        }));
+        
     }
-
-    userAnswers[questionId].answer = [
-            document.getElementById('checkbox0').checked,
-            document.getElementById('checkbox1').checked,
-            document.getElementById('checkbox2').checked,
-            document.getElementById('checkbox3').checked
-       ];
-    userAnswers[questionId].answerText = document.getElementById('answerText').value;
-    userAnswers[questionId].answerEssay = document.getElementById('answerEssay').value;
-
-    localStorage.setItem(userId+quizId, JSON.stringify({
-        userAnswers: userAnswers,
-        timeRemaining: store? store.getState()["timeRemaining"] : timeLimit
-    }))
 }
 
+const submitQuiz = () => {
+    handlePost('/quiz/grade/' + courseId + '/' + quizId, {
+        userAnswers: userAnswers, 
+        timePassed: timePassed
+    }, (response) => {
+
+        let returnToCoursePage = "<a href='/course/" + courseId + "'>Return to course page</a>"; 
+        document.getElementById('feedback').innerHTML = JSON.parse(response).feedback + " ... " + returnToCoursePage;
+        localStorage.removeItem(userId + quizId);
+        hideQuestionInterface();
+    })
+}
 
 
 addButtonListeners();

@@ -72,6 +72,7 @@
         <div id="projectSubmission" class="{{{hideIfNotEqual currentQuestion.type "projectSubmission"}}}">
             <div id="userProjectLink"></div>
             
+            {{#unless reviewMode}}
             <label for="projectSubmissionForm">Submit Project:</label>
             <div class="custom-file">
                 <form id="projectSubmissionForm">
@@ -82,7 +83,7 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-
+            {{/unless}}
         </div>
 
         {{#if currentQuestion.videoLocation}}

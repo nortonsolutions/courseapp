@@ -1,7 +1,11 @@
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) {
   .container {
     max-width: 1024px !important;
   }
+} */
+
+@media (max-width: 1024px) {
+  
 }
 
 @media (max-width: 800px) {
@@ -93,9 +97,13 @@ textarea:disabled, input:disabled {
 
 #quizGraph {
   width: 100%;
+  padding-top: 10px;
+  background-color: white !important;
 }
 
-canvas { border: 1px solid black; }
+canvas { 
+  border: 1px solid black; 
+}
 
 svg {
   overflow: visible !important;

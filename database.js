@@ -47,7 +47,8 @@ module.exports = function (mongoose, callback) {
       quizName: { type: String, required: true },
       answers: Object,
       date: Date,
-      score: Number
+      score: Number,
+      timePassed: Number
     })
 
     const userSchema = mongoose.Schema({

@@ -25,7 +25,7 @@ Array.from(document.querySelectorAll('.userQuiz')).forEach(userQuiz => {
             
             localStorage.setItem(userQuiz.userId+userQuiz.quizId, JSON.stringify({
                 userAnswers: userQuiz.answers,
-                timeRemaining: 0
+                timePassed: userQuiz.timePassed,
             }))
 
             window.location.href='/quizActive/review/' +  userQuiz.quizId;

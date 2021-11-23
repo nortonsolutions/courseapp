@@ -2,13 +2,13 @@ var scoreArrays = JSON.parse(document.getElementById('scoreArrays').innerText);
 var lowestDate = 0, highestDate = 0, lowestScore = Infinity, highestScore = 0;
 
 var height = 200;
-var width = 640;
+var width = 400;
 var padding = 10;
 
 colors = ["red","orange","yellow","green","blue","indigo","violet"]
 
-Object.keys(scoreArrays).forEach((quizName, index) => {
-    scoreArrays[quizName].forEach((entry, index2) => {
+Object.keys(scoreArrays).forEach((courseName, index) => {
+    scoreArrays[courseName].forEach((entry, index2) => {
         if (index == 0 && index2 == 0) {
             lowestDate = entry.date;
             highestDate = entry.date;
@@ -41,20 +41,20 @@ var selectedColor = 0;
 var labelHeight = 20;
 
 // CANVAS
-Object.keys(scoreArrays).forEach(quizName => {
+Object.keys(scoreArrays).forEach(courseName => {
 
     ctx.strokeStyle = colors[selectedColor];
     ctx.lineCap = "round";
-    ctx.font = '12px Times New Roman';
+    ctx.font = '9px Times New Roman';
     ctx.beginPath();
     // ctx.moveTo(10, height-10);
 
-    scoreArrays[quizName].forEach(quiz => {
+    scoreArrays[courseName].forEach(quiz => {
         let xScaled = x(new Date(quiz.date));
         let yScaled = y(quiz.score);
         // console.log(quizName + ": xScaled=" + xScaled + ",yScaled=" + yScaled);
         ctx.lineTo(xScaled, yScaled+10);
-        ctx.fillText(quiz.score, xScaled-10, yScaled+5);
+        ctx.fillText(quiz.name + " " + quiz.score, xScaled-10, yScaled+5);
 
     })
 
@@ -63,7 +63,7 @@ Object.keys(scoreArrays).forEach(quizName => {
     ctx.lineTo(width-150, labelHeight - 5);
     ctx.stroke();
 
-    ctx.fillText(quizName, width-140, labelHeight);
+    ctx.fillText(courseName, width-140, labelHeight);
     labelHeight +=20;
 
     selectedColor++;
@@ -109,7 +109,7 @@ svg.selectAll("text")
 // Add labels with keycodes:
 selectedColor = 0;
 
-var xStart = 480;
+var xStart = 280;
 var yStart = 20;
 
 Object.keys(scoreArrays).forEach(quizName => {
@@ -142,3 +142,14 @@ svg.append('g')
 svg.append('g')
     .attr("transform", "translate(0," + (height - padding) + ")")
     .call(xAxis)
+
+let stage = document.getElementById('quizGraph');
+
+var scaleX = stage.offsetWidth / canvas.width;
+var scaleY = 1.0;
+
+var scaleToFit = Math.min(scaleX, scaleY);
+var scaleToCover = Math.max(scaleX, scaleY);
+
+// stage.style.transformOrigin = top;
+stage.style.transform = 'scale(' + scaleToCover + ') translateY(' + scaleToCover*0.3*scaleToCover + 'in)';

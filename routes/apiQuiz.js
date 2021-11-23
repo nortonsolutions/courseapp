@@ -103,6 +103,7 @@ module.exports = function(app, db, upload, uploadProject) {
         let courseId = req.params.courseId;
         let quizId = req.params.quizId;
         let userAnswers = req.body.userAnswers;
+        let timePassed = req.body.timePassed;
     
         db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
             if (err) {
@@ -151,7 +152,8 @@ module.exports = function(app, db, upload, uploadProject) {
                     answers: userAnswers,
                     score: score*100,
                     date: new Date(),
-                    quizName: quiz.name
+                    quizName: quiz.name,
+                    timePassed: timePassed
                 }];
 
                 user.save((err,doc) => {
@@ -175,6 +177,7 @@ module.exports = function(app, db, upload, uploadProject) {
                 let courseId = req.params.courseId;
                 let quizId = req.params.quizId;
                 let userAnswers = JSON.parse(req.body.userAnswers);
+                let timePassed = req.body.timePassed;
                 let projectFile = req.body.projectFile;
             
                 db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
@@ -191,9 +194,10 @@ module.exports = function(app, db, upload, uploadProject) {
                                     courseId: courseId,
                                     quizId: quizId,
                                     answers: userAnswers,
-                                    score: 0,
+                                    score: 70,
                                     date: new Date(),
-                                    quizName: quiz.name
+                                    quizName: quiz.name,
+                                    timePassed: timePassed
                                 }];
                 
                                 user.projects = [...user.projects, {
@@ -206,7 +210,7 @@ module.exports = function(app, db, upload, uploadProject) {
                                     if (err) {
                                     res.json({feedback: err.message});
                                     } else {
-                                    res.json({feedback: "Success.  Score is 0 until graded."});
+                                    res.json({feedback: "Success.  Score is 70 until graded."});
                                     }
                                 })
                             }
@@ -233,6 +237,7 @@ module.exports = function(app, db, upload, uploadProject) {
                     quizId: subDoc.quizId,
                     quizName: subDoc.quizName,
                     score: subDoc.score,
+                    timePassed: subDoc.timePassed,
                     userId: req.user.id
                 }
                 res.json(responseJson);
@@ -479,7 +484,7 @@ module.exports = function(app, db, upload, uploadProject) {
           let options = {
               quizId: req.params.quizId,
               admin: req.user.roles.includes('admin'),
-          }
+          } 
 
           if (req.headers.referer && req.headers.referer.match(/profile/)) {
               res.cookie(req.user.id, quizId);
