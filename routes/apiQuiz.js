@@ -34,32 +34,23 @@ module.exports = function(app, db, upload, uploadProject) {
         res.redirect('/');
     };
 
-    // ensureAdminOrTeacher - unique for course route
-    const ensureAdminOrTeacher = (req,res,next) => {
-        let quizId = req.params.quizId;
-        
-        db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
-        if (user.roles.includes('admin')) {
+    // ensureAdminOrTeacher
+    const ensureAdminOrTeacher = (req, res, next) => {
+        if (req.user.roles.includes('admin')) {
             next();
         } else {
-            if (user.roles.includes('teacher')) {
+            if (req.user.roles.includes('teacher')) {
+                let courseId = req.params.courseId;
                 db.models.Course.findOne()
-                .and([{'quizIds.quizId': quizId }, {'instructors.instructorId': req.user.id}])
-                .exec((err,course) => {
-                    if (course) {
-                        next();
-                    } else {
-                        res.redirect('/main');
-                    }
-                })
-
+                    .and([{ _id: courseId }, { 'instructors.instructorId': req.user.id }])
+                    .exec((err, course) => {
+                        if (course) next();
+                    })
             } else {
                 res.redirect('/main');
             }
-        }     
-        })
+        }
     };
-
     
     // Grab list of quizzes for selectQuiz partial
     app.route('/quizzes/:courseId')

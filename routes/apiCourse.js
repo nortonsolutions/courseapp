@@ -18,35 +18,29 @@ module.exports = function (app, db) {
 
     // ensureAdmin
     const ensureAdmin = (req,res,next) => {
-        db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
-        if (user.roles.includes('admin')) {
+        if (req.user.roles.includes('admin')) {
             next();
         } else {
             res.redirect('/main');
         }     
-        })
     };
 
     // ensureAdminOrTeacher
     const ensureAdminOrTeacher = (req, res, next) => {
-        let courseId = req.params.courseId;
-
-        db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
-            if (user.roles.includes('admin')) {
-                next();
+        if (req.user.roles.includes('admin')) {
+            next();
+        } else {
+            if (req.user.roles.includes('teacher')) {
+                let courseId = req.params.courseId;
+                db.models.Course.findOne()
+                    .and([{ _id: courseId }, { 'instructors.instructorId': req.user.id }])
+                    .exec((err, course) => {
+                        if (course) next();
+                    })
             } else {
-                if (user.roles.includes('teacher')) {
-                    db.models.Course.findOne()
-                        .and([{ _id: courseId }, { 'instructors.instructorId': req.user.id }])
-                        .exec((err, course) => {
-                            if (course) next();
-                        })
-
-                } else {
-                    res.redirect('/main');
-                }
+                res.redirect('/main');
             }
-        })
+        }
     };
 
     app.route('/courses')

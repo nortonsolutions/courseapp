@@ -21,13 +21,11 @@ module.exports = function (app, db) {
 
     // ensureAdmin
     const ensureAdmin = (req,res,next) => {
-        db.models.User.findOne({ username: req.user.username }, 'username roles', (err, user) => {
-        if (user.roles.includes('admin')) {
+        if (req.user.roles.includes('admin')) {
             next();
         } else {
             res.redirect('/main');
         }     
-        })
     };
 
     app.route('/')
