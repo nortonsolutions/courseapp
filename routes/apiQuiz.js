@@ -247,141 +247,141 @@ module.exports = function(app, db, upload, uploadProject) {
 
     app.route('/quizAdmin/:quizId')
 
-    // Get entire quizAdmin view for a quiz
-    .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-        let quizId = req.params.quizId;
-        let courseId = req.query.courseId;
-
-        let options = {
-            admin: req.user.roles.includes('admin'),
-            currentQuestion: blankQuestion
-        };
-
-        db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
-            if (err) {
-            res.json({error: err.message});
-            } else {
-            options.quiz = quiz;
-            options.courseId = courseId;
-            options.questionsHighIndex = quiz.questions.length - 1;
-            res.render(process.cwd() + '/views/quizAdmin.hbs', options);
-            }
-        })
-        })
-
-    // Post question for the quiz
-    .post(
-        ensureAuthenticated, 
-        ensureAdminOrTeacher, 
-        // upload.single('file'), // req.file
-        upload.fields([{ name: 'file', maxCount: 1 }, { name: 'video', maxCount: 1 }]),
-        (req,res) => {
+        // Get entire quizAdmin view for a quiz
+        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
             let quizId = req.params.quizId;
-            let question = JSON.parse(req.body.questionJson);
-            db.models.Quiz.findOne({_id: quizId}, (err,doc) => {
-            
-            if (question._id == 0) {
-                // add new question
-                doc.questions = [...doc.questions, { 
-                question: question.question, 
-                choices: question.choices,
-                type: question.type,
-                imageLocation: req.files? req.files.file? req.files.file[0].originalname: '': '',
-                videoLocation: req.files? req.files.video? req.files.video[0].originalname: '': '',
-                answerTextRegex: question.answerTextRegex,
-                answerEssayRegex: question.answerEssayRegex
-                }];
+            let courseId = req.query.courseId;
 
-            } else {
-                // update existing question
-                var subDoc = doc.questions.id(question._id);
-                subDoc.question = question.question;
-                subDoc.choices = question.choices;
-                subDoc.type = question.type;
-                subDoc.answerTextRegex = question.answerTextRegex;
-                subDoc.answerEssayRegex = question.answerEssayRegex;
+            let options = {
+                admin: req.user.roles.includes('admin'),
+                currentQuestion: blankQuestion
+            };
 
-                if (req.files) {
-                    if (req.files.file) {
-                        subDoc.imageLocation = req.files.file[0].originalname;
-                    }
-    
-                    if (req.files.video) {
-                        subDoc.videoLocation = req.files.video[0].originalname;
-                    }
-    
-                }
-            }
-            
-            doc.save((err,doc) => {
+            db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
                 if (err) {
                 res.json({error: err.message});
                 } else {
-                res.json(doc);
+                options.quiz = quiz;
+                options.courseId = courseId;
+                options.questionsHighIndex = quiz.questions.length - 1;
+                res.render(process.cwd() + '/views/quizAdmin.hbs', options);
                 }
             })
             })
-        })
 
-    .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-        let quizId = req.params.quizId;
-        db.models.Quiz.remove({_id: quizId}, (err) => {
-            if (err) {
-                res.json({error: err.message});
-            } else {
-
-                // Clean up references to this quizId
-                db.models.Course.find({}, (err, courses) => {
-                    if (err) {
-                        res.json({error: err.message});
-                    } else {
-                        courses.forEach(course => {
-                            course.quizIds = course.quizIds.filter(el => el.quizId != quizId);
-                            course.save();
-                        })
-                        res.json({response: 'Successfully removed quiz.'});
-                    }
-                })
-            }
-        });
-    })
-
-    .put(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-        db.models.Quiz.findOne({_id: req.params.quizId}, (err,quiz) => {
-            if (err) {
-                res.json({error: err.message});
-            } else {
-
-                if (req.body.changeSort) {
-                    // Find the index of the current quizQuestion
-                    let questionId = req.body.questionId;
-                    let index = quiz.questions.findIndex(el => el.id == questionId);
-                    let indexToSwap = req.body.changeSort == "up"? index - 1: index + 1;
-                    let itemToMove = quiz.questions.splice(index,1)[0];
-                    quiz.questions = [...quiz.questions.slice(0,indexToSwap), itemToMove, ...quiz.questions.slice(indexToSwap,quiz.questions.length)];
-                    quiz.save(err => {
-                        if (err) {
-                            res.json({error: err.message});
-                        } else {
-                            res.json({response: 'Successfully updated quiz.'});
-                        } 
-                    })
+        // Post question for the quiz
+        .post(
+            ensureAuthenticated, 
+            ensureAdminOrTeacher, 
+            // upload.single('file'), // req.file
+            upload.fields([{ name: 'file', maxCount: 1 }, { name: 'video', maxCount: 1 }]),
+            (req,res) => {
+                let quizId = req.params.quizId;
+                let question = JSON.parse(req.body.questionJson);
+                db.models.Quiz.findOne({_id: quizId}, (err,doc) => {
+                
+                if (question._id == 0) {
+                    // add new question
+                    doc.questions = [...doc.questions, { 
+                    question: question.question, 
+                    choices: question.choices,
+                    type: question.type,
+                    imageLocation: req.files? req.files.file? req.files.file[0].originalname: '': '',
+                    videoLocation: req.files? req.files.video? req.files.video[0].originalname: '': '',
+                    answerTextRegex: question.answerTextRegex,
+                    answerEssayRegex: question.answerEssayRegex
+                    }];
 
                 } else {
-                    quiz.description = req.body.quizDescription;
-                    quiz.timeLimit = req.body.quizTimeLimit;
-                    quiz.maxAttempts = req.body.quizMaxAttempts;
-                    quiz.save(err => {
+                    // update existing question
+                    var subDoc = doc.questions.id(question._id);
+                    subDoc.question = question.question;
+                    subDoc.choices = question.choices;
+                    subDoc.type = question.type;
+                    subDoc.answerTextRegex = question.answerTextRegex;
+                    subDoc.answerEssayRegex = question.answerEssayRegex;
+
+                    if (req.files) {
+                        if (req.files.file) {
+                            subDoc.imageLocation = req.files.file[0].originalname;
+                        }
+        
+                        if (req.files.video) {
+                            subDoc.videoLocation = req.files.video[0].originalname;
+                        }
+        
+                    }
+                }
+                
+                doc.save((err,doc) => {
+                    if (err) {
+                    res.json({error: err.message});
+                    } else {
+                    res.json(doc);
+                    }
+                })
+                })
+            })
+
+        .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            let quizId = req.params.quizId;
+            db.models.Quiz.remove({_id: quizId}, (err) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+
+                    // Clean up references to this quizId
+                    db.models.Course.find({}, (err, courses) => {
                         if (err) {
                             res.json({error: err.message});
                         } else {
-                            res.json({response: 'Successfully updated quiz.'});
-                        } 
+                            courses.forEach(course => {
+                                course.quizIds = course.quizIds.filter(el => el.quizId != quizId);
+                                course.save();
+                            })
+                            res.json({response: 'Successfully removed quiz.'});
+                        }
                     })
                 }
-            }
+            });
         })
-    })
+
+        .put(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            db.models.Quiz.findOne({_id: req.params.quizId}, (err,quiz) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+
+                    if (req.body.changeSort) {
+                        // Find the index of the current quizQuestion
+                        let questionId = req.body.questionId;
+                        let index = quiz.questions.findIndex(el => el.id == questionId);
+                        let indexToSwap = req.body.changeSort == "up"? index - 1: index + 1;
+                        let itemToMove = quiz.questions.splice(index,1)[0];
+                        quiz.questions = [...quiz.questions.slice(0,indexToSwap), itemToMove, ...quiz.questions.slice(indexToSwap,quiz.questions.length)];
+                        quiz.save(err => {
+                            if (err) {
+                                res.json({error: err.message});
+                            } else {
+                                res.json({response: 'Successfully updated quiz.'});
+                            } 
+                        })
+
+                    } else {
+                        quiz.description = req.body.quizDescription;
+                        quiz.timeLimit = req.body.quizTimeLimit;
+                        quiz.maxAttempts = req.body.quizMaxAttempts;
+                        quiz.save(err => {
+                            if (err) {
+                                res.json({error: err.message});
+                            } else {
+                                res.json({response: 'Successfully updated quiz.'});
+                            } 
+                        })
+                    }
+                }
+            })
+        })
 
     app.route('/quizAdmin/modalQuestions/:quizId/')
         .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {

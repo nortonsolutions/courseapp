@@ -13,7 +13,7 @@ var multer      = require('multer');
 
 var auth                     = require('./auth.js');
 var apiRoutes                = require('./routes/api.js');
-// var apiCourseRoutes          = require('./routes/apiCourse.js')
+var apiCourseRoutes          = require('./routes/apiCourse.js')
 var apiMessageboardRoutes    = require('./routes/apiMessageboard.js')
 var apiQuizRoutes            = require('./routes/apiQuiz.js')
 var hbsHelpers               = require('./public/handlebarsHelpers.js')
@@ -94,7 +94,7 @@ database(mongoose, (db) => {
   auth(app, db.models.User);
   
   apiRoutes(app, db);
-  // apiCourseRoutes(app, db);
+  apiCourseRoutes(app, db);
   apiQuizRoutes(app, db, upload, uploadProject);
   apiMessageboardRoutes(app,db);
   
