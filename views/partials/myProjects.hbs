@@ -1,36 +1,36 @@
 <div class="col-12">
-                            <div class="row card-header">
-                                    <div class="col-5 pl-0"><h4>My Projects</h4></div>    
-                            </div>
-                            <div id="accordianId" role="tablist" aria-multiselectable="true">
-                                {{#each projectArrays}}
-                                <div class="card">
-                                    <div class="card-header" role="tab" id="projectsSection{{@index}}HeaderId">
-                                        <h5 class="mb-0">
-                                            <a data-toggle="collapse" data-parent="#accordianId"
-                                                href="#projectsSection{{@index}}ContentId" aria-expanded="true"
-                                                aria-controls="projectsSection{{@index}}ContentId">
-                                                <div class="row">
-                                                    <div class="col-12">{{@key}}</div>    
-                                                </div>
-                                            </a>
-                                        </h5>
-                                    </div>
-
-                                    <div id="projectsSection{{@index}}ContentId" class="collapse in" role="tabpanel"
-                                        aria-labelledby="projectsSection{{@index}}HeaderId">
-                                        {{#each projects}}
-                                        <div class="card-body py-2">
-                                                <div class="row">
-                                                    <div class="col-6">{{quizName}}</div>    
-                                                    <div class="col-6"><a href="/public/projects/{{file}}">{{file}}</a></div>    
-                                                </div>
-                                        </div>
-                                        {{/each}}
-                                    </div>
-
-                                </div>
-                                {{/each}}
-
-                            </div>
+    <div class="row card-header">
+            <div class="col-5 pl-0"><h4>My Projects</h4></div>    
+    </div>
+    <div id="accordianId" role="tablist" aria-multiselectable="true">
+        {{#each projectArrays}}
+        <div class="card">
+            <div class="card-header" role="tab" id="projectsSection{{@index}}HeaderId">
+                <h5 class="mb-0">
+                    <a data-toggle="collapse" data-parent="#accordianId"
+                        href="#projectsSection{{@index}}ContentId" aria-expanded="true"
+                        aria-controls="projectsSection{{@index}}ContentId">
+                        <div class="row">
+                            <div class="col-12">{{@key}}</div>    
                         </div>
+                    </a>
+                </h5>
+            </div>
+
+            <div id="projectsSection{{@index}}ContentId" class="collapse in" role="tabpanel"
+                aria-labelledby="projectsSection{{@index}}HeaderId">
+                {{#each projects}}
+                <div class="card-body py-2">
+                        <div class="row">
+                            <div class="col-6">{{quizName}}</div>    
+                            <div class="col-6"><a href="/public/projects/{{file}}">{{file}}</a></div>    
+                        </div>
+                </div>
+                {{/each}}
+            </div>
+
+        </div>
+        {{/each}}
+
+    </div>
+</div>

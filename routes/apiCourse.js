@@ -218,7 +218,7 @@ module.exports = function (app, db) {
                                     instructorName: user.surname + ', ' + user.firstname
                                 }];
                                 course.save(err => {
-                                    let options = { course: course };
+                                    let options = { admin: req.user.roles.includes('admin'), course: course };
                                     res.render(process.cwd() + '/views/partials/instructors.hbs', options);
                                 })
                             })
@@ -288,7 +288,7 @@ module.exports = function (app, db) {
                         if (err) {
                             res.json({ error: err.message });
                         } else {
-                            let options = { course: course };
+                            let options = { admin: req.user.roles.includes('admin'), course: course };
                             res.render(process.cwd() + '/views/partials/instructors.hbs', options);
                         }
                     })

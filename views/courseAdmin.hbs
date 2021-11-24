@@ -23,65 +23,91 @@
                     <div class="col-2 mt-4"><button id="deleteCourse" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete</button></div>
                 </div>
 
-                <div class="row">
-
-                    <div class="col-8 border">
-                        
-                        <div id="instructors">
-                        {{> instructors }}
+                <div id="accordianId" role="tablist" aria-multiselectable="true">
+                    <div class="card">
+                        <div class="card-header" role="tab" id="section0HeaderId">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-parent="#accordianId" href="#section0ContentId" aria-expanded="true" aria-controls="section1ContentId">
+                        Homepage Content
+                        </a>
+                            </h5>
                         </div>
-
-                        <label for="description">Description:</label>
-                        <input type="text" class="form-control" name="description" id="description" aria-describedby="helpId2" value="{{course.description}}">
-                        <small id="helpId2" class="form-text text-muted">Short Description</small>
-                        
-                        <label for="homeContent">Homepage contents:</label>
-                        <textarea class="form-control" rows="8s" name="homeContent" id="homeContent" aria-describedby="helpId">{{course.homeContent}}</textarea>
-                        <small id="helpId" class="form-text text-muted">Homepage contents (HTML and Markdown supported)</small>
-                        
-                        <button type="button" id="saveCourseDetails" class="btn btn-primary mt-4"><i class="fas fa-save"></i> Save</button>
-                    
+                        <div id="section0ContentId" class="collapse in" role="tabpanel" aria-labelledby="section0HeaderId">
+                            <div id="instructors" class="card-body">
+                                
+                                <label for="description">Description:</label>
+                                <input type="text" class="form-control" name="description" id="description" aria-describedby="helpId2" value="{{course.description}}">
+                                <small id="helpId2" class="form-text text-muted">Short Description</small>
+                                
+                                <label for="homeContent">Homepage contents:</label>
+                                <textarea class="form-control" rows="8" name="homeContent" id="homeContent" aria-describedby="helpId">{{course.homeContent}}</textarea>
+                                <small id="helpId" class="form-text text-muted">Homepage contents (HTML and Markdown supported)</small>
+                                
+                                <button type="button" id="saveCourseDetails" class="btn btn-sm btn-primary btn-std mt-4"><i class="fas fa-save"></i> Save</button>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab" id="section1HeaderId">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-parent="#accordianId" href="#section1ContentId" aria-expanded="true" aria-controls="section1ContentId">
+                        Modules
+                        </a>
+                            </h5>
+                        </div>
+                        <div id="section1ContentId" class="collapse in" role="tabpanel" aria-labelledby="section1HeaderId">
+                            <div id="modules" class="card-body">
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                    <form class="form-group" id="newQuiz" method="post" action="/quiz">
+                                            <label>Add Module:</label>
+                                            <input type="text" class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="Enter module name...">
+                                            <button type="submit" class="btn btn-sm btn-primary btn-std">Submit</button>
+                                    </form>
+                                    </div>
+                                    <div class="col-6">
+                                    <form class="form-group" id='selectQuiz' action="/quiz" method="get">
+                                        {{> selectQuiz }}
+                                    </form>
+                                    <button id="btnOrdering" type="button" class="btn btn-sm btn-secondary btn-std mt-1" data-toggle="modal" data-target="#modalContainer">Ordering</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="col-4 border">
-                        
-                        <form class="form-group" id="newQuiz" method="post" action="/quiz">
-                            <div class="row">
-                                <label>Add Module:</label>
-                                <div class="col-12 p-0">
-                                    <input type="text" class="form-control" name="quizName" id="quizName" aria-describedby="helpId" placeholder="">
-                                </div>
-                                <div class="col-4 p-0">
-                                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                                </div>
-                                <small class="form-text text-muted ml-5">Enter the name</small>
+                    <div class="card">
+                        <div class="card-header" role="tab" id="section2HeaderId">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-parent="#accordianId" href="#section2ContentId" aria-expanded="true" aria-controls="section1ContentId">
+                        Instructors
+                        </a>
+                            </h5>
+                        </div>
+                        <div id="section2ContentId" class="collapse in" role="tabpanel" aria-labelledby="section2HeaderId">
+                            <div id="instructors" class="card-body">
+                                {{> instructors }}
                             </div>
-                        </form>
-                        <form class="form-group" id='selectQuiz' action="/quiz" method="get">
-                            {{> selectQuiz }}
-                        </form>
-                        <button id="btnOrdering" type="button" class="btn btn-sm btn-secondary row mt-1" data-toggle="modal" data-target="#modalContainer">Ordering</button>
-                        {{#if admin}}
-                        <form id='selectTeachers' class="form-group">
-                            <div class="row">
-                                <label>Add teacher:</label>
-                                <div class="col-12 p-0">
-                                    <select class="form-control" id="instructorId" name="instructorId">
-                                    {{#each teachers}}
-                                        <option value="{{_id}}">{{surname}}, {{firstname}}</option>
-                                    {{/each}}
-                                    </select>
-                                </div>
-                                <div class="col-4 p-0">
-                                    <button id="addTeacher" type="submit" class="btn btn-sm btn-primary">Submit</button>
-                                </div>
-                                <small class="form-text text-muted ml-5">Select from list</small>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab" id="section3HeaderId">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-parent="#accordianId" href="#section3ContentId" aria-expanded="true" aria-controls="section2ContentId">
+                        Students
+                        </a>
+                            </h5>
+                        </div>
+                        <div id="section3ContentId" class="collapse in" role="tabpanel" aria-labelledby="section3HeaderId">
+                            <div class="card-body">
+                                {{> students }}
                             </div>
-                        </form>
-                        {{/if}}
-
+                        </div>
                     </div>
                 </div>
+
 
                 <div class="row">
                     <div class="col-12">

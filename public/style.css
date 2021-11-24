@@ -9,7 +9,7 @@
 }
 
 @media (max-width: 800px) {
-  label, div, button, input[type=button] {
+  label, div, button, input[type=button], textarea {
     font-size: 12px !important;
   }
 
@@ -19,8 +19,12 @@
 }
 
 @media (max-width: 600px) {
-  label, div, button, input[type=button] {
+  label, div, button, input[type=button], textarea {
     font-size: 11px !important;
+  }
+
+  textarea {
+    padding: 0px !important;
   }
 
   .newReplyText {

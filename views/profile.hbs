@@ -30,24 +30,33 @@
                         <div class="col-2"><a href="/publicProfile/{{username}}">Public Profile</a></div>
                     </div>
                     <hr class="my-2">
-                    <div class="row">
-                        <div class="col-12">
-                            <h4>Change account details:</h4>
+                    <div class="card">
+                        <div class="card-header" role="tab" id="accountHeaderId">
+                            <h5 class="mb-0">
+                                <a data-toggle="collapse" data-parent="#accordianId" href="#accountContentId" aria-expanded="true" aria-controls="section1ContentId">
+                        Account details...
+                        </a>
+                            </h5>
+                        </div>
+                        <div id="accountContentId" class="collapse in" role="tabpanel" aria-labelledby="accountHeaderId">
+                            <div class="card-body">
                             <form id="userUpdateForm" action="/updateAccount" method="post">
                                 {{> userUpdateForm }}
                             </form>
+                            </div>
                         </div>
-
-                        {{#if teacher}}
-                        {{>myCourses}}
-                        {{/if}}
-
-                        {{>myProjects}}
-                        
-                        {{>myActivity}}
-                        
-
                     </div>
+
+                    <hr>
+                    
+                    {{#if teacher}}
+                    {{>myCourses}}
+                    {{/if}}
+
+                    {{>myProjects}}
+
+                    {{>myActivity}}
+
                     <div id="quizGraph" class="text-center my-3">
                         <div class="d-none">
                             <canvas id="quizGraphCanvas" width="400" height="200"></canvas>

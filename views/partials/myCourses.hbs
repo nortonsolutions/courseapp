@@ -1,17 +1,16 @@
-                        <div class="col-12">
+    <div class="col-12 my-3">
 
-                                <div class="row card-header pl-1">
-                                    <div class="col-12">
-                                        <h4>My Courses</h4>
-                                    </div>
-                                </div>
+            <div class="row card-header pl-1">
+                <div class="col-12">
+                    <h4>My Courses</h4>
+                </div>
+            </div>
 
-                                {{#each myCourses}}
-                                <form class="row card mx-0">
-                                    <div class="col-12">
-                                        <div class="courseLink"><a href="/{{#if ../public}}course{{else}}courseAdmin{{/if}}/{{_id}}"><h5>{{name}}</h5></a></div>
-                                    </div>
-                                </form>
-                                {{/each}}
-                                <hr>
-                        </div>
+            {{#each myCourses}}
+            <form class="row card mx-0">
+                <div class="col-12">
+                    <div class="courseLink"><a href="/{{#if ../public}}course{{else}}courseAdmin{{/if}}/{{_id}}"><h5>{{name}}</h5></a></div>
+                </div>
+            </form>
+            {{/each}}
+    </div>
