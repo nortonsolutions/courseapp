@@ -51,7 +51,7 @@
                             <div class="col-4 pr-1"><button id="btnSaveQuestion" type="submit" class="d-none btn btn-primary btn-block "><i class="fa fa-check" aria-hidden="true"></i> Save</button></div>
                             <div class="col-4 pl-1"><button id="btnCancel" type="button" class="d-none btn btn-danger btn-block "><i class="fas fa-backspace"></i> Cancel</button></div>
                         </div>
-                        <form class="d-none row" id="questionDetail" method="post" action="/quizAdmin/{{quiz._id}}">
+                        <form class="d-none row" id="questionDetail" method="post" action="/quizAdmin/{{courseId}}/{{quiz._id}}">
                             {{> questionDetail }}
                         </form>
 

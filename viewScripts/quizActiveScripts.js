@@ -140,7 +140,9 @@ const addProjectSubmissionHandling = () => {
 
 
         handleFormPost('/quiz/projectSubmission/' + courseId + '/' + quizId, formData, (response) => {
-            document.getElementById('feedback').innerHTML = JSON.parse(response).feedback;
+            
+            let returnToCoursePage = "<a href='/course/" + courseId + "'>Return to course page</a>"; 
+            document.getElementById('feedback').innerHTML = JSON.parse(response).feedback + "..." + returnToCoursePage;
             localStorage.removeItem(userId + quizId);
             hideQuestionInterface();
         }) 

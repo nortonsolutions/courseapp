@@ -19,7 +19,7 @@ applyQuestionListHandlers = () => {
             if (confirm('Are you sure you want to delete this question?')) {
 
                 questionIdToDelete = e.target.parentNode.querySelector('div:nth-child(2)').id;
-                handleDelete('/quizAdmin/' + currentQuizId + '/' + questionIdToDelete, {}, (response) => {
+                handleDelete('/quizAdmin/' + currentCourseId + '/' + currentQuizId + '/' + questionIdToDelete, {}, (response) => {
                     rerenderQuestionList();
                     document.getElementById('feedback').innerHTML = response;
 
@@ -142,7 +142,7 @@ document.getElementById('btnSaveQuestion').addEventListener('click', (e) => {
     var formData = new FormData(document.getElementById('questionDetail'));
     formData.append('questionJson', JSON.stringify(questionJson));
 
-    handleFormPost('/quizAdmin/' + currentQuizId, formData, (response) => {
+    handleFormPost('/quizAdmin/' + currentCourseId + '/' + currentQuizId, formData, (response) => {
         if (/error:/.test(response)) {
             document.getElementById('feedback').innerHTML = response;
         } else {
@@ -161,7 +161,7 @@ document.getElementById('btnSaveQuestion').addEventListener('click', (e) => {
 document.getElementById('deleteQuiz').addEventListener('click', (e) => {
     
     if (confirm('Are you sure you want to delete this quiz?')) {
-        handleDelete('/quizAdmin/' + currentQuizId, {}, (response) => {
+        handleDelete('/quizAdmin/' + currentCourseId + '/' + currentQuizId, {}, (response) => {
             window.location.href = encodeURI('/courseAdmin/' + currentCourseId + '?feedback=' + JSON.parse(response).response);
         })
     }
@@ -169,7 +169,7 @@ document.getElementById('deleteQuiz').addEventListener('click', (e) => {
 
 document.getElementById('saveQuiz').addEventListener('click', (e) => {
     
-    handlePut('/quizAdmin/' + currentQuizId, {
+    handlePut('/quizAdmin/' + currentCourseId + '/' + currentQuizId, {
         quizDescription: document.getElementById('quizDescription').value,
         quizTimeLimit: document.getElementById('quizTimeLimit').value,
         quizMaxAttempts: document.getElementById('quizMaxAttempts').value
@@ -180,7 +180,7 @@ document.getElementById('saveQuiz').addEventListener('click', (e) => {
 })
 
 rerenderQuestionList = (callback) => {
-    handleGet('/quizAdmin/' + currentQuizId + '/questions', (response) => {
+    handleGet('/quizAdmin/' + currentCourseId + '/' + currentQuizId + '/questions', (response) => {
         document.getElementById('questionListContainer').innerHTML = response;
         applyQuestionListHandlers();
         if (callback) callback();
@@ -188,7 +188,7 @@ rerenderQuestionList = (callback) => {
 }
 
 rerenderQuestionDetail = (callback) => {
-    handleGet('/quizAdmin/' + currentQuizId + '/' + currentQuestionId, (response) => {
+    handleGet('/quizAdmin/' + currentCourseId + '/' + currentQuizId + '/' + currentQuestionId, (response) => {
         showQuestionForm();
         document.getElementById('questionDetail').innerHTML = response;
         applyQuestionDetailHandlers();
@@ -216,7 +216,7 @@ addModalQuestionsListeners = () => {
             // TODO: This would be an excellent place for CustomEvent, rather than
             // a call to grandfather node!
             let questionId = e.target.parentNode.parentNode.querySelector('.questionId').id
-            handlePut('/quizAdmin/' + currentQuizId, { questionId: questionId, changeSort: 'down'}, (response) => {
+            handlePut('/quizAdmin/' + currentCourseId + '/' + currentQuizId, { questionId: questionId, changeSort: 'down'}, (response) => {
                 reloadQuestionLists();                
             })
         })
@@ -226,7 +226,7 @@ addModalQuestionsListeners = () => {
         el.addEventListener('click', e => {
         
             let questionId = e.target.parentNode.parentNode.querySelector('.questionId').id
-            handlePut('/quizAdmin/' + currentQuizId, { questionId: questionId, changeSort: 'up'}, (response) => {
+            handlePut('/quizAdmin/' + currentCourseId + '/' + currentQuizId, { questionId: questionId, changeSort: 'up'}, (response) => {
                 reloadQuestionLists();                
             })
         })

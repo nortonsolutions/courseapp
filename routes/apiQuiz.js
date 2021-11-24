@@ -236,12 +236,33 @@ module.exports = function(app, db, upload, uploadProject) {
             })
         }) 
 
-    app.route('/quizAdmin/:quizId')
+    app.route('/quizAdmin/modalQuestions/:quizId/')
+        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
+            let quizId = req.params.quizId;
+
+            let options = {
+                admin: req.user.roles.includes('admin'),
+                feedback: req.query.feedback? req.query.feedback : ''
+            };
+            
+            db.models.Quiz.findOne({ _id : quizId})
+                .exec((err, quiz) => {
+                if (err) {
+                    res.json({error: err.message});
+                } else {
+                    options.quiz = quiz;
+                    options.questionsHighIndex = quiz.questions.length - 1;
+                    res.render(process.cwd() + '/views/partials/modalQuestions.hbs', options);
+                }
+            })
+        })
+
+    app.route('/quizAdmin/:courseId/:quizId')
 
         // Get entire quizAdmin view for a quiz
         .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
             let quizId = req.params.quizId;
-            let courseId = req.query.courseId;
+            let courseId = req.params.courseId;
 
             let options = {
                 admin: req.user.roles.includes('admin'),
@@ -374,28 +395,9 @@ module.exports = function(app, db, upload, uploadProject) {
             })
         })
 
-    app.route('/quizAdmin/modalQuestions/:quizId/')
-        .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
-            let quizId = req.params.quizId;
+    
 
-            let options = {
-                admin: req.user.roles.includes('admin'),
-                feedback: req.query.feedback? req.query.feedback : ''
-            };
-            
-            db.models.Quiz.findOne({ _id : quizId})
-                .exec((err, quiz) => {
-                if (err) {
-                    res.json({error: err.message});
-                } else {
-                    options.quiz = quiz;
-                    options.questionsHighIndex = quiz.questions.length - 1;
-                    res.render(process.cwd() + '/views/partials/modalQuestions.hbs', options);
-                }
-            })
-        })
-
-    app.route('/quizAdmin/:quizId/questions')
+    app.route('/quizAdmin/:courseId/:quizId/questions')
 
         // Grab list of questions for questionList partial
         .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
@@ -414,7 +416,7 @@ module.exports = function(app, db, upload, uploadProject) {
 
 
 
-    app.route('/quizAdmin/:quizId/:questionId')
+    app.route('/quizAdmin/:courseId/:quizId/:questionId')
 
         // Grab question details for questionDetail partial
         .get(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {

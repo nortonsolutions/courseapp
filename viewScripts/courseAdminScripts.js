@@ -27,7 +27,7 @@ document.getElementById('newQuiz').addEventListener('submit', (e) => {
 
 document.getElementById('selectQuiz').addEventListener('submit', (e) => {
     let quizId = e.target.elements.quizSelect.value;
-    let url = "/quizAdmin/" + quizId + "?courseId=" + currentCourseId;
+    let url = "/quizAdmin/" + currentCourseId + "/" + quizId;
     window.location.href = url;
     e.preventDefault();
 })

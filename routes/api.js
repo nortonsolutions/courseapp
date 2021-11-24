@@ -258,6 +258,32 @@ module.exports = function (app, db) {
         })
     }
 
+    const getProjectsArrays = (projects, callback) => {
+        var courseNameLookup = {};
+        var quizNameLookup = {};
+        db.models.Course.find({}, (err,courses) => {
+            Array.from(courses).forEach(course => {
+                courseNameLookup[course.id] = course.name;
+            })
+
+            db.models.Quiz.find({}, (err, quizzes) => {
+                Array.from(quizzes).forEach(quiz => {
+                    quizNameLookup[quiz.id] = quiz.name;
+                })
+                let projectArrays = {};
+                projects.forEach(project => {
+                    let courseName = courseNameLookup[project.courseId];
+                    if (! projectArrays[courseName]) projectArrays[courseName] = {};
+                    if (! projectArrays[courseName].projects) projectArrays[courseName].projects = [];
+
+                    projectArrays[courseName].projects.push({ id: project.id, file: project.file, quizId: project.quizId, quizName: quizNameLookup[project.quizId] });
+                });
+
+                callback(projectArrays);    
+            })
+        })        
+    }
+
     app.route('/profile')
         .get(ensureAuthenticated, (req,res) => {
         
@@ -265,23 +291,29 @@ module.exports = function (app, db) {
             context.admin = req.user.roles.includes('admin');
             context.teacher = req.user.roles.includes('teacher');
             getScoreArrays(context.quizzes, (scoreArrays) => {
-                context.scoreArraysObj = scoreArrays;
-                context.scoreArrays = JSON.stringify(scoreArrays);
-
-                if (context.teacher) {
-
-                    db.models.Course.find({ 'instructors.instructorId': req.user.id }).select('name').sort({ name: 1}).exec((err,courses) => {
-                        if (err) {
-                            res.json({error: err.message});
-                        } else {
-                            context.myCourses = courses;
-                            res.render(process.cwd() + '/views/profile.hbs', context);
-                        }
-                    })
+                getProjectsArrays(context.projects, (projectArrays) => {
+                    context.public = false;
+                    context.projectArrays = projectArrays;
+                    context.scoreArraysObj = scoreArrays;
+                    context.scoreArrays = JSON.stringify(scoreArrays);
     
-                } else {
-                    res.render(process.cwd() + '/views/profile.hbs', context);
-                }
+                    if (context.teacher) {
+    
+                        db.models.Course.find({ 'instructors.instructorId': req.user.id }).select('name').sort({ name: 1}).exec((err,courses) => {
+                            if (err) {
+                                res.json({error: err.message});
+                            } else {
+                                context.myCourses = courses;
+                                res.render(process.cwd() + '/views/profile.hbs', context);
+                            }
+                        })
+        
+                    } else {
+                        res.render(process.cwd() + '/views/profile.hbs', context);
+                    }
+                })
+                
+                
             });
         })
 
@@ -291,25 +323,29 @@ module.exports = function (app, db) {
                 if (err) {
                     res.json({error: err.message});
                 } else {
+                    context.public = true;
                     context.teacher = context.roles.includes('teacher');
                     getScoreArrays(context.quizzes, (scoreArrays) => {
-                        context.scoreArraysObj = scoreArrays;
-                        context.scoreArrays = JSON.stringify(scoreArrays);
-                        
-                        if (context.teacher) {
-        
-                            db.models.Course.find({ 'instructors.instructorId': context.id }).select('name').sort({ name: 1}).exec((err,courses) => {
-                                if (err) {
-                                    res.json({error: err.message});
-                                } else {
-                                    context.myCourses = courses;
-                                    res.render(process.cwd() + '/views/publicProfile.hbs', context);
-                                }
-                            })
+                        getProjectsArrays(context.projects, (projectArrays) => {
+                            context.projectArrays = projectArrays;
+                            context.scoreArraysObj = scoreArrays;
+                            context.scoreArrays = JSON.stringify(scoreArrays);
+                            
+                            if (context.teacher) {
             
-                        } else {
-                            res.render(process.cwd() + '/views/publicProfile.hbs', context);
-                        }
+                                db.models.Course.find({ 'instructors.instructorId': context.id }).select('name').sort({ name: 1}).exec((err,courses) => {
+                                    if (err) {
+                                        res.json({error: err.message});
+                                    } else {
+                                        context.myCourses = courses;
+                                        res.render(process.cwd() + '/views/publicProfile.hbs', context);
+                                    }
+                                })
+                
+                            } else {
+                                res.render(process.cwd() + '/views/publicProfile.hbs', context);
+                            }
+                        });
                     });
                 }
             })
