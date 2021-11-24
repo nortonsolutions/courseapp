@@ -218,8 +218,20 @@ module.exports = function (app, db) {
                                     instructorName: user.surname + ', ' + user.firstname
                                 }];
                                 course.save(err => {
-                                    let options = { admin: req.user.roles.includes('admin'), course: course };
-                                    res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                                    let options = { 
+                                        admin: req.user.roles.includes('admin'),
+                                        course: course,
+                                        teachers: []
+                                    };
+
+                                    db.models.User.find((err, users) => {
+                                        users.forEach(user => {
+                                            if (user.roles.includes('teacher')) {
+                                                options.teachers = [...options.teachers, user]
+                                            }
+                                        })
+                                        res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                                    });
                                 })
                             })
 
@@ -288,14 +300,24 @@ module.exports = function (app, db) {
                         if (err) {
                             res.json({ error: err.message });
                         } else {
-                            let options = { admin: req.user.roles.includes('admin'), course: course };
-                            res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                            let options = { 
+                                admin: req.user.roles.includes('admin'),
+                                course: course,
+                                teachers: []
+                            };
+                            db.models.User.find((err, users) => {
+                                users.forEach(user => {
+                                    if (user.roles.includes('teacher')) {
+                                        options.teachers = [...options.teachers, user]
+                                    }
+                                })
+                                res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                            });
                         }
                     })
                 }
             });
         })       
-        
 
     app.route('/courseAdmin/modalModules/:courseId')
         .get(ensureAuthenticated, ensureAdminOrTeacher, (req, res) => {
