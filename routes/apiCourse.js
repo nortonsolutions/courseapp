@@ -161,8 +161,8 @@ module.exports = function (app, db) {
                                             firstname: user.firstname
                                         };
 
-                                        if (user.quizzes.map(el => el.courseId).includes(courseId) || 
-                                            user.projects.map(el => el.courseId).includes(courseId)) {
+                                        if (user.quizzes.filter(el => el.date >= course.currentTermStartDate).map(el => el.courseId).includes(courseId) || 
+                                            user.projects.filter(el => el.date >= course.currentTermStartDate).map(el => el.courseId).includes(courseId)) {
                                             options.students = [...options.students, userCopy];
                                         }
                                         if (user.roles.includes('teacher')) {
