@@ -1,16 +1,25 @@
-    <div class="col-12 my-3">
-
-            <div class="row card-header pl-1">
-                <div class="col-12">
-                    <h4>My Courses</h4>
+<div id="myCoursesAccordian" role="tablist" aria-multiselectable="true">
+    <div class="card">
+        <div class="card-header" role="tab" id="myCoursesHeader">
+            <h5 class="mb-0">
+                <a data-toggle="collapse" data-parent="#myCoursesAccordian" href="#myCoursesContent" aria-expanded="true" aria-controls="myCoursesContent">
+          My Courses
+        </a>
+            </h5>
+        </div>
+        <div id="myCoursesContent" class="collapse in" role="tabpanel" aria-labelledby="myCoursesHeader">
+            <div role="tablist" aria-multiselectable="true" class="ml-5">
+                {{#each myCourses}}
+                <div class="card">
+                    <div class="card-header" role="tab" id="projectsSection{{@index}}HeaderId">
+                        <h5 class="mb-0">
+                        <div><a href="/{{#if ../public}}course{{else}}courseAdmin{{/if}}/{{_id}}">{{name}}</a></div>
+                        </h5>
+                    
+                    </div>
                 </div>
+                {{/each}}
             </div>
-
-            {{#each myCourses}}
-            <form class="row card mx-0">
-                <div class="col-12">
-                    <div class="courseLink"><a href="/{{#if ../public}}course{{else}}courseAdmin{{/if}}/{{_id}}"><h5>{{name}}</h5></a></div>
-                </div>
-            </form>
-            {{/each}}
+        </div>
     </div>
+</div>

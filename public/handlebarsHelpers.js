@@ -84,6 +84,17 @@ module.exports = function(hbs) {
         return date.toLocaleDateString();
     });
 
+    hbs.registerHelper("jsDate", function(date) {
+        var formatter = new Intl.DateTimeFormat('en-us', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+
+        let [{value: month},,{value: day},,{value: year}] = formatter.formatToParts(date);
+        return year + "-" + month + "-" + day;
+    });
+
     hbs.registerHelper("calculateRows", function(string) {
         if (string.length == 0) return 4;
         return Math.ceil(string.length / 45);

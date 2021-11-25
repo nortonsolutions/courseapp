@@ -45,7 +45,8 @@ document.getElementById('saveCourseDetails').addEventListener('click', e => {
     let url = "/courseAdmin/" + currentCourseId;
     let data = {
         description: document.getElementById('description').value,
-        homeContent: document.getElementById('homeContent').value
+        homeContent: document.getElementById('homeContent').value,
+        currentTermStartDate: document.getElementById('currentTermStartDate').value + "T12:00:00-06:00"
     };
     handlePut(url, data, (response) => {
         document.getElementById('feedback').innerHTML = response;
@@ -53,8 +54,7 @@ document.getElementById('saveCourseDetails').addEventListener('click', e => {
 })
 
 
-if (admin) {
-
+addInstructorAddListener = () => {
     document.getElementById('selectTeachers').addEventListener('submit', e => {
         let url = "/courseAdmin/" + currentCourseId;
         let data = {
@@ -65,6 +65,7 @@ if (admin) {
                 document.getElementById('feedback').innerHTML = response;
             } else {
                 document.getElementById('instructors').innerHTML = response;
+                addInstructorAddListener();
                 addInstructorDeleteListeners();
     
             }
@@ -73,24 +74,29 @@ if (admin) {
         e.preventDefault();
     
     })
+}
 
-    addInstructorDeleteListeners = () => {
-        Array.from(document.querySelectorAll('.deleteInstructor')).forEach(el => {
-            el.addEventListener('click', e => {
-                let instructorId = e.target.parentNode.querySelector('.instructorId').id;
-                handleDelete('/courseAdmin/' + currentCourseId, { instructorId: instructorId }, response => {
-                    if (/error:/.test(response)) {
-                        document.getElementById('feedback').innerHTML = response;
-                    } else {
-                        document.getElementById('instructors').innerHTML = response;
-                        addInstructorDeleteListeners();
-    
-                    }
-                })
+
+addInstructorDeleteListeners = () => {
+    Array.from(document.querySelectorAll('.deleteInstructor')).forEach(el => {
+        el.addEventListener('click', e => {
+            let instructorId = e.target.parentNode.querySelector('.instructorId').id;
+            handleDelete('/courseAdmin/' + currentCourseId, { instructorId: instructorId }, response => {
+                if (/error:/.test(response)) {
+                    document.getElementById('feedback').innerHTML = response;
+                } else {
+                    document.getElementById('instructors').innerHTML = response;
+                    addInstructorAddListener();
+                    addInstructorDeleteListeners();
+
+                }
             })
         })
-    }
+    })
+}
 
+if (admin) {
+    addInstructorAddListener();
     addInstructorDeleteListeners();
 }
 

@@ -194,7 +194,8 @@ module.exports = function(app, db, upload, uploadProject) {
                                 user.projects = [...user.projects, {
                                     courseId: courseId,
                                     quizId: quizId,
-                                    file: projectFile
+                                    file: projectFile,
+                                    date: new Date()
                                 }]
 
                                 user.save((err,doc) => {

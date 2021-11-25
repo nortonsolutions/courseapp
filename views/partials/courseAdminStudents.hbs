@@ -1,0 +1,31 @@
+<div class="card">
+    <div class="card-header" role="tab" id="section3HeaderId">
+        <h5 class="mb-0">
+            <a data-toggle="collapse" data-parent="#courseAdminAccordian" href="#section3ContentId" aria-expanded="true" aria-controls="section2ContentId">
+    Students
+    </a>
+        </h5>
+    </div>
+    <div id="section3ContentId" class="collapse in" role="tabpanel" aria-labelledby="section3HeaderId">
+        <div class="card-body">
+            <div id="studentList" class="form-group">
+                <label for="studentList">Current Students:</label>
+                {{#each students}}
+                    <div class="row">
+                    <div class="col-11 pr-0">
+                        <div class="form-control" id={{id}}><a href="/publicProfile/{{username}}">{{surname}}, {{firstname}}</a></div>
+                    </div>
+                    {{#if ../admin}}
+                    <div class="pl-0 col-1 deleteStudent text-danger text-center">
+                        <span class="fas fa-minus-circle"></span>
+                    </div>
+                    {{/if}}
+                    </div>
+                {{/each}}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

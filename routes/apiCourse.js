@@ -116,12 +116,14 @@ module.exports = function (app, db) {
 
         // Get the full courseAdmin view
         .get(ensureAuthenticated, ensureAdminOrTeacher, (req, res) => {
+            
+            let courseId = req.params.courseId;
             let options = {
                 admin: req.user.roles.includes('admin'),
                 feedback: req.query.feedback ? req.query.feedback : ''
             };
 
-            db.models.Course.findOne({ _id: req.params.courseId }, (err, course) => {
+            db.models.Course.findOne({ _id: courseId }, (err, course) => {
                 if (err) {
                     res.json({ error: err.message });
                 } else {
@@ -146,12 +148,26 @@ module.exports = function (app, db) {
 
                                 options.quizzesHighIndex = quizzes.length - 1;
                                 options.teachers = [];
+                                options.students = [];
 
                                 // Also get the Users marked with teacher role
-                                db.models.User.find((err, users) => {
+                                db.models.User.find().exec((err, users) => {
                                     users.forEach(user => {
+                                        // userCopy is pared down, used for templating
+                                        let userCopy = {
+                                            id: user.id,
+                                            username: user.username,
+                                            surname: user.surname,
+                                            firstname: user.firstname
+                                        };
+
+                                        if (user.quizzes.map(el => el.courseId).includes(courseId) || 
+                                            user.projects.map(el => el.courseId).includes(courseId)) {
+                                            options.students = [...options.students, userCopy];
+                                        }
                                         if (user.roles.includes('teacher')) {
-                                            options.teachers = [...options.teachers, user]
+                                            
+                                            options.teachers = [...options.teachers, userCopy];
                                         }
                                     })
                                     res.render(process.cwd() + '/views/courseAdmin.hbs', options);
@@ -196,7 +212,7 @@ module.exports = function (app, db) {
             });
         })
 
-        // Post details for the course (description, content, instructors, etc.)
+        // Post details for the course (description, content, instructors, date, etc.)
         .put(ensureAuthenticated, ensureAdminOrTeacher, (req, res) => {
             let courseId = req.params.courseId;
 
@@ -230,13 +246,13 @@ module.exports = function (app, db) {
                                                 options.teachers = [...options.teachers, user]
                                             }
                                         })
-                                        res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                                        res.render(process.cwd() + '/views/partials/courseAdminInstructors.hbs', options);
                                     });
                                 })
                             })
 
                         } else {
-                            res.json({ success: "Instructor already exists." });
+                            res.json({ error: "Instructor already exists." });
                         }
                     }
                 })
@@ -276,6 +292,7 @@ module.exports = function (app, db) {
                     } else {
                         course.description = req.body.description;
                         course.homeContent = req.body.homeContent;
+                        course.currentTermStartDate = req.body.currentTermStartDate;
                         course.save(err => {
                             res.json(err ? { error: err.message } : { success: "Course updated." });
                         })
@@ -311,7 +328,7 @@ module.exports = function (app, db) {
                                         options.teachers = [...options.teachers, user]
                                     }
                                 })
-                                res.render(process.cwd() + '/views/partials/instructors.hbs', options);
+                                res.render(process.cwd() + '/views/partials/courseAdminInstructors.hbs', options);
                             });
                         }
                     })

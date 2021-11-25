@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="card-header" role="tab" id="section0HeaderId">
+        <h5 class="mb-0">
+            <a data-toggle="collapse" data-parent="#courseAdminAccordian" href="#section0ContentId" aria-expanded="true" aria-controls="section1ContentId">
+    Homepage Content
+    </a>
+        </h5>
+    </div>
+    <div id="section0ContentId" class="collapse in" role="tabpanel" aria-labelledby="section0HeaderId">
+        <div id="homepageContent" class="card-body">
+            
+            <label for="currentTermStartDate">Current Term Start Date: {{course.currentTermStartDate}}</label>
+            <input type="date" class="form-control" name="currentTermStartDate" id="currentTermStartDate" aria-describedby="helpId3" value="{{{jsDate course.currentTermStartDate}}}">
+            <small id="helpId3" class="form-text text-muted">Only quizzes/projects submitted after this date will appear on the Student list.</small>
+
+            <label for="description">Description:</label>
+            <input type="text" class="form-control" name="description" id="description" aria-describedby="helpId2" value="{{course.description}}">
+            <small id="helpId2" class="form-text text-muted">Short Description</small>
+            
+            <label for="homeContent">Homepage contents:</label>
+            <textarea class="form-control" rows="8" name="homeContent" id="homeContent" aria-describedby="helpId">{{course.homeContent}}</textarea>
+            <small id="helpId" class="form-text text-muted">Homepage contents (HTML and Markdown supported)</small>
+            
+            <button type="button" id="saveCourseDetails" class="btn btn-sm btn-primary btn-std mt-4"><i class="fas fa-save"></i> Save</button>
+        
+        </div>
+    </div>
+</div>

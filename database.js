@@ -59,7 +59,8 @@ module.exports = function (mongoose, callback) {
       projects: [{
         courseId: String,
         quizId: String,
-        file: String
+        file: String,
+        date: Date
       }],
       firstname: String,
       surname: String
@@ -101,7 +102,8 @@ module.exports = function (mongoose, callback) {
       quizIds: [{
         quizId: String,
         sortKey: Number
-      }]
+      }],
+      currentTermStartDate: Date
     })
 
     const CourseModel = mongoose.model('Course', courseSchema);
