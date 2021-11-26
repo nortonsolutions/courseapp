@@ -30,6 +30,8 @@ var timeLimitText = document.getElementById('timeLimit').value;
 var timeLimit = timeLimitText.length==0? Infinity : Number(timeLimitText)*60; //seconds
 var timePassed = 0;
 
+const msg = new SpeechSynthesisUtterance();
+
 const markedOptions = {
     breaks: true
 }
@@ -152,13 +154,15 @@ const addProjectSubmissionHandling = () => {
 
 }
 
-const getQuestion = () => {
+const getQuestion = (callback) => {
     handleGet('/quizActive/' + courseId + '/' + quizId + '/' + currentQuestionIndex, (response) => {
         document.getElementById('quizQuestion').innerHTML = response;
         questionId = document.getElementById('questionId').value;
 
         var questionMarked = marked(document.getElementById('questionRaw').innerText, markedOptions);
         document.getElementById('questionMarked').innerHTML = questionMarked;
+
+        msg.text = document.getElementById('questionMarked').innerText;
         
         setButtonVisibility();
         applyCheckboxHandlers();
@@ -168,6 +172,7 @@ const getQuestion = () => {
         }
 
         populateCurrentAnswer(questionId);
+        if (callback) callback();
     });
 }
 
@@ -242,6 +247,51 @@ const submitQuiz = () => {
     })
 }
 
+/* Thanks to Wes Bos for this stuff */
+const addSpeechSynthesis = () => {
+
+    let voices = [];
+    const voicesDropdown = document.querySelector('[name="voice"]');
+    const options = document.querySelectorAll('[type="range"], [name="text"]');
+    const speakButton = document.querySelector('#speak');
+
+    function populatevoices() {
+        voices = this.getVoices();
+        // console.log(voices);
+
+        voicesDropdown.innerHTML = voices
+            .filter(voice => voice.name.match(/English/))
+            .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+            .join('');
+    }
+
+    function setVoice() {
+        msg.voice = voices.find(voice => voice.name == this.value);
+        console.log(this.value);
+    }
+
+    function toggle(startOver = true) {
+        speechSynthesis.cancel();
+
+        if (startOver) {
+            speechSynthesis.speak(msg);
+        }
+    }
+
+    function setOption() {
+        console.log(this.name, this.value);
+        msg[this.name] = this.value;
+        toggle();
+    }
+
+    speechSynthesis.addEventListener('voiceschanged', populatevoices);
+    voicesDropdown.addEventListener('change', setVoice);
+    options.forEach(option => option.addEventListener('change', setOption));
+    speakButton.addEventListener('click', toggle);
+    
+}
 
 addButtonListeners();
 getQuestion();
+
+addSpeechSynthesis();
