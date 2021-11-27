@@ -23,7 +23,7 @@ module.exports = function (mongoose, callback) {
 
 
     const quizSchema = mongoose.Schema({
-      name: { type: String, required: true },
+      name: { type: String },
       questions: {type: [quizQuestionSchema], default: []},
       description: String,
       timeLimit: Number,

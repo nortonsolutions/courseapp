@@ -162,7 +162,15 @@ const getQuestion = (callback) => {
         var questionMarked = marked(document.getElementById('questionRaw').innerText, markedOptions);
         document.getElementById('questionMarked').innerHTML = questionMarked;
 
+        // Speech synthesis stuff
         msg.text = document.getElementById('questionMarked').innerText;
+        let answers = document.getElementById('responseCheckboxes').querySelectorAll('textarea');
+        if (answers) {
+            msg.text += Array.from(answers)
+                .filter(answer => answer.value.length > 0)
+                .map((answer,index) => (index+1) + answer.value)
+                .join();
+        }
         
         setButtonVisibility();
         applyCheckboxHandlers();

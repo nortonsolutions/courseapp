@@ -134,4 +134,8 @@ module.exports = function(hbs) {
         return Math.floor(seconds/60) + ":" + (seconds%60).toLocaleString("en-US", { minimumIntegerDigits: 2 });
     });
 
+    hbs.registerHelper("homeContentHelper", function(homeContent) {
+        return new hbs.SafeString(homeContent);
+    });
+
 }

@@ -18,11 +18,14 @@
             <small id="helpId2" class="form-text text-muted">Short Description</small>
             
             <label for="homeContent">Homepage contents:</label>
-            <textarea class="form-control" rows="8" name="homeContent" id="homeContent" aria-describedby="helpId">{{course.homeContent}}</textarea>
+{{!-- This must remain left-justified for the homeContent to display correctly.  Is there another workaround? --}}
+<textarea class="form-control" rows="8" name="homeContent" id="homeContent" aria-describedby="helpId">
+{{{homeContentHelper course.homeContent}}}
+</textarea>
             <small id="helpId" class="form-text text-muted">Homepage contents (HTML and Markdown supported)</small>
             
             <button type="button" id="saveCourseDetails" class="btn btn-sm btn-primary btn-std mt-4"><i class="fas fa-save"></i> Save</button>
-        
+
         </div>
     </div>
 </div>

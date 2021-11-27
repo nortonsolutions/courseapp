@@ -31,20 +31,56 @@ module.exports = function(app,db) {
     res.redirect('/');
   };
 
-  // ensureAdmin
-  const ensureAdmin = (req,res,next) => {
+  // ensureAdminOrTeacher
+  const ensureAdminOrTeacher = (req, res, next) => {
     if (req.user.roles.includes('admin')) {
         next();
     } else {
-        res.redirect('/main');
-    }     
+        if (req.user.roles.includes('teacher')) {
+            let courseId = req.params.courseId;
+            
+            db.models.Course.findOne()
+                .and([{ _id: courseId }, { 'instructors.instructorId': req.user.id }])
+                .exec((err, course) => {
+                    if (course) {
+                      req.user.currentTeacher = true;
+                      next();
+                    }
+                })
+        } else {
+            res.redirect('/main');
+        }
+    }
+  };
+
+  // checkIfTeacher
+  const setCurrentTeacher = (req, res, next) => {
+      if (req.user.roles.includes('teacher')) {
+          let courseId = req.params.courseId;
+          
+          db.models.Course.findOne()
+              .and([{ _id: courseId }, { 'instructors.instructorId': req.user.id }])
+              .exec((err, course) => {
+                  if (course) {
+                    req.user.currentTeacher = true;
+                    next();
+                  } else {
+                    next();
+                  }
+              })
+      } else {
+          next();
+      }
   };
 
   app.route('/course/messageBoard/:courseId')
 
-  .get(ensureAuthenticated, (req, res) => {
+  .get(ensureAuthenticated, setCurrentTeacher, (req, res) => {
 
-      let options = { admin: req.user.roles.includes('admin') };
+      let options = { 
+        admin: req.user.roles.includes('admin'),
+        teacherPrivileges: req.user.roles.includes('admin') || req.user.currentTeacher
+      };
       var courseId = req.params.courseId;
 
       db.models.Thread.find({ courseId: courseId }).limit(10).sort({ bumped_on: -1 }).exec((err, threads) => {
@@ -81,7 +117,7 @@ module.exports = function(app,db) {
           if (err) {
             res.send(err.message);
           } else {
-            res.send(thread);
+            res.send({success: "New thread added."});
             // res.redirect(302, '/b/' + board + '/');
           }
         })
@@ -106,7 +142,7 @@ module.exports = function(app,db) {
       })
     })
 
-    .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
 
       let threadId = req.body.threadId;
 
@@ -185,10 +221,9 @@ module.exports = function(app,db) {
             res.json(thread);
           }
         })
+      })
 
-    })
-
-    .delete(ensureAuthenticated, ensureAdmin, (req,res) => {
+    .delete(ensureAuthenticated, ensureAdminOrTeacher, (req,res) => {
       let threadId = req.body.threadId;
       let replyId = req.body.replyId;
       

@@ -32,10 +32,14 @@ module.exports = function (app, db) {
         } else {
             if (req.user.roles.includes('teacher')) {
                 let courseId = req.params.courseId;
+                
                 db.models.Course.findOne()
                     .and([{ _id: courseId }, { 'instructors.instructorId': req.user.id }])
                     .exec((err, course) => {
-                        if (course) next();
+                        if (course) {
+                        req.user.currentTeacher = true;
+                        next();
+                        }
                     })
             } else {
                 res.redirect('/main');

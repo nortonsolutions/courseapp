@@ -99,11 +99,12 @@ if (!reviewMode) {
         componentDidMount() {
             // document.getElementById('beep').load();
             if (this.props.running) {
-                setInterval(() => {
+                let myVar = setInterval(() => {
                     if (this.props.running) {
                         this.tick();
                     } else {
                         submitQuiz();
+                        clearInterval(myVar);
                     }
                 }, 1000)
             }
