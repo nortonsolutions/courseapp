@@ -92,8 +92,10 @@
         <hr>
     </div>
     {{#if currentQuestion.imageLocation}}
+    
     <div class="col-5">
-        <div class="mt-3"><img width="100%" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"></div>
+        <label for="questionImage">Click to open full-size</label>
+        <div class="mt-3 questionImage" id="{{currentQuestion.imageLocation}}"><img width="100%" class="noclick" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"></div>
     </div>
     {{/if}}
     <input class="d-none" type="text" name="questionId" id="questionId" value="{{currentQuestion._id}}">

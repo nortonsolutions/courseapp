@@ -154,6 +154,13 @@ const addProjectSubmissionHandling = () => {
 
 }
 
+const applyImageLink = () => {
+    document.querySelector('.questionImage').addEventListener('click', (e) => {
+        window.open('/public/uploads/' + e.target.id,'CourseApp image',"top=500,left=500,width=800,height=800"); 
+
+    })
+}
+
 const getQuestion = (callback) => {
     handleGet('/quizActive/' + courseId + '/' + quizId + '/' + currentQuestionIndex, (response) => {
         document.getElementById('quizQuestion').innerHTML = response;
@@ -178,6 +185,8 @@ const getQuestion = (callback) => {
         if (!reviewMode && document.getElementById('questionType').value == "projectSubmission") {
             addProjectSubmissionHandling(questionId);
         }
+
+        applyImageLink();
 
         populateCurrentAnswer(questionId);
         if (callback) callback();
