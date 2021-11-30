@@ -91,7 +91,7 @@ suite('Functional Tests', function() {
   });
 
   suite('e2e with Zombie:', () => {
-    Browser.site = 'http://localhost:8080'; 
+    Browser.site = 'http://localhost:3000'; 
 
     suite('Login and Logout as test user', function() {
 

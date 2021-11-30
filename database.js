@@ -6,7 +6,7 @@
 
 module.exports = function (mongoose, callback) {
 
-    const CONNECTION_STRING = process.env.DB || "mongodb://localhost:27018/CourseApp";
+    const CONNECTION_STRING = process.env.DB || "mongodb://localhost:27017/CourseApp";
 
     const quizQuestionSchema = mongoose.Schema({
       type: { type: String, required: true, default: 'single' },
