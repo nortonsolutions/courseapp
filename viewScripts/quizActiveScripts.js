@@ -189,6 +189,7 @@ const getQuestion = (callback) => {
         applyImageLink();
 
         populateCurrentAnswer(questionId);
+        window.UpdateMath(document.getElementById('questionRaw').innerText);
         if (callback) callback();
     });
 }

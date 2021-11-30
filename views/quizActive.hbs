@@ -4,14 +4,14 @@
 
     <title>CourseApp Quiz Interface</title>
 
-    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true react=true redux=true marked=true }}
+    {{> headerStuff jQuery=true fontAwesome=true bootStrap=true react=true redux=true marked=true mathjax=true }}
 
 </head>
 <body>
 
     <div class="outerContainer">
         {{> navbar quizActive='active' }}
-
+        
         <div class="pt-1 jumbotron jumbotron-fluid">
             <div class="container">
                 <div class="row">
@@ -59,6 +59,10 @@
                         <div class="col-6">
 
                         </div>
+                    </div>
+                    <input id="MathInput" size="80" onchange="UpdateMath(this.value)" />
+                    <div class="box" id="box" style="visibility:hidden">
+                        <div id="MathOutput" class="output">$${}$$</div>
                     </div>
                     <div id="quizQuestion"></div>
                 </main>
