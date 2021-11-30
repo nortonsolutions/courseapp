@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+            <script src="/public/common.js"></script>
+</head>
+
+<body>
+    <style id="myStyle"></style>
+    <h1 class="font">Google Fonts "{{font}}" Example</h1>
+    
+    <p class="font" style="font-family: {{font}}; font-size:30px;">Normal Text</p>
+    <p class="font" style="font-family: {{font}}; font-size:24px; font-weight: bold;">Bold Text</p>
+    <p class="font" style="font-family: {{font}}; font-size:24px; font-style: italic;">Italic Text</p>
+    <p class="font" style="font-family: {{font}}; font-size:24px; font-weight: bold; font-style: italic;">Bold Italic Text</p>
+    <p class="font" style="font-family: {{font}}; font-size:24px; font-variant: small-caps;">Small-caps Text</p>
+
+    <br><p>To use this font in your document visit the following link:</p>
+	<p><a href="http://192.168.109.1/resources/google-fonts/cssFetch.php?family={{font}}">http://192.168.109.1/resources/google-fonts/cssFetch.php?family={{font}}</a></p>
+	<p>Then put the contents of that file in your local style, and add "font-family: '{{font}}';" to the style statement for the desired element.</p>
+
+    <br><p>In memory of Henry, who loved fonts and got a PHP version of this working!</p>
+
+    <code id="myCode"></code>
+
+    <script>
+
+        handleGet('http://192.168.109.1/resources/google-fonts/loadfont.php', response => {
+
+            var regex = /109.2/gi;
+            var style = response.replace(regex, '109.1');
+            document.getElementById('myStyle').innerHTML = style;
+
+        })
+
+    </script>
+</body>
+
+
+
+</html>

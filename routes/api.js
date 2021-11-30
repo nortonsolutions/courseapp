@@ -350,4 +350,12 @@ module.exports = function (app, db) {
                 }
             })
         })
+
+    app.route('/public/tryfont')
+        .get((req,res) => {
+            let context = {
+                font: req.query.font
+            }
+            res.render(process.cwd() + '/views/tryfont.hbs', context);
+        })
 }
