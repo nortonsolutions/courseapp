@@ -8,22 +8,44 @@
                     <option {{{selectedIfEqual currentQuestion.type "instructional"}}} value="instructional">Instructional</option>
                     <option {{{selectedIfEqual currentQuestion.type "projectSubmission"}}} value="projectSubmission">Project Submission</option>
                   </select>
-                <label style="width: 100%" for="question">Question:</label>
-
                 
-                <p>Type text (mixed with MathML, TeX or asciimath) in the box below for a live preview.</p>
+                <div class="row">
+                  <div class="col-4"><label style="width: 100%" for="question">Question:</label></div>
+                  <div class="col-8">
+                    <p>
+                      <a class="btn btn-sm" data-toggle="collapse" href="#mathJaxInstructions" aria-expanded="false" aria-controls="mathJaxInstructions">
+                        MathJax Instructions
+                      </a>
+                    </p>
+                  </div>
 
-                <p>Configured delimiters: 
-                <ul>
-                <li>TeX, inline mode: <code>\(...\)</code> or <code>$...$</code></li>
-                <li>TeX, display mode: <code>\[...\]</code> or <code> $$...$$</code></li>
-                <li>Asciimath: <code>`...`</code>.</li>
-                </ul>
-                </p>
+                  <div class="col-12 collapse" id="mathJaxInstructions">
+                    <p>Type text (mixed with MathML, TeX or asciimath).  <br><a href="/cdn/js/MathJax-master/test/examples.html" target="_blank">Click here for examples.</a></p>
 
-                <textarea class="form-control" name="question" id="question" rows="{{{calculateRows currentQuestion.question}}}" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
+                    <p>Configured delimiters: 
+                    <ul>
+                    <li>TeX, inline mode: <code>\(...\)</code> or <code>$...$</code></li>
+                    <li>TeX, display mode: <code>\[...\]</code> or <code> $$...$$</code></li>
+                    <li>Asciimath: <code>`...`</code>.</li>
+                    </ul>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="row">
+
+                  <div class="col-11 pr-0">
+                    <textarea class="form-control" name="question" id="question" rows="{{{calculateRows currentQuestion.question}}}" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
+                    
+                  </div>
+                  <div class="col-1 px-0">
+                    <button type="button" class="p-0 btn btn-sm btnTriggerPreviewModal" data-toggle="modal" data-target="#previewModal">
+                        <i class="fas fa-code"></i>
+                    </button>
+                  </div>
+                </div>
+
                 {{> questionResponse }}
-                
                 
                 <input class="d-none" type="text" name="questionId" id="questionId" value="{{currentQuestion._id}}">
                 
@@ -42,7 +64,6 @@
                     {{#if currentQuestion.videoLocation}}
                     <label style="width: 100%" for="currentVideo">Current video:</label>
                     <div class="mediaContainer"><video id="currentVideo" src="/public/uploads/{{currentQuestion.videoLocation}}" alt="Question Video"></video></div>
-                    {{!-- <img id="currentImage" height="100px" src="/public/uploads/{{currentQuestion.imageLocation}}" alt="Question Image"> --}}
                     {{/if}}
                     <div class="custom-file">
                       <input type="file" class="custom-file-input" name="video" id="video" accept="video/*">
@@ -51,3 +72,27 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Button trigger modal -->
+              <button type="button" class="p-0 btn btn-sm btnTriggerPreviewModal" data-toggle="modal" data-target="#previewModal">
+                  <i class="fas fa-code"></i>
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Preview with Mathjax</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="modalBody" class="modal-body"></div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+

@@ -16,11 +16,19 @@
   .newReplyText {
     min-width: 82% !important;
   }
+
+  #modalBody {
+    font-size: 16px !important;
+  }
 }
 
 @media (max-width: 600px) {
   label, div, button, input[type=button], textarea {
     font-size: 11px !important;
+  }
+
+  a.nav-link {
+    font-size: 9px !important;
   }
 
   textarea {
@@ -30,6 +38,14 @@
   .newReplyText {
     min-width: 80% !important;
   }
+
+  #modalBody {
+    font-size: 16px !important;
+  }
+}
+
+#modalBody .MathJax {
+  padding-right: 15px !important;
 }
 
 #currentImage, #currentVideo {
@@ -71,9 +87,9 @@ label {
     max-width: 1024px;
 }
 
-.checkboxContainer {
+/* .checkboxContainer {
     padding: 5px 0px 5px 20px !important;
-}
+} */
 
 #questionList .question:hover, 
 input[type="checkbox"], 

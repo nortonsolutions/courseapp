@@ -11,8 +11,8 @@ module.exports = function(hbs) {
     });
 
     hbs.registerHelper("limitLength", function(string) {
-        if (string.length > 24) {
-            return (string.substring(0,24) + '...');
+        if (string.length > 22) {
+            return (string.substring(0,22) + '...');
         } else return string;
     });
 

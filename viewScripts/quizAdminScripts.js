@@ -192,6 +192,7 @@ rerenderQuestionDetail = (callback) => {
         showQuestionForm();
         document.getElementById('questionDetail').innerHTML = response;
         applyQuestionDetailHandlers();
+        addPreviewModalListeners();
         window.scroll(0,300);
         if (callback) callback();
     })
@@ -233,8 +234,30 @@ addModalQuestionsListeners = () => {
     })
 }
 
+addPreviewModalListeners = () => {
+    Array.from(document.querySelectorAll('.btnTriggerPreviewModal')).forEach(el => {
+        el.addEventListener('click', e => {
+            document.querySelector('#modalBody').innerText = e.target.parentNode.parentNode.querySelector('textarea').innerHTML;
+            Preview.callback();  // MathJax
+        })
+    })
+}
 
 applyQuestionListHandlers();
 applyQuestionDetailHandlers();
 addModalQuestionsListeners();
+addPreviewModalListeners();
 
+
+// MathJax:
+var Preview = {
+    CreatePreview: function () {
+        MathJax.Hub.Queue(
+            ["Typeset",MathJax.Hub,document.querySelector('#modalBody')]
+        );
+    },
+};
+  
+Preview.callback = MathJax.Callback(["CreatePreview",Preview]);
+Preview.callback.autoReset = true;  // make sure it can run more than once
+// End of MathJax

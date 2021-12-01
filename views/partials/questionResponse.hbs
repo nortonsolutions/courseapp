@@ -2,11 +2,16 @@
                 <label for="question">Choices:</label>
                 {{#each currentQuestion.choices}}
                 <div class="row">
-                    <div class="col-1 checkboxContainer" >
+                    <div class="col-1 pr-1">
                         <input class="checkbox" name="checkbox{{@index}}" type="checkbox" {{{booleanCheckboxHelper correct}}}>
                     </div>
-                    <div class="col-11">
+                    <div class="col-9 px-0 ml-1">
                         <textarea name="text{{@index}}" rows="{{{calculateRowsShort text}}}" type="text" class="form-control" aria-describedby="helpId" placeholder="Enter text...">{{text}}</textarea>
+                    </div>
+                    <div class="col-1 px-0">
+                        <button type="button" class="p-0 btn btn-sm btnTriggerPreviewModal" data-toggle="modal" data-target="#previewModal">
+                            <i class="fas fa-code"></i>
+                        </button>
                     </div>
                 </div>
                 {{/each}}
