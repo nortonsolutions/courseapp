@@ -4,9 +4,9 @@
 </div>
 <div class="form-group row">
     {{#if currentQuestion.imageLocation}}
-    <div class="col-7">
+    <div class="col-7" id="mainQuestionPanel">
     {{else}}
-    <div class="col-12">
+    <div class="col-12" id="mainQuestionPanel">
     {{/if}}    
         <input type="hidden" id="questionType" name="questionType" value="{{currentQuestion.type}}">
         <label style="width: 100%" for="question">Question #{{currentQuestionNumber}}: <span id="correctOrIncorrect"></span></label>

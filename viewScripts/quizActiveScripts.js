@@ -322,9 +322,13 @@ var Preview = {
             ["Typeset",MathJax.Hub,document.getElementById("text0")],
             ["Typeset",MathJax.Hub,document.getElementById("text1")],
             ["Typeset",MathJax.Hub,document.getElementById("text2")],
-            ["Typeset",MathJax.Hub,document.getElementById("text3")]
+            ["Typeset",MathJax.Hub,document.getElementById("text3")],
+            ["PreviewDone",this]
         );
     },
+    PreviewDone: function () {
+        
+    }
 };
   
 Preview.callback = MathJax.Callback(["CreatePreview",Preview]);
