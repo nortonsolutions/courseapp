@@ -187,9 +187,9 @@ const getQuestion = (callback) => {
         }
 
         applyImageLink();
-
+        
         populateCurrentAnswer(questionId);
-        window.UpdateMath(document.getElementById('questionRaw').innerText);
+        Preview.callback();  // MathJax
         if (callback) callback();
     });
 }
@@ -313,3 +313,20 @@ addButtonListeners();
 getQuestion();
 
 addSpeechSynthesis();
+
+// MathJax:
+var Preview = {
+    CreatePreview: function () {
+        MathJax.Hub.Queue(
+            ["Typeset",MathJax.Hub,document.getElementById("questionMarked")],
+            ["Typeset",MathJax.Hub,document.getElementById("text0")],
+            ["Typeset",MathJax.Hub,document.getElementById("text1")],
+            ["Typeset",MathJax.Hub,document.getElementById("text2")],
+            ["Typeset",MathJax.Hub,document.getElementById("text3")]
+        );
+    },
+};
+  
+Preview.callback = MathJax.Callback(["CreatePreview",Preview]);
+Preview.callback.autoReset = true;  // make sure it can run more than once
+// End of MathJax

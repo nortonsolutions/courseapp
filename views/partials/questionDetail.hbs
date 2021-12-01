@@ -9,6 +9,18 @@
                     <option {{{selectedIfEqual currentQuestion.type "projectSubmission"}}} value="projectSubmission">Project Submission</option>
                   </select>
                 <label style="width: 100%" for="question">Question:</label>
+
+                
+                <p>Type text (mixed with MathML, TeX or asciimath) in the box below for a live preview.</p>
+
+                <p>Configured delimiters: 
+                <ul>
+                <li>TeX, inline mode: <code>\(...\)</code> or <code>$...$</code></li>
+                <li>TeX, display mode: <code>\[...\]</code> or <code> $$...$$</code></li>
+                <li>Asciimath: <code>`...`</code>.</li>
+                </ul>
+                </p>
+
                 <textarea class="form-control" name="question" id="question" rows="{{{calculateRows currentQuestion.question}}}" placeholder="Enter question...">{{currentQuestion.question}}</textarea>
                 {{> questionResponse }}
                 
