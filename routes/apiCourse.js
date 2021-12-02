@@ -78,7 +78,7 @@ module.exports = function (app, db) {
                     options.course = course;
                     db.models.Quiz.find()
                         .where('_id').in(course.quizIds.map(el => el.quizId))
-                        .select('name').exec((err, quizzes) => {
+                        .select('name maxAttempts timeLimit minPassingGrade').exec((err, quizzes) => {
                             if (err) {
                                 res.json({ error: err.message });
                             } else {
@@ -89,11 +89,29 @@ module.exports = function (app, db) {
                                     sortLookupTable[el.quizId] = el.sortKey;
                                 })
 
-                                options.quizzes = Array.from(quizzes).sort((a, b) => {
+                                let quizzesSorted = Array.from(quizzes).sort((a, b) => {
                                     return sortLookupTable[a.id] - sortLookupTable[b.id]
                                 });
 
+                                let userQuizzes = req.user.quizzes;
                                 options.userId = req.user._id;
+                                options.quizzes = quizzesSorted.map(quiz => {
+                                    if (quiz.maxAttempts) {
+                                        let userAttempts = userQuizzes.reduce((acc,cur) => {
+                                            return (cur.quizId == quiz.id)? acc+1 : acc;
+                                        },0)
+    
+                                        quiz.userReachedMaxAttempts = (userAttempts >= quiz.maxAttempts);
+                                    }
+                                    
+                                    if (quiz.minPassingGrade) {
+                                        quiz.userPassed = userQuizzes
+                                            .filter(cur => cur.quizId == quiz.id && cur.score >= quiz.minPassingGrade)
+                                            .length > 0;
+                                    }
+
+                                    return quiz;
+                                })
 
                                 // Add messageboard threads to options
                                 db.models.Thread.find({ courseId: courseId }, (err, threads) => {

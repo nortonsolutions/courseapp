@@ -139,6 +139,9 @@ module.exports = function(app, db, upload, uploadProject) {
                     if (!userAnswers[questionId].correct) totalMissed++;
                 })
 
+                // How many questions were unanswered?  Add to totalMissed tally:
+                totalMissed += (totalQuestions - Object.keys(userAnswers).length);
+
                 let score = ((totalQuestions - totalMissed) / totalQuestions).toFixed(2);
 
                 user.quizzes = [...user.quizzes, {
@@ -388,6 +391,7 @@ module.exports = function(app, db, upload, uploadProject) {
                         quiz.description = req.body.quizDescription;
                         quiz.timeLimit = req.body.quizTimeLimit;
                         quiz.maxAttempts = req.body.quizMaxAttempts;
+                        quiz.minPassingGrade = req.body.quizMinPassingGrade;
                         quiz.save(err => {
                             if (err) {
                                 res.json({error: err.message});

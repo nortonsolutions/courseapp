@@ -44,6 +44,10 @@
   }
 }
 
+option:disabled {
+  color: red;
+}
+
 #modalBody .MathJax {
   padding-right: 15px !important;
 }

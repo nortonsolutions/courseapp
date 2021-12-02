@@ -27,7 +27,8 @@ module.exports = function (mongoose, callback) {
       questions: {type: [quizQuestionSchema], default: []},
       description: String,
       timeLimit: Number,
-      maxAttempts: Number
+      maxAttempts: Number,
+      minPassingGrade: Number
     })
 
     const QuizModel = mongoose.model('Quiz', quizSchema);

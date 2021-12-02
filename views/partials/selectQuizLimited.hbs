@@ -1,7 +1,7 @@
     <label>Module:</label>
     <select class="form-control" name="quizSelect">
     {{#each quizzes}}
-        <option value="{{_id}}" {{#if userReachedMaxAttempts}}disabled{{/if}} {{#if userPassed}}class="text-success"{{/if}}>{{name}}</option>
+        <option value="{{quiz.id}}" {{#if userReachedMaxAttempts}}disabled{{/if}}>{{quiz.name}}</option>
     {{/each}}
     </select>
 

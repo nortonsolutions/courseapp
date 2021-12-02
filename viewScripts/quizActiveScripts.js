@@ -12,7 +12,8 @@
  * { 
  *    userIdquizId: {
  *       userAnswers: {},
- *       timePassed: Number, (seconds)
+ *       timePassed: Number, (seconds),
+ *       currentQuestionIndex: Number
  *    } 
  * }
  * 
@@ -41,6 +42,7 @@ if (localStorage.getItem(userId + quizId)) {
     let quizObj = JSON.parse(localStorage.getItem(userId + quizId));
     userAnswers = quizObj.userAnswers;
     timePassed = quizObj.timePassed;
+    currentQuestionIndex = quizObj.currentQuestionIndex;
 } 
 
 const hideQuestionInterface = () => {
@@ -162,6 +164,14 @@ const applyImageLink = () => {
 }
 
 const getQuestion = (callback) => {
+
+    // Save the current answers, time passed, and current question index
+    localStorage.setItem(userId+quizId, JSON.stringify({
+        userAnswers: userAnswers,
+        timePassed: timePassed,
+        currentQuestionIndex: currentQuestionIndex
+    }));
+
     handleGet('/quizActive/' + courseId + '/' + quizId + '/' + currentQuestionIndex, (response) => {
         document.getElementById('quizQuestion').innerHTML = response;
         questionId = document.getElementById('questionId').value;
@@ -244,10 +254,7 @@ const saveCurrentAnswer = () => {
         userAnswers[questionId].answerEssay = document.getElementById('answerEssay').value;
         timePassed = store? store.getState()["timePassed"] : 0;
 
-        localStorage.setItem(userId+quizId, JSON.stringify({
-            userAnswers: userAnswers,
-            timePassed: timePassed
-        }));
+        // Save userAnswers - moved to getQuestion
         
     }
 }

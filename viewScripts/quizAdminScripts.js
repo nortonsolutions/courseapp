@@ -172,7 +172,8 @@ document.getElementById('saveQuiz').addEventListener('click', (e) => {
     handlePut('/quizAdmin/' + currentCourseId + '/' + currentQuizId, {
         quizDescription: document.getElementById('quizDescription').value,
         quizTimeLimit: document.getElementById('quizTimeLimit').value,
-        quizMaxAttempts: document.getElementById('quizMaxAttempts').value
+        quizMaxAttempts: document.getElementById('quizMaxAttempts').value,
+        quizMinPassingGrade: document.getElementById('quizMinPassingGrade').value
     }, (response) => {
         document.getElementById('feedback').innerHTML = response;
     });
