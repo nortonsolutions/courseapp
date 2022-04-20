@@ -96,12 +96,12 @@ module.exports = function(hbs) {
     });
 
     hbs.registerHelper("calculateRows", function(string) {
-        if (string.length == 0) return 4;
+        if (!string || string.length == 0) return 4;
         return Math.ceil(string.length / 45);
     });
     
     hbs.registerHelper("calculateRowsShort", function(string) {
-        if (string.length == 0) return 2;
+        if (!string || string.length == 0) return 2;
         return Math.ceil(string.length / 37);
     });
 
