@@ -4,9 +4,9 @@
 ## CourseApp
 #### Copyright Norton 2021
 
-<img src="courseApp_1.png" width="100" height="100"/>
-<img src="courseApp_2.png" width="100" height="100"/>
-<img src="courseApp_3.png" width="100" height="100"/>
+<img src="courseApp_1.png" width="400"/>
+<img src="courseApp_2.png" width="400"/>
+<img src="courseApp_3.png" width="400"/>
 
 This version assumes MongoDB is up and running on port 27017 
 and uses the DB called "CourseApp" (wiredtiger) by default.
