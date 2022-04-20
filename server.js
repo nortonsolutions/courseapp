@@ -4,6 +4,33 @@
 
 'use strict';
 
+// (function () {
+//   var r = require
+//   require = function (n) {
+//     try {
+//       return r(n)
+//     } catch (e) {
+//       console.log(`Module "${n}" was not found and will be installed`)
+//       r('child_process').exec(`npm i ${n}`, function (err, body) {
+//         if (err) {
+//           console.log(`Module "${n}" could not be installed. Try again or install manually`)
+//           console.log(body)
+//           exit(1)
+//         } else {
+//           console.log(`Module "${n}" was installed. Will try to require again`)
+//           try{
+//             return r(n)
+//           } catch (e) {
+//             console.log(`Module "${n}" could not be required. Please restart the app`)
+//             console.log(e)
+//             exit(1)
+//           }
+//         }
+//       })
+//     }
+//   }
+// })();
+
 var express     = require('express');
 var session     = require('express-session');
 var bodyParser  = require('body-parser');
@@ -61,9 +88,10 @@ database(mongoose, (db) => {
   app.use(helmet.dnsPrefetchControl({ allow: false }));
   app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
   
-  app.use('/public', express.static(process.cwd() + '/public'));
-  app.use('/cdn', express.static(process.cwd() + '/cdn'));
-  app.use('/viewScripts', express.static(process.cwd() + '/viewScripts'));
+  app.use('/', express.static(__dirname));
+  app.use('/public', express.static(__dirname + '/public'));
+  app.use('/cdn', express.static(__dirname + '/cdn'));
+  app.use('/viewScripts', express.static(__dirname + '/viewScripts'));
   
   app.use(cors({origin: '*'})); //For FCC testing purposes only
   
@@ -106,7 +134,7 @@ database(mongoose, (db) => {
   });
   
   //Start our server and tests!
-  app.listen(process.env.PORT || 3000, function () {
+  app.listen(process.env.PORT || 8080, function () {
     console.log("Listening on port " + process.env.PORT);
     if(process.env.NODE_ENV==='test') {
       console.log('Running Tests...');

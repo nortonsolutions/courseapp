@@ -4,10 +4,14 @@
 ## CourseApp
 #### Copyright Norton 2021
 
-This production version assumes MongoDB is up and running on port 27017 
+This version assumes MongoDB is up and running on port 27017 
 and uses the DB called "CourseApp" (wiredtiger) by default.
 
+Extract cdn.zip in current folder to create /cdn directory.
+
 -----
+
+Only applicable to pm2-windows-service:
 
 Auto-startup for pm2.exe service configured with pm2-windows-service module:
 
@@ -53,7 +57,7 @@ Logs are in C:\util\courseApp\utils\node\logs
 
 -----
 
-Development mode:
+Development mode (only applicable if you have the ./utils directory tree)
 
 If you want to run in development mode with a standalone DB (mmapv1), 
 you can startup a local MongoDB using 'startDB.bat' instead (port 27018).  

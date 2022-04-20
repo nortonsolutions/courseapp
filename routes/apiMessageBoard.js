@@ -91,7 +91,7 @@ module.exports = function(app,db) {
               }).slice(0, 3);
           })
           options.threads = threads;
-          res.render(process.cwd() + '/views/partials/messageBoard.hbs', options);
+          res.render('partials/messageBoard.hbs', options);
       })
   })
 

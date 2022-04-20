@@ -41,7 +41,7 @@ module.exports = function (app, db) {
 
         if (req.query.failedLogin) options.alertText = "Failed login.";
 
-        res.render(process.cwd() + '/views/index.hbs', options);
+        res.render('index.hbs', options);
         })
 
     app.route('/login')
@@ -98,7 +98,7 @@ module.exports = function (app, db) {
                 if (err) {
                 res.json({error: err.message});
                 } else {
-                res.render(process.cwd() + '/views/partials/selectUser.hbs', {users: users});
+                res.render('partials/selectUser.hbs', {users: users});
                 }
             })
             }
@@ -156,7 +156,7 @@ module.exports = function (app, db) {
     app.route('/main')
         // Get and render the main view:
         .get(ensureAuthenticated, (req,res) => {
-        res.render(process.cwd() + '/views/main.hbs', {
+        res.render('main.hbs', {
             showWelcome: true,
             user: req.user,
             admin: req.user.roles.includes('admin')
@@ -185,7 +185,7 @@ module.exports = function (app, db) {
                     res.json({error: err.message});
                     } else {
                     options.users = users;
-                    res.render(process.cwd() + '/views/admin.hbs', options);
+                    res.render('admin.hbs', options);
                     }
                 })
                 }
@@ -210,7 +210,7 @@ module.exports = function (app, db) {
                     res.json({error: err.message});
                 } else {
                     user.admin = req.user.roles.includes('admin');
-                    res.render(process.cwd() + '/views/partials/userUpdateForm.hbs', user);
+                    res.render('partials/userUpdateForm.hbs', user);
                 }
             })
         })
@@ -304,12 +304,12 @@ module.exports = function (app, db) {
                                 res.json({error: err.message});
                             } else {
                                 context.myCourses = courses;
-                                res.render(process.cwd() + '/views/profile.hbs', context);
+                                res.render('profile.hbs', context);
                             }
                         })
         
                     } else {
-                        res.render(process.cwd() + '/views/profile.hbs', context);
+                        res.render('profile.hbs', context);
                     }
                 })
                 
@@ -338,12 +338,12 @@ module.exports = function (app, db) {
                                         res.json({error: err.message});
                                     } else {
                                         context.myCourses = courses;
-                                        res.render(process.cwd() + '/views/publicProfile.hbs', context);
+                                        res.render('publicProfile.hbs', context);
                                     }
                                 })
                 
                             } else {
-                                res.render(process.cwd() + '/views/publicProfile.hbs', context);
+                                res.render('publicProfile.hbs', context);
                             }
                         });
                     });
@@ -356,6 +356,6 @@ module.exports = function (app, db) {
             let context = {
                 font: req.query.font
             }
-            res.render(process.cwd() + '/views/tryfont.hbs', context);
+            res.render('tryfont.hbs', context);
         })
 }

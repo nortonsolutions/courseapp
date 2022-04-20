@@ -58,7 +58,7 @@ module.exports = function (app, db) {
                     res.json({ error: err.message });
                 } else {
                     options.courses = doc
-                    res.render(process.cwd() + '/views/partials/selectCourse.hbs', options);
+                    res.render('partials/selectCourse.hbs', options);
                 }
             })
         })    
@@ -116,7 +116,7 @@ module.exports = function (app, db) {
                                 // Add messageboard threads to options
                                 db.models.Thread.find({ courseId: courseId }, (err, threads) => {
                                     options.threads = threads;
-                                    res.render(process.cwd() + '/views/course.hbs', options);
+                                    res.render('course.hbs', options);
                                 })
                             }
                         })
@@ -192,7 +192,7 @@ module.exports = function (app, db) {
                                             options.teachers = [...options.teachers, userCopy];
                                         }
                                     })
-                                    res.render(process.cwd() + '/views/courseAdmin.hbs', options);
+                                    res.render('courseAdmin.hbs', options);
                                 })
                             }
                         })
@@ -268,7 +268,7 @@ module.exports = function (app, db) {
                                                 options.teachers = [...options.teachers, user]
                                             }
                                         })
-                                        res.render(process.cwd() + '/views/partials/courseAdminInstructors.hbs', options);
+                                        res.render('partials/courseAdminInstructors.hbs', options);
                                     });
                                 })
                             })
@@ -350,7 +350,7 @@ module.exports = function (app, db) {
                                         options.teachers = [...options.teachers, user]
                                     }
                                 })
-                                res.render(process.cwd() + '/views/partials/courseAdminInstructors.hbs', options);
+                                res.render('partials/courseAdminInstructors.hbs', options);
                             });
                         }
                     })
@@ -390,7 +390,7 @@ module.exports = function (app, db) {
                                     });
 
                                     options.quizzesHighIndex = quizzes.length - 1;
-                                    res.render(process.cwd() + '/views/partials/modalModules.hbs', options);
+                                    res.render('partials/modalModules.hbs', options);
                                 }
                             })
                     }
@@ -410,7 +410,7 @@ module.exports = function (app, db) {
                 } else {
                     options.courses = courses;
                     options.userId = req.user._id;
-                    res.render(process.cwd() + '/views/courseSelect.hbs', options);
+                    res.render('courseSelect.hbs', options);
                 }
             })
         })

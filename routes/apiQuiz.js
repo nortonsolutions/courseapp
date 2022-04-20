@@ -84,7 +84,7 @@ module.exports = function(app, db, upload, uploadProject) {
                             return sortLookupTable[a.id] - sortLookupTable[b.id]
                         });
 
-                        res.render(process.cwd() + '/views/partials/selectQuiz.hbs', options);
+                        res.render('partials/selectQuiz.hbs', options);
                     }
                 })
             }
@@ -260,7 +260,7 @@ module.exports = function(app, db, upload, uploadProject) {
                 } else {
                     options.quiz = quiz;
                     options.questionsHighIndex = quiz.questions.length - 1;
-                    res.render(process.cwd() + '/views/partials/modalQuestions.hbs', options);
+                    res.render('partials/modalQuestions.hbs', options);
                 }
             })
         })
@@ -284,7 +284,7 @@ module.exports = function(app, db, upload, uploadProject) {
                 options.quiz = quiz;
                 options.courseId = courseId;
                 options.questionsHighIndex = quiz.questions.length - 1;
-                res.render(process.cwd() + '/views/quizAdmin.hbs', options);
+                res.render('quizAdmin.hbs', options);
                 }
             })
             })
@@ -418,7 +418,7 @@ module.exports = function(app, db, upload, uploadProject) {
                 res.json({error: err.message});
                 } else {
                 options.quiz = quiz
-                res.render(process.cwd() + '/views/partials/questionList.hbs', options);
+                res.render('partials/questionList.hbs', options);
                 }
             })
         })
@@ -435,14 +435,14 @@ module.exports = function(app, db, upload, uploadProject) {
 
             if (questionId == 0) {
                 options.currentQuestion = blankQuestion;
-                res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
+                res.render('partials/questionDetail.hbs', options);
             } else {
                 db.models.Quiz.findOne({_id: quizId}, (err,quiz) => {
                 if (err) {
                     res.json({error: err.message});
                 } else {
                     options.currentQuestion = quiz.questions.find(el => el._id == questionId);
-                    res.render(process.cwd() + '/views/partials/questionDetail.hbs', options);
+                    res.render('partials/questionDetail.hbs', options);
                 }
                 })
             }
@@ -507,7 +507,7 @@ module.exports = function(app, db, upload, uploadProject) {
 
               options.courseId = courseId;
               options.userId = req.user._id;
-              res.render(process.cwd() + '/views/quizActive.hbs', options);
+              res.render('quizActive.hbs', options);
             }
           })
     })
@@ -542,7 +542,7 @@ module.exports = function(app, db, upload, uploadProject) {
             } else {
               options.totalQuestions = quiz.questions.length  
               options.currentQuestion = quiz.questions[req.params.index];
-              res.render(process.cwd() + '/views/partials/quizQuestion.hbs', options);
+              res.render('partials/quizQuestion.hbs', options);
             }
           })
     })
