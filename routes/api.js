@@ -34,7 +34,7 @@ module.exports = function (app, db) {
         
         
         let options = {
-            welcomeMessage: "Welcome to CourseApp!",
+            welcomeMessage: "Welcome to Norton CourseApp!",
             showRegistration: false,
             showLogin: true
         }
