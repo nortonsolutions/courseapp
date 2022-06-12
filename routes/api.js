@@ -32,6 +32,29 @@ module.exports = function (app, db) {
         // Get and render the index view
         .get((req,res) => {
         
+        if (req.hostname == "www.quizzapp.com") {
+            let options = {
+                welcomeMessage: "Welcome to Norton CourseApp!",
+                showRegistration: false,
+                showLogin: true
+            }
+    
+            if (req.query.failedLogin) options.alertText = "Failed login.";
+            res.render('index.hbs', options);
+
+        } else {
+            let options = {
+                welcomeMessage: "Welcome!",
+            }
+    
+            res.render('indexNorton.hbs', options);
+        }
+    })
+
+    app.route('/courseApp')
+        // Get and render the index view
+        .get((req,res) => {
+        
         
         let options = {
             welcomeMessage: "Welcome to Norton CourseApp!",

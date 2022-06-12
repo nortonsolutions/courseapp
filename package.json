@@ -27,7 +27,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js -e js,hbs"
   },
   "author": "Dave Norton",
   "license": "ISC"
