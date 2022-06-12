@@ -2,7 +2,8 @@
  * Database strategy - Norton 2021
  * Based on Mongoose.
  */
-
+const dotenv = require('dotenv');
+dotenv.config({ path: './.env'});
 
 module.exports = function (mongoose, callback) {
 
@@ -109,7 +110,13 @@ module.exports = function (mongoose, callback) {
 
     const CourseModel = mongoose.model('Course', courseSchema);
 
-    mongoose.connect(CONNECTION_STRING, { useMongoClient: true })
+    const clientOptions = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+
+    mongoose.connect(CONNECTION_STRING, clientOptions)
+
     .then(
       (db) => {
         callback(db);

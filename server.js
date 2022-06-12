@@ -37,11 +37,12 @@ var bodyParser  = require('body-parser');
 var cors        = require('cors');
 var fs          = require('fs');
 var multer      = require('multer');
+const dotenv    = require('dotenv');
 
 var auth                     = require('./auth.js');
 var apiRoutes                = require('./routes/api.js');
 var apiCourseRoutes          = require('./routes/apiCourse.js')
-var apiMessageboardRoutes    = require('./routes/apiMessageboard.js')
+var apiMessageboardRoutes    = require('./routes/apiMessageBoard.js')
 var apiQuizRoutes            = require('./routes/apiQuiz.js')
 var hbsHelpers               = require('./public/handlebarsHelpers.js')
 var helmet                   = require('helmet');
@@ -49,6 +50,7 @@ var passport                 = require('passport');
 var hbs                      = require('express-hbs');
 
 const mongoose               = require('mongoose');
+dotenv.config({ path: './.env'});
 
 // For general-purpose uploads
 var storage = multer.diskStorage({
