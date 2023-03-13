@@ -4,6 +4,7 @@ class Character {
     this.name = name;
     this.strength = strength;
     this.hitPoints = hitPoints;
+    this.maxHitPoints = hitPoints;
   }
 
   // Method which prints all of the stats for a character
@@ -24,6 +25,10 @@ class Character {
     return true;
   }
 
+  resetHitPoints() {
+    this.hitPoints = this.maxHitPoints;
+  }
+
   // Method which takes in a second object and decreases their "hitPoints" by this character's strength
   attack(opponent) {
     console.log(`${this.name} hit ${opponent.name} for ${this.strength}`);
@@ -41,19 +46,33 @@ let graceTurn = true;
 grace.printStats();
 dijkstra.printStats();
 
-const turnInterval = setInterval(() => {
-  // If either character is not alive, end the game
-  if (!grace.isAlive() || !dijkstra.isAlive()) {
-    clearInterval(turnInterval);
-    console.log('Game over!');
-  } else if (graceTurn) {
-    grace.attack(dijkstra);
-    dijkstra.printStats();
-  } else {
-    dijkstra.attack(grace);
-    grace.printStats();
-  }
+var runBattle
+(runBattle = () => { 
 
-  // Switch turns
-  graceTurn = !graceTurn;
-}, 2000);
+  const turnInterval = setInterval(() => {
+    // If either character is not alive, end the game
+    if (!grace.isAlive() || !dijkstra.isAlive()) {
+      clearInterval(turnInterval);
+      console.log('Game over!');
+    } else if (graceTurn) {
+      grace.attack(dijkstra);
+      dijkstra.printStats();
+    } else {
+      dijkstra.attack(grace);
+      grace.printStats();
+    }
+
+    // Switch turns
+    graceTurn = !graceTurn;
+  }, 2000);
+
+})()
+
+const runAgain = () => {
+  grace.resetHitPoints();
+  dijkstra.resetHitPoints();
+  graceTurn = true;
+  grace.printStats();
+  dijkstra.printStats();
+  runBattle();
+}

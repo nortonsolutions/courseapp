@@ -11,7 +11,53 @@
 <body>
     <img width="100px" src="/public/favicon.ico" alt="CourseApp">
     <div id="title">ES6 Classes demonstration</div>
+
+    <div id="shape">
+        <div id="shape-title" style="font-weight: bolder">Shape</div>
+        <div id="shape-description">A shape is a two-dimensional object that has area and perimeter attributes.</div>
+        <div>
+            
+            <div>
+                <label for="shape-area-input">Shape area:</label><br>
+                <input type="number" id="shape-area-input" name="shape-area-input">
+            </div>
+            
+            <div>
+                <label for="shape-perimeter-input">Shape perimeter:</label><br>
+                <input type="number" id="shape-perimeter-input" name="shape-perimeter-input">
+            </div>
+            
+            <button id="shape-button">Print info for my shape!  (Watch the console.)</button><br><br>
+        </div>
+    </div>
+
+    <div id="character">
+        <div id="character-title" style="font-weight: bolder">Character</div>
+        <div id="character-description">A character has a name, strength, and hitpoints attributes.
+            <p>In this example we will create two unique character objects using the "Character" class constructor: </p>
+            <p>
+                const grace = new Character('Grace', 30, 75);<br>
+                const dijkstra = new Character('Dijkstra', 20, 105);
+            </p>
+            <button id="character-button">Restart the battle!  (Watch the console.)</button>
+        </div>
+    </div>
+
+
     <script src="shape.js"></script>
+    <script src="character.js"></script>
     
+    <script>
+        document.getElementById('shape-button').addEventListener('click', () => {
+            let shapeArea = document.getElementById('shape-area-input').value
+            let shapePerimeter = document.getElementById('shape-perimeter-input').value
+            let shape = new Shape(shapeArea, shapePerimeter)
+            shape.printInfo()
+        })
+
+        document.getElementById('character-button').addEventListener('click', () => {
+            runAgain()
+        })
+    </script>
 </body>
 </html>
