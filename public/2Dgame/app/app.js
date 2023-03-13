@@ -1,5 +1,5 @@
 import { SceneController } from "./scene/sceneController.js";
-import { EventDepot } from "./public/eventDepot.js"
+import { EventDepot } from "../public/eventDepot.js"
 import {messageBoxController} from "./errorMessageContoller.js";
 import { Modal } from "./modal.js"
 
