@@ -36,7 +36,7 @@ class SceneController {
     this.messageShowingItem = false;
     
     this.terrainImg = document.createElement("img");
-    this.terrainImg.src = `/public/2Dgame/assets/images/${this.levelTemplate.name}/${this.levelTemplate.terrain.image}`;
+    this.terrainImg.src = `assets/images/${this.levelTemplate.name}/${this.levelTemplate.terrain.image}`;
 
   }
 
@@ -99,7 +99,7 @@ class SceneController {
             img = this.terrainImg;            
           } else {
             img = document.createElement("img");
-            img.src = `/public/2Dgame/assets/images/${c.name}/${c.image}`;
+            img.src = `assets/images/${c.name}/${c.image}`;
           }
           // console.log(`${c.name} - ${c.x},${c.y} ${c.image}`)
           this.context.drawImage(img, c.cycle * c.width, 0, c.width, c.height, c.x - this.hero.xOffset, c.y - this.hero.yOffset, c.width, c.height);

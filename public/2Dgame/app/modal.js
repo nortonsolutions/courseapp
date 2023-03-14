@@ -48,7 +48,7 @@ class Modal {
   };
 
   loadTemplate = (elementId, template, data, callback) => {
-    handleGet(`/views/${template}.hbs`, response => {
+    handleGet(`views/${template}.hbs`, response => {
       let template = Handlebars.compile(response);
       document.getElementById(elementId).innerHTML = template(data);
       if (callback) callback();
