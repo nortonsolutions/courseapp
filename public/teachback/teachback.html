@@ -7,51 +7,56 @@
     <link id="favicon" rel="icon" href="/public/favicon.ico" type="image/x-icon">
     <title>Full Stack Flex Teach Back</title>
     <link rel="stylesheet" href="/public/teachback/teachback.css">
+
+    <link rel="stylesheet" href="/cdn/js/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous" />
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script> -->
+    <script src="/cdn/js/bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <img width="100px" src="/public/favicon.ico" alt="CourseApp">
-    <div id="title">ES6 Classes demonstrations</div>
-    <div id="description">These pages demonstrate the use of ES6 classes, inheritance, and modules.</div>
-    <small>Open Developer Tools (F12 or Ctrl-Shift-I to see the source.)</small>
+    <main>
+        <img width="100px" src="/public/favicon.ico" alt="CourseApp">
+        <div id="title">ES6 Classes demonstrations</div>
+        <div id="description">These pages demonstrate the use of ES6 classes, inheritance, and modules.</div>
+        <small>Open Developer Tools (F12 or Ctrl-Shift-I to see the source.)</small>
 
-    <p><a href="../2Dgame/" target="_blank">Simple 2D scroller</a></p>
-    <small>Try moving around with the arrow keys, click G to grab, I for inventory.  (Very unfinished; just a sample!)</small>
-    <p><a href="../virtuallife2021/" target="_blank">Virtual Life</a></p>
-    <small>Different colors represent different lifeforms -- eating, aging, moving, reproducing, planting, etc.</small>  
+        <p><a href="../2Dgame/" target="_blank">Simple 2D scroller</a></p>
+        <small>Try moving around with the arrow keys, click G to grab, I for inventory.  (Very unfinished; just a sample!)</small>
+        <p><a href="../virtuallife2021/" target="_blank">Virtual Life</a></p>
+        <small>Different colors represent different lifeforms -- eating, aging, moving, reproducing, planting, etc.</small>  
 
-    <br>
-    <p>What we'll cover in this lesson:</p>
-    <div id="shape">
-        <div id="shape-title" style="font-weight: bolder">Shape</div>
-        <div id="shape-description">A shape is a two-dimensional object that has area and perimeter attributes.</div>
-        <div>
-            
+        <br>
+        <p>What we'll cover in this lesson:</p>
+        <div id="shape">
+            <div id="shape-title" style="font-weight: bolder">Shape</div>
+            <div id="shape-description">A shape is a two-dimensional object that has area and perimeter attributes.</div>
             <div>
-                <label for="shape-area-input">Shape area:</label><br>
-                <input type="number" id="shape-area-input" name="shape-area-input">
+                
+                <div>
+                    <label for="shape-area-input">Shape area:</label><br>
+                    <input type="number" id="shape-area-input" name="shape-area-input">
+                </div>
+                
+                <div>
+                    <label for="shape-perimeter-input">Shape perimeter:</label><br>
+                    <input type="number" id="shape-perimeter-input" name="shape-perimeter-input">
+                </div>
+                
+                <button id="shape-button">Print info for my shape!  (Watch the console.)</button><br><br>
             </div>
-            
-            <div>
-                <label for="shape-perimeter-input">Shape perimeter:</label><br>
-                <input type="number" id="shape-perimeter-input" name="shape-perimeter-input">
+        </div>
+
+        <div id="character">
+            <div id="character-title" style="font-weight: bolder">Character</div>
+            <div id="character-description">A character has a name, strength, and hitpoints attributes.
+                <p>In this example we will create two unique character objects using the "Character" class constructor: </p>
+                <p>
+                    const grace = new Character('Grace', 30, 75);<br>
+                    const dijkstra = new Character('Dijkstra', 20, 105);
+                </p>
+                <button id="character-button">Restart the battle!  (Watch the console.)</button>
             </div>
-            
-            <button id="shape-button">Print info for my shape!  (Watch the console.)</button><br><br>
         </div>
-    </div>
-
-    <div id="character">
-        <div id="character-title" style="font-weight: bolder">Character</div>
-        <div id="character-description">A character has a name, strength, and hitpoints attributes.
-            <p>In this example we will create two unique character objects using the "Character" class constructor: </p>
-            <p>
-                const grace = new Character('Grace', 30, 75);<br>
-                const dijkstra = new Character('Dijkstra', 20, 105);
-            </p>
-            <button id="character-button">Restart the battle!  (Watch the console.)</button>
-        </div>
-    </div>
-
+    </main>
 
     <script src="shape.js"></script>
     <script src="character.js"></script>
