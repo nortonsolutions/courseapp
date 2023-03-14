@@ -13,23 +13,29 @@
     <script src="/cdn/js/bootstrap/4.1.3/js/bootstrap.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <main>
+    <div class="col-md-12 text-center justify-content-md-center">
         <img width="100px" src="/public/favicon.ico" alt="CourseApp">
-        <div id="title">ES6 Classes demonstrations</div><br>
+        <div id="title" >ES6 Classes demonstrations</div><br>
         <div id="description">These pages demonstrate the use of ES6 classes, inheritance, and modules.</div>
         <small>Open Developer Tools (F12 or Ctrl-Shift-I to see the source.)</small>
 
-        <p><a href="../2Dgame/" target="_blank">Simple 2D scroller</a></p>
-        <small>Try moving around with the arrow keys, click G to grab, I for inventory.  (Very unfinished; just a sample!)</small>
-        <p><a href="../virtuallife2021/" target="_blank">Virtual Life</a></p>
-        <small>Different colors represent different lifeforms -- eating, aging, moving, reproducing, planting, etc.</small>  
+        <div class="pt-4 text-center">
+            <a class="font-weight-bold" href="../2Dgame/" target="_blank">Simple 2D scroller</a><br>
+            <label class="small">Try moving around with the arrow keys, click G to grab, I for inventory.  (Very unfinished; just a sample!)</label><br>
+        </div>
 
+        <div>
+            <a class="font-weight-bold" href="../virtuallife2021/" target="_blank">Virtual Life</a><br>
+            <label class="small">Different colors represent different lifeforms -- eating, aging, moving, reproducing, planting, etc</label><br>
+        </div>
+        
         <br>
-        <p>What we'll cover in this lesson:</p>
-        <div id="shape">
+        <hr>
+        <div class="py-3">What we'll cover in this lesson:</div>
+        <div class="col-md-12 text-center">
             <div id="shape-title" style="font-weight: bolder">Shape</div>
             <div id="shape-description">A shape is a two-dimensional object that has area and perimeter attributes.</div>
-            <div class="row">
+            <div class="row justify-content-center">
                 <div>
                     <label for="shape-area-input">Shape area:</label><br>
                     <input type="number" id="shape-area-input" name="shape-area-input">
@@ -42,9 +48,6 @@
             </div>
                 
             <button id="shape-button">Print info for my shape!  (Watch the console.)</button><br><br>
-        </div>
-
-        <div id="character" class="d-flex">
             <div id="character-title" style="font-weight: bolder">Character</div>
             <div id="character-description">A character has a name, strength, and hitpoints attributes.
                 <p>In this example we will create two unique character objects using the "Character" class constructor: </p>
@@ -55,12 +58,12 @@
                 <button id="character-button">Restart the battle!  (Watch the console.)</button>
             </div>
         </div>
-    </main>
+    </div>
 
 
-    <footer class="d-flex pt-4">
-        <p>(: 2023 Dave Norton - dnorton211153@gmail.com :)</p>
-    </footer>
+    <div class="py-4 col-md-12 text-center text-info">
+        (: 2023 Dave Norton - dnorton211153@gmail.com :)
+    </div>
 
     <script src="shape.js"></script>
     <script src="character.js"></script>
