@@ -13,6 +13,11 @@ and uses the DB called "CourseApp" (wiredtiger) by default.
 
 Extract cdn.zip in current folder to create /cdn directory.
 
+Versioning:
+
+- 1.0.0: (2021) Initial version
+- 1.0.1: (May 2024) Updated this readme.  :)
+
 -----
 
 Only applicable to pm2-windows-service:
