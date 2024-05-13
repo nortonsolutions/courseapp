@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <title>David Andrew Norton</title>
@@ -7,42 +8,48 @@
     {{> headerStuff jQuery=true fontAwesome=false bootStrap=true }}
 
 </head>
+
 <body>
     <div class="outerContainer">
 
         <h2>{{ welcomeMessage }}<img width="100px" src="/public/favicon.ico" alt="CourseApp"></h2>
-        
         <a target="_blank" href="https://www.linkedin.com/in/davidandrewnorton/">LinkedIn Profile</a><br>
+        <h4>Coding Samples</h4>
+            <ul>
+                <li><a target="_blank" href="https://github.com/dnorton211153">GitHub Profile + Projects</a><br></li>
+                <li><a target="_blank" href="/courseApp">Norton CourseApp</a><br></li>
+                <li><a target="_blank" href="http://davidandrewnorton.com:3001">Norton 3D Adventure</a><br></li>
+                <li><a target="_blank" href="https://davidandrewnorton.com">GoLang REST AI w/ Google Authentication</a><br></li>
+            </ul>
         
-        <h4 class="pt-3">Coding Samples</h4>
-        <a target="_blank" href="https://github.com/dnorton211153">GitHub Profile + Projects</a><br>
-        <a target="_blank" href="/courseApp">Norton CourseApp (Legacy w/ Node backend)</a><br>
-        <a target="_blank" href="https://davidandrewnorton.com">Norton CourseApp (GoLang+)</a><br> 
-        <a target="_blank" href="http://davidandrewnorton.com:3001">Norton 3D Adventure</a><br>
-        <a target="_blank" href="https://davidandrewnorton.com">GoLang REST api w/ Google Authentication</a><br>
+        <h4>AI/Machine Learning Projects</h4>
+            <ul>
+                <li><a href="https://www.davidandrewnorton.com/ai/genetic.html">Genetic Algorithm</a></li>
+                <li><a href="https://github.com/dnorton211153/aiml-1">Road-sign detection</a> : <a target=href="https://youtu.be/llop-weoDH8">5-minute YouTube overview</a>
+                <li>Almost ready: Driver Cam video analysis with superimposed speed and lane-line projection.</li>
+                {{!-- under construction? <a href="https://www.davidandrewnorton.com/ai/roadSignDetection.html"> --}}
+            </ul>
+
         
-	<h4 class="pt-3">AI/Machine Learning projects</h4>
+        <h4>Writings</h4>
+            <h5>The 144,000 Trilogy</h5>
+            <ul>
+                <li><a target="_blank" href="https://www.amazon.com/Watchful-One-Tree-Life-ebook/dp/B0B4B2NS2P">The Watchful One and the Tree of Life</a></li>
+                <li>Coming soon: books two and threeThe Watchful One and the Tree of Knowledge, prequel/sequel<br></li>  
+            </ul>
 
- 	<ul>
-	    <li><a target="_blank" href="https://www.davidandrewnorton.com/ai/genetic.html">Genetic algorithm</a></li>
-	    <li><a href="https://github.com/dnorton211153/aiml-1">Road-sign detection</a></li> 
-		&amp; <a href="https://youtu.be/llop-weoDH8">5-minute YouTube overview</a><br>
-            <li><a href="http://davidandrewnorton.com:8000/speedTest/">Speed prediction & object detection</a></li>
-	</ul>
+        <h4>Artwork</h4>
+            <ul>
+                <li><a target="_blank" href="https://16colo.rs/group/lapse">Lapse Productions (1994)</a></li>
+                <li><a target="_blank" href="http://davidandrewnorton.com/public/watchfulOne/watchfulOne.html">Watchful One - AI impressions</a></li>
+            </ul>
 
-        <h4 class="pt-3">Writings, Artwork, AI</h4>
-        <a target="_blank" href="https://www.amazon.com/Watchful-One-Tree-Life-ebook/dp/B0B4B2NS2P">The Watchful One and the Tree of Life</a><br>
-        <a target="_blank" href="http://davidandrewnorton.com/public/watchfulOne/watchfulOne.html">Watchful One - AI impressions</a><br>
-        <a target="_blank" href="https://16colo.rs/group/lapse">Lapse Productions (1994)</a><br>
 
-        <h4 class="pt-3">Teaching</h4>
-        <a target="_blank" href="http://davidandrewnorton.com/public/teachback/teachback.html">Teachback Lesson</a><br>
+        {{!-- <h4>Miscellaneous/Teaching</h4> --}}
+            {{!-- <a target="_blank" href="http://davidandrewnorton.com/public/teachback/teachback.html">Teachback Lesson</a><br> --}}
 
         {{!-- <h4>Music</h4>
         <a href="http://davidandrewnorton.com/public/music/music.html">A few tunes from Kane County</a><br> --}}
-
-        {{!-- <h4>Other</h4> --}}
-        {{!-- <a href="http://davidandrewnorton.com/public/Desires2.pdf">Feelings</a><br> --}}
     </div>
 
     <script>
@@ -50,5 +57,60 @@
 
     </script>
 
+    <style>
+        .outerContainer {
+            margin: 0 auto;
+            width: 80%;
+            padding: 10px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        h4 {
+            margin-top: 20px;
+        }
+
+        ul {
+            margin-top: 10px;
+        }
+
+        a {
+            margin-top: 10px;
+        }
+
+        h5 {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style: none; /* removes the default bullet points */
+            padding: 0; /* removes the default padding */
+            margin-top: 10px;
+        }
+
+        li {
+            padding: 10px 0; /* adds vertical padding to each list item */
+            border-bottom: 1px solid #ddd; /* adds a bottom border to each list item */
+        }
+
+        li:last-child {
+            border-bottom: none; /* removes the bottom border from the last list item */
+        }
+
+        a {
+            color: #3498db; /* changes the link color to a modern blue */
+            text-decoration: none; /* removes the default underline */
+            transition: color 0.3s ease; /* adds a transition effect when the link color changes */
+        }
+
+        a:hover {
+            color: #2980b9; /* changes the link color to a darker blue when hovered */
+        }
+
+
+
+
+    </style>
 </body>
-</html>
