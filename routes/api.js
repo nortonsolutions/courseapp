@@ -32,7 +32,7 @@ module.exports = function (app, db) {
         // Get and render the index view
         .get((req,res) => {
         
-        if (req.hostname == "www.quizzapp.com") {
+        if (req.hostname == "www.quizzap.net" || req.hostname == "quizzap.net") {
             let options = {
                 welcomeMessage: "Welcome to Norton CourseApp!",
                 showRegistration: false,
