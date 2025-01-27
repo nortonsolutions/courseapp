@@ -52,6 +52,10 @@ var hbs                      = require('express-hbs');
 const mongoose               = require('mongoose');
 dotenv.config({ path: './.env'});
 
+const PORT = process.env.PORT || 3000;
+const HOSTNAME = process.env.HOSTNAME || 'localhost';
+
+
 // For general-purpose uploads
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -123,7 +127,7 @@ database(mongoose, (db) => {
   
   auth(app, db.models.User);
   
-  apiRoutes(app, db);
+  apiRoutes(app, db, `${HOSTNAME}`);
   apiCourseRoutes(app, db);
   apiQuizRoutes(app, db, upload, uploadProject);
   apiMessageboardRoutes(app,db);
@@ -136,8 +140,8 @@ database(mongoose, (db) => {
   });
   
   //Start our server and tests!
-  app.listen(process.env.PORT || 8080, function () {
-    console.log("Listening on port " + process.env.PORT);
+  app.listen(PORT, function () {
+    console.log(`Listening on ${HOSTNAME}:${PORT}`);
     if(process.env.NODE_ENV==='test') {
       console.log('Running Tests...');
       setTimeout(function () {

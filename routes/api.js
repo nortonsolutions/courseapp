@@ -9,7 +9,7 @@ var expect             = require('chai').expect;
 var bcrypt             = require('bcrypt');
 var passport           = require('passport');
 
-module.exports = function (app, db) {
+module.exports = (app, db, HOSTNAME) => {
 
     // ensureAuthenticated
     const ensureAuthenticated = (req,res,next) => {
@@ -36,7 +36,7 @@ module.exports = function (app, db) {
             let options = {
                 welcomeMessage: "Welcome to Norton CourseApp!",
                 showRegistration: false,
-                showLogin: true
+                showLogin: true            
             }
     
             if (req.query.failedLogin) options.alertText = "Failed login.";
@@ -45,6 +45,7 @@ module.exports = function (app, db) {
         } else {
             let options = {
                 welcomeMessage: "Welcome!",
+                hostName: `${HOSTNAME}`
             }
     
             res.render('indexNorton.hbs', options);
