@@ -28,7 +28,7 @@ module.exports = (app, db, HOSTNAME) => {
         }     
     };
 
-    app.route('/')
+    app.route('/althome')
         // Get and render the index view
         .get((req,res) => {
         
@@ -52,7 +52,7 @@ module.exports = (app, db, HOSTNAME) => {
         }
     })
 
-    app.route('/courseApp')
+    app.route('/')
         // Get and render the index view
         .get((req,res) => {
         
