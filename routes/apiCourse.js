@@ -132,7 +132,7 @@ module.exports = function (app, db) {
                             // Add messageboard threads to options
                             db.models.Thread.find({ courseId: courseId }, (err, threads) => {
                                 options.threads = threads;
-                                options.readonly = !(req.user.roles.includes('guest'));
+                                options.readonly = req.user.roles.includes('guest');
                                 res.render('course.hbs', options);
                             })
                         }
