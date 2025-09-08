@@ -61,68 +61,79 @@ module.exports = function (app, db) {
                     res.render('partials/selectCourse.hbs', options);
                 }
             })
-        })    
+        })   
+    
+    coursePage = (req, res) => {
+        let options = { admin: req.user.roles.includes('admin') };
+        let courseId = req.params.courseId;
+
+        db.models.Course.findOne({ _id: courseId }, (err, course) => {
+            if (err) {
+                res.json({ error: err.message });
+            } else {
+                options.course = course;
+                db.models.Quiz.find()
+                    .where('_id').in(course.quizIds.map(el => el.quizId))
+                    .select('name maxAttempts timeLimit minPassingGrade').exec((err, quizzes) => {
+                        if (err) {
+                            res.json({ error: err.message });
+                        } else {
+
+                            // Sort quizzes according to course quizIds sortKey
+                            var sortLookupTable = {}
+                            Array.from(course.quizIds).forEach(el => {
+                                sortLookupTable[el.quizId] = el.sortKey;
+                            })
+
+                            let quizzesSorted = Array.from(quizzes).sort((a, b) => {
+                                return sortLookupTable[a.id] - sortLookupTable[b.id]
+                            });
+
+                            let userQuizzes = req.user.quizzes;
+                            options.userId = req.user._id;
+                            options.quizzes = quizzesSorted.map(quiz => {
+                                if (quiz.maxAttempts) {
+                                    let userAttempts = userQuizzes.reduce((acc,cur) => {
+                                        return (cur.quizId == quiz.id)? acc+1 : acc;
+                                    },0)
+
+                                    quiz.userReachedMaxAttempts = (userAttempts >= quiz.maxAttempts);
+                                }
+                                
+                                if (quiz.minPassingGrade) {
+                                    quiz.userPassed = userQuizzes
+                                        .filter(cur => cur.quizId == quiz.id && cur.score >= quiz.minPassingGrade)
+                                        .length > 0;
+                                }
+
+                                return quiz;
+                            })
+
+                            // Add messageboard threads to options
+                            db.models.Thread.find({ courseId: courseId }, (err, threads) => {
+                                options.threads = threads;
+                                res.render('course.hbs', options);
+                            })
+                        }
+                    })
+            }
+        })
+    }
+
+    // Special case for "store" course which bypasses authentication
+    app.route('/course/68ba5293871ee5ae992b5d50')
+        .get((req, res) => {
+            if (!req.user) {
+                req.user = { _id: "dummyUserId", roles: ["student"], quizzes: [] };
+            }
+            coursePage(req, res);
+        });
 
     app.route('/course/:courseId')
 
         .get(ensureAuthenticated, (req, res) => {
-
-
-            let options = { admin: req.user.roles.includes('admin') };
-            let courseId = req.params.courseId;
-
-            db.models.Course.findOne({ _id: courseId }, (err, course) => {
-                if (err) {
-                    res.json({ error: err.message });
-                } else {
-                    options.course = course;
-                    db.models.Quiz.find()
-                        .where('_id').in(course.quizIds.map(el => el.quizId))
-                        .select('name maxAttempts timeLimit minPassingGrade').exec((err, quizzes) => {
-                            if (err) {
-                                res.json({ error: err.message });
-                            } else {
-
-                                // Sort quizzes according to course quizIds sortKey
-                                var sortLookupTable = {}
-                                Array.from(course.quizIds).forEach(el => {
-                                    sortLookupTable[el.quizId] = el.sortKey;
-                                })
-
-                                let quizzesSorted = Array.from(quizzes).sort((a, b) => {
-                                    return sortLookupTable[a.id] - sortLookupTable[b.id]
-                                });
-
-                                let userQuizzes = req.user.quizzes;
-                                options.userId = req.user._id;
-                                options.quizzes = quizzesSorted.map(quiz => {
-                                    if (quiz.maxAttempts) {
-                                        let userAttempts = userQuizzes.reduce((acc,cur) => {
-                                            return (cur.quizId == quiz.id)? acc+1 : acc;
-                                        },0)
-    
-                                        quiz.userReachedMaxAttempts = (userAttempts >= quiz.maxAttempts);
-                                    }
-                                    
-                                    if (quiz.minPassingGrade) {
-                                        quiz.userPassed = userQuizzes
-                                            .filter(cur => cur.quizId == quiz.id && cur.score >= quiz.minPassingGrade)
-                                            .length > 0;
-                                    }
-
-                                    return quiz;
-                                })
-
-                                // Add messageboard threads to options
-                                db.models.Thread.find({ courseId: courseId }, (err, threads) => {
-                                    options.threads = threads;
-                                    res.render('course.hbs', options);
-                                })
-                            }
-                        })
-                }
-            })
-        })
+            coursePage(req, res);   
+        });
 
     app.route('/courseAdmin')
 
