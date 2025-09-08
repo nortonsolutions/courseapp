@@ -75,6 +75,8 @@ module.exports = function (app, db) {
         let options = { admin: req.user.roles.includes('admin') };
         let courseId = req.params.courseId;
 
+        console.log('Looking up courseId: ' + courseId);
+
         db.models.Course.findOne({ _id: courseId }, (err, course) => {
             if (err) {
                 res.json({ error: err.message });
@@ -88,7 +90,7 @@ module.exports = function (app, db) {
                 if (!course.quizIds) {
                     course.quizIds = [];
                 }
-                
+
                 options.course = course;
                 db.models.Quiz.find()
                     .where('_id').in(course.quizIds.map(el => el.quizId))
