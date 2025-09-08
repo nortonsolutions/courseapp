@@ -67,7 +67,8 @@ module.exports = function (app, db) {
         if (!req.user) {
             req.user = { 
                 roles: ['student'],
-                quizzes: [], 
+                quizzes: [],
+                quizIds: [],
                 _id: 0
             };
         }  
