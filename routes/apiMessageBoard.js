@@ -60,10 +60,9 @@ module.exports = function(app,db) {
   // checkIfTeacher
   const setCurrentTeacher = (req, res, next) => {
 
-      if (!req.user || !req.user.roles) {
-          req.user.currentTeacher = false;
-          next();
-      }
+      if (!req.user) {
+          req.user = { roles: [] };
+      } 
       if (req.user.roles.includes('teacher')) {
           let courseId = req.params.courseId;
           
