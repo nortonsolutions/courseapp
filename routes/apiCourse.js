@@ -64,7 +64,7 @@ module.exports = function (app, db) {
         })
 
     const coursePage = (req, res) => {
-        let options = { admin: req.user.roles.includes('admin') };
+        let options = { admin: req.user.roles?.includes('admin') };
         let courseId = req.params.courseId;
 
         db.models.Course.findOne({ _id: courseId }, (err, course) => {
