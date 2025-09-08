@@ -66,7 +66,7 @@ module.exports = function (app, db) {
     const coursePage = (req, res) => {
         if (!req.user) {
             req.user = { 
-                roles: ['student'],
+                roles: ['student', 'guest'],
                 quizzes: [],
                 quizIds: [],
                 _id: 0
@@ -132,6 +132,7 @@ module.exports = function (app, db) {
                             // Add messageboard threads to options
                             db.models.Thread.find({ courseId: courseId }, (err, threads) => {
                                 options.threads = threads;
+                                options.readonly = !(req.user.roles.includes('guest'));
                                 res.render('course.hbs', options);
                             })
                         }

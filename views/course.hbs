@@ -35,11 +35,14 @@
                     <hr>
                     <div class="h3 font-weight-bold">{{course.name}} Messageboard:</div>
 
+                    {{#if options.readonly}}
+                    {{else}}
                     <label for="newThreadText">Submit a new thread:</label>
                     <div id='submitNewThread' class="row m-auto">
                         <textarea rows="2" type='text' placeholder='Thread text...' id='newThreadText' required=''></textarea><br>
                         <button class='btn btn-sm btn-primary btn-limitedHeight' id="btnSubmitNewThread" type="submit" value="Submit">Submit</button>
                     </div>
+                    {{/if}}
                     <div id='messageBoard'></div>
 
                 </div>
