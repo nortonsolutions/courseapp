@@ -27,8 +27,12 @@ module.exports = function(app,db) {
   const ensureAuthenticated = (req,res,next) => {
     if (req.isAuthenticated()) {
         return next();
+    } else {
+        req.readonly = true;
+        return next();
     }
-    res.redirect('/');
+    // res.redirect('/');
+    // Not an error condition if not logged in for messageboards, just display 
   };
 
   // ensureAdminOrTeacher
@@ -75,7 +79,7 @@ module.exports = function(app,db) {
 
   app.route('/course/messageBoard/:courseId')
 
-  .get(ensureAuthenticated, setCurrentTeacher, (req, res) => {
+    .get(ensureAuthenticated, setCurrentTeacher, (req, res) => {
 
       let options = { 
         admin: req.user.roles.includes('admin'),
@@ -91,6 +95,7 @@ module.exports = function(app,db) {
               }).slice(0, 3);
           })
           options.threads = threads;
+          options.readonly = req.readonly;
           res.render('partials/messageBoard.hbs', options);
       })
   })
