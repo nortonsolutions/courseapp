@@ -61,9 +61,9 @@ module.exports = function (app, db) {
                     res.render('partials/selectCourse.hbs', options);
                 }
             })
-        })   
-    
-    coursePage = (req, res) => {
+        })
+
+    const coursePage = (req, res) => {
         let options = { admin: req.user.roles.includes('admin') };
         let courseId = req.params.courseId;
 
@@ -122,18 +122,11 @@ module.exports = function (app, db) {
 
     // Special case for "store" course which bypasses authentication
     app.route('/course/68ba5293871ee5ae992b5d50')
-        .get((req, res) => {
-            if (!req.user) {
-                req.user = { _id: "dummyUserId", roles: ["student"], quizzes: [] };
-            }
-            coursePage(req, res);
-        });
+        .get(coursePage)
 
     app.route('/course/:courseId')
 
-        .get(ensureAuthenticated, (req, res) => {
-            coursePage(req, res);   
-        });
+        .get(ensureAuthenticated, coursePage)
 
     app.route('/courseAdmin')
 
