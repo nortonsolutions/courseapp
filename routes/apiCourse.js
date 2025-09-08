@@ -142,7 +142,10 @@ module.exports = function (app, db) {
 
     // Special case for "store" course which bypasses authentication
     app.route('/course/68ba5293871ee5ae992b5d50')
-        .get(coursePage)
+        .get((req, res) => {
+            req.params.courseId = '68ba5293871ee5ae992b5d50';
+            coursePage(req, res);
+        })
 
     app.route('/course/:courseId')
 
