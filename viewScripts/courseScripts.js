@@ -13,18 +13,20 @@ document.getElementById('selectQuiz').addEventListener('submit', (e) => {
     e.preventDefault();
 })
 
-document.getElementById('btnSubmitNewThread').addEventListener('click', e => {
-
-    handlePostTextResponse('/api/threads/' + courseId, {
-        text: document.getElementById('newThreadText').value
-    }, (response) => {
-        document.getElementById('feedback').innerHTML = response;
-        loadMessageboardContent();
-        document.getElementById('newThreadText').value = '';
+if (document.getElementById('btnSubmitNewThread')) {
+    document.getElementById('btnSubmitNewThread').addEventListener('click', e => {
+    
+        handlePostTextResponse('/api/threads/' + courseId, {
+            text: document.getElementById('newThreadText').value
+        }, (response) => {
+            document.getElementById('feedback').innerHTML = response;
+            loadMessageboardContent();
+            document.getElementById('newThreadText').value = '';
+        })
+    
+        e.preventDefault();
     })
-
-    e.preventDefault();
-})
+}
 
 addThreadListeners = () => {
 
