@@ -37,11 +37,16 @@
                 </div>
                 {{/each}}
                 
+                {{#if ../readonly}}
+                <div>Read-only mode: You cannot post new replies.</div>
+                {{else}}
                 <div class="newReply row">
                     <div class="threadId d-none">{{id}}</div>
-                    {{#if ../readonly}}{{else}}<textarea rows="1" type='text' placeholder='Quick reply...' class='newReplyText' required=''></textarea><br>
-                     <button class='btn btn-sm btn-primary btnSubmitNewReply btn-limitedHeight' type="submit" value="Submit">Submit</button>{{/if}}
+                    <textarea rows="1" type='text' placeholder='Quick reply...' class='newReplyText' required=''></textarea><br>
+                     <button class='btn btn-sm btn-primary btnSubmitNewReply btn-limitedHeight' type="submit" value="Submit">Submit</button>
                 </div>
+                {{/if}}
+                
             </div>
             
         </div>
