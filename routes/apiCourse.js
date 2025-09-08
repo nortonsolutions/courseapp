@@ -65,8 +65,12 @@ module.exports = function (app, db) {
 
     const coursePage = (req, res) => {
         if (!req.user) {
-            req.user = { roles: ['student'] };
-        }
+            req.user = { 
+                roles: ['student'],
+                quizzes: [], 
+                _id: 0
+            };
+        }  
         let options = { admin: req.user.roles.includes('admin') };
         let courseId = req.params.courseId;
 
