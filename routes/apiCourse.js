@@ -79,6 +79,16 @@ module.exports = function (app, db) {
             if (err) {
                 res.json({ error: err.message });
             } else {
+                if (!course) {
+                    res.redirect('/courseSelect');
+                    return;
+                }
+
+                // if course.quizIds is undefined, set to empty array
+                if (!course.quizIds) {
+                    course.quizIds = [];
+                }
+                
                 options.course = course;
                 db.models.Quiz.find()
                     .where('_id').in(course.quizIds.map(el => el.quizId))
