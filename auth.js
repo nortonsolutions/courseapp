@@ -1,5 +1,5 @@
 /**
- * Authentication strategy - Norton 2021
+ * Authentication strategy - Norton 2025
  * Based on passport, passport-local, bcrypt;
  * Assumes Mongoose-style UserModel.
  */

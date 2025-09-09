@@ -1,5 +1,5 @@
 /**
- * Norton 2021 - CourseApp App
+ * Norton 2025 - CourseApp App
  */
 
 'use strict';

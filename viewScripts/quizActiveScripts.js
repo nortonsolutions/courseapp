@@ -1,5 +1,5 @@
 /**
- * quizActive scripts by Norton 2021
+ * quizActive scripts by Norton 2025
  * 
  * Provides supporting JavaScript for /quizActive page,
  * including QuizQuestion and Timer react components.

@@ -1,5 +1,5 @@
 /*
-* Norton 2021 - CourseApp
+* Norton 2025 - CourseApp
 *
 */
 
@@ -34,7 +34,7 @@ module.exports = (app, db, HOSTNAME) => {
         
         if (req.hostname == "www.quizzap.net" || req.hostname == "quizzap.net") {
             let options = {
-                welcomeMessage: "Welcome to Norton CourseApp!",
+                welcomeMessage: "Welcome to Quizzap!",
                 showRegistration: false,
                 showLogin: true            
             }
@@ -58,7 +58,7 @@ module.exports = (app, db, HOSTNAME) => {
         
         
         let options = {
-            welcomeMessage: "Welcome to Norton CourseApp!",
+            welcomeMessage: "Welcome to Quizzap!",
             showRegistration: false,
             showLogin: true
         }

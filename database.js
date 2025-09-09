@@ -1,5 +1,5 @@
 /**
- * Database strategy - Norton 2021
+ * Database strategy - Norton 2025
  * Based on Mongoose.
  */
 const dotenv = require('dotenv');

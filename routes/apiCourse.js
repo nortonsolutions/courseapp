@@ -1,5 +1,5 @@
 /*
-* Norton 2021 - CourseApp
+* Norton 2025 - CourseApp
 *
 */
 

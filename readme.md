@@ -2,7 +2,7 @@
 
 
 ## CourseApp
-#### Copyright Norton 2021
+#### Copyright Norton 2025
 
 <img src="courseApp_1.png" width="400"/>
 <img src="courseApp_2.png" width="400"/>
