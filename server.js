@@ -1,5 +1,5 @@
 /**
- * Norton 2025 - CourseApp App
+ * Norton 2025 - Quizzap! App
  */
 
 'use strict';

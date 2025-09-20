@@ -1,5 +1,5 @@
 /*
-* Norton 2025 - CourseApp
+* Norton 2025 - Quizzap!
 *
 */
 

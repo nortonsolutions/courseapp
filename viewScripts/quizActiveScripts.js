@@ -158,7 +158,7 @@ const addProjectSubmissionHandling = () => {
 
 const applyImageLink = () => {
     document.querySelector('.questionImage').addEventListener('click', (e) => {
-        window.open('/public/uploads/' + e.target.id,'CourseApp image',"top=500,left=500,width=800,height=800"); 
+        window.open('/public/uploads/' + e.target.id,'Quizzap! image',"top=500,left=500,width=800,height=800"); 
 
     })
 }

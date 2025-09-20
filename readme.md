@@ -1,7 +1,7 @@
 
 
 
-## CourseApp
+## Quizzap!
 #### Copyright Norton 2025
 
 <img src="courseApp_1.png" width="400"/>
@@ -54,7 +54,7 @@ $ pm2 save
 
 Manual startup of the production server:
 
-Assuming the MongoDB process is running, start CourseApp with:
+Assuming the MongoDB process is running, start Quizzap! with:
 
 pm2 start courseApp
 
