@@ -93,7 +93,8 @@ module.exports = function(app, db, upload, uploadProject) {
 
 
     app.route('/quiz/grade/:courseId/:quizId')
-        .post(ensureAuthenticated, (req,res) => {
+        // .post(ensureAuthenticated, (req,res) => {
+        .post((req,res) => {
         
         let courseId = req.params.courseId;
         let quizId = req.params.quizId;
@@ -479,7 +480,7 @@ module.exports = function(app, db, upload, uploadProject) {
     app.route('/quizActive/:courseId/:quizId')
 
         // Get and render the active quiz container:
-        .get(ensureAuthenticated, (req,res) => {
+        .get((req,res) => {
     
           let courseId = req.params.courseId;
           let quizId = req.params.quizId;
@@ -515,7 +516,7 @@ module.exports = function(app, db, upload, uploadProject) {
     app.route('/quizActive/:courseId/:quizId/:index')
 
         // Get and render the quiz question:
-        .get(ensureAuthenticated, (req,res) => {
+        .get((req,res) => {
     
           let courseId = req.params.courseId;  
           let quizId = req.params.quizId;
