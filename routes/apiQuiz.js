@@ -481,6 +481,10 @@ module.exports = function(app, db, upload, uploadProject) {
 
         // Get and render the active quiz container:
         .get((req,res) => {
+          if (!req.user) {
+            // assume anonymous user, use fake user object for now
+            req.user = { id: 'anonymous', roles: [] };
+          }
     
           let courseId = req.params.courseId;
           let quizId = req.params.quizId;
