@@ -1,14 +1,47 @@
-
-
-
 ## Quizzap!
+
 #### Copyright Norton 2025
 
 <img src="courseApp_1.png" width="400"/>
 <img src="courseApp_2.png" width="400"/>
 <img src="courseApp_3.png" width="400"/>
 
-This version assumes MongoDB is up and running on port 27017 
+Claude 3.7 summarized the application as follows:
+
+The legacy JavaScript application (Quizzap!) is a course management platform built with:
+
+* **Backend** : Node.js with Express
+* **Database** : MongoDB with Mongoose ODM
+* **Authentication** : Passport.js with local strategy
+* **View Engine** : Handlebars (HBS)
+* **UI Framework** : Bootstrap with jQuery
+
+The key functionalities include:
+
+1. **User Authentication**
+   * Login/register system
+   * Role-based access (student, teacher, admin)
+2. **Course Management**
+   * Creating and managing courses
+   * Assigning instructors to courses
+   * Student enrollment
+3. **Quiz System**
+   * Creating/editing quizzes with multiple question types
+   * Quiz attempts tracking
+   * Timer functionality
+   * Grading system with pass/fail criteria
+   * Project submissions
+4. **Discussion Forums**
+   * Thread creation by course
+   * Replies with upvoting/downvoting
+   * Moderation features
+5. **Learning Content**
+   * Course materials organized in modules
+   * Media support (images, videos)
+
+-----
+
+This version assumes MongoDB is up and running on port 27017
 and uses the DB called "CourseApp" (wiredtiger) by default.
 
 Extract cdn.zip in current folder to create /cdn directory.
@@ -18,7 +51,7 @@ Versioning:
 - 1.0.0: (2021) Initial version
 - 1.0.1: (May 2024) Updated this readme.  :)
 
------
+---
 
 Only applicable to pm2-windows-service:
 
@@ -50,7 +83,7 @@ $ pm2 save
 
 (The 'pm2 save' will cause pm2 to pick up from where it leaves off on the next restart.)
 
------
+---
 
 Manual startup of the production server:
 
@@ -60,27 +93,27 @@ pm2 start courseApp
 
 ... which essentially runs "node /c/util/courseApp/server.js" in daemon mode.
 
------
+---
 
 Logs are in C:\util\courseApp\utils\node\logs
 
------
+---
 
 Development mode (only applicable if you have the ./utils directory tree)
 
-If you want to run in development mode with a standalone DB (mmapv1), 
-you can startup a local MongoDB using 'startDB.bat' instead (port 27018).  
-This DB has some data loaded already in the "nortonQuiz" DB instance.  
+If you want to run in development mode with a standalone DB (mmapv1),
+you can startup a local MongoDB using 'startDB.bat' instead (port 27018).
+This DB has some data loaded already in the "nortonQuiz" DB instance.
 Use F5 in Visual Studio Code to launch with .env settings.
 
------
+---
 
 TODO: Precompile the babelscript.  Currently only used for React timer component.
 
-DeprecationWarning: Mongoose: mpromise (mongoose's default promise library) 
-is deprecated, plug in your own promise library instead: 
+DeprecationWarning: Mongoose: mpromise (mongoose's default promise library)
+is deprecated, plug in your own promise library instead:
 http://mongoosejs.com/docs/promises.html
 
-Express-Session Warning: connect.session() MemoryStore 
-is not designed for a production environment, as it will leak memory, 
+Express-Session Warning: connect.session() MemoryStore
+is not designed for a production environment, as it will leak memory,
 and will not scale past a single process.

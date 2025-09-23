@@ -340,6 +340,7 @@ module.exports = function (app, db) {
                     if (err) {
                         res.json({ error: err.message });
                     } else {
+                        course.name = req.body.name;
                         course.description = req.body.description;
                         course.homeContent = req.body.homeContent;
                         course.currentTermStartDate = req.body.currentTermStartDate;
