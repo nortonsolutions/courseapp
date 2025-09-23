@@ -44,6 +44,7 @@ document.getElementById('deleteCourse').addEventListener('click', (e) => {
 document.getElementById('saveCourseDetails').addEventListener('click', e => {
     let url = "/courseAdmin/" + currentCourseId;
     let data = {
+        name: document.getElementById('courseName').value,
         description: document.getElementById('description').value,
         homeContent: document.getElementById('homeContent').value,
         currentTermStartDate: document.getElementById('currentTermStartDate').value + "T12:00:00-06:00"
