@@ -7,3 +7,5 @@ cdn
 .env
 .png
 .mp3
+
+.DS_Store

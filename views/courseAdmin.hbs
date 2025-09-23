@@ -18,7 +18,10 @@
                 <div id='courseId' class='d-none'>{{course._id}}</div>
                 <div class="row">
                     <div class="col-9 p-0">
-                        <h1 class="display-4">Admin: {{course.name}}</h1>
+                        <h1 class="display-4">Admin: 
+                            <input type="text" id="courseName" class="form-control d-inline-block" 
+                                value="{{course.name}}" style="width: auto; font-size: 0.7em;">
+                        </h1>
                     </div>
                     <div class="col-3 mt-4 text-right"><button id="deleteCourse" type="button" class="btn btn-danger"><i class="fas fa-minus-circle"></i> Delete</button></div>
                 </div>
